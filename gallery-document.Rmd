@@ -1,0 +1,112 @@
+---
+title: "Household Wealth Inequality in a Synthetic Sample"
+subtitle: "A compact gallery document for testing publication-inspired styles"
+author:
+  - name: "Ada Template"
+    dept: "Department of Sociology"
+    inst: "Queens College, City University of New York"
+    email: "ada.template@example.edu"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+institution: "Research Design Gallery"
+series: "Style Test"
+surname: "Template"
+runningtitle: "Style Gallery"
+
+abstract: |
+  This short document tests title treatment, headings, ordinary prose,
+  tables, figures, code, mathematical notation, and closing matter across
+  each document type and visual style.
+
+keywords:
+  - scholarly design
+  - R Markdown
+  - research communication
+
+acknowledgements: |
+  This synthetic acknowledgement is included to check title-page spacing and
+  secondary metadata.
+
+fontpath: "../inst/fonts/"
+numbersections: true
+doublespace: false
+linenumbers: false
+maincolumns: 1
+
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 5.5,
+  fig.height = 3.2
+)
+```
+
+# Introduction
+
+This gallery document is deliberately ordinary. It includes a short empirical
+argument, a table, a chart, inline code such as `median_wealth`, and a small
+amount of mathematical notation. The goal is to reveal whether a style can
+handle common research material without requiring the author to redesign the
+document by hand.
+
+## Data and Measures
+
+The example uses a synthetic table of household wealth by educational
+attainment. A production document would describe the sample, weights,
+measurement period, and missing-data rules in more detail.
+
+```{r table-example}
+summary_table <- data.frame(
+  group = c("No degree", "BA", "Graduate"),
+  median_wealth = c(42000, 180000, 325000),
+  share = c(0.52, 0.31, 0.17)
+)
+knitr::kable(summary_table, caption = "Synthetic household wealth by education")
+```
+
+## Model Sketch
+
+Inline math should sit comfortably in the line, as in
+$y_i = \alpha + \beta x_i + \epsilon_i$.
+
+$$
+\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
+$$
+
+# Findings
+
+The main pattern is intentionally simple: median wealth rises with educational
+attainment. The figure is not meant to be analytically interesting; it is a
+stress test for caption placement, plot sizing, and the relationship between
+figures and body text.
+
+```{r figure-example}
+barplot(
+  summary_table$median_wealth,
+  names.arg = summary_table$group,
+  col = c("#D9E2EC", "#8FB3D9", "#2E6FA3"),
+  border = NA,
+  ylab = "Median wealth",
+  las = 1,
+  cex.axis = 0.75,
+  cex.lab = 0.85,
+  cex.names = 0.8
+)
+```
+
+# Implications
+
+Different audiences need different visual signals. A journal reviewer may want
+conventional restraint, a policy reader may need clear signposting, and a
+public audience may need a stronger editorial entry point. The package styles
+are designed to let the author choose that communication setting directly.
+
+# References
+
+No bibliography is required for this synthetic gallery document.
+

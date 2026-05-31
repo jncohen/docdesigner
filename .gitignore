@@ -1,0 +1,29 @@
+# R package
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+.Rlib/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Test output PDFs (do not commit)
+test-*.pdf
+gallery/*.pdf
+gallery/*.html
+gallery/*.tex
+gallery/*_files/
+
+# R CMD build/check artifacts (never commit these)
+*.Rcheck/
+*.tar.gz

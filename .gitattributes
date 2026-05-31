@@ -1,0 +1,7 @@
+# Font binaries committed as regular git objects (no LFS needed for GitHub-only package).
+# Text file line-ending normalization:
+*.tex text eol=lf
+*.R   text eol=lf
+*.sh  text eol=lf
+*.md  text eol=lf
+*.csl text eol=lf

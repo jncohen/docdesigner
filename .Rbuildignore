@@ -1,0 +1,17 @@
+^.*\.Rcheck$
+^.*\.tar\.gz$
+^tests$
+^fonts$
+^scripts$
+^docs$
+^test\.bib$
+^test\.md$
+^fetch-template\.sh$
+^install\.sh$
+^update-template\.R$
+^\.claude$
+^\.Rlib$
+^gallery/.*\.pdf$
+^gallery/.*\.html$
+^gallery/.*\.tex$
+^gallery/.*_files$

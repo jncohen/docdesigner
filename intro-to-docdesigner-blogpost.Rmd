@@ -1,0 +1,224 @@
+---
+title: "Using the docdesigner TeX Template from R Markdown"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+author:
+  - name: "Ada Template"
+    dept: "Household Finance Lab"
+    inst: "Queens College, City University of New York"
+    email: "ada.template@example.edu"
+
+institution: "Household Finance Lab"
+author_title: "Research Associate, Household Finance Lab"
+author_bio: "Creates practical guides and short public posts for Household Finance Lab readers."
+
+surname: "docdesigner"
+runningtitle: "Using the docdesigner TeX Template"
+
+fontset: docdesigner
+fontpath: "../inst/fonts/"
+accent: 003DA5
+
+abstract: |
+  This post explains what the docdesigner TeX template does and how it fits into an
+  R Markdown workflow. It is written for students who know the basics of R and
+  R Markdown but have never worked directly with TeX or LaTeX.
+
+output:
+  docdesigner::blogpost_pdf:
+    template: "../inst/templates/docdesignertemplate.tex"
+    latex_engine: xelatex
+    keep_tex: true
+    wordpress: html
+    wordpress_assets: true
+    wordpress_checklist: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 6,
+  fig.height = 3.5
+)
+```
+
+# What this package is for
+
+If you have just learned R Markdown, you already know the basic idea: you write text, code, tables, and figures in one `.Rmd` file, then click **Knit** to turn that file into a finished document.
+
+The `docdesigner` package helps with the last part of that workflow. It gives R Markdown a polished academic document design, so you do not have to learn TeX before you can make a professional-looking PDF.
+
+TeX and LaTeX are the typesetting systems that sit underneath many academic PDFs. They are powerful, but they can be intimidating if you are new to them. This template hides most of that complexity. You control the document with familiar YAML fields at the top of your R Markdown file.
+
+# What the template does
+
+The template controls the appearance of the PDF. It sets the page margins, fonts, title page, headers, section headings, spacing, tables, figures, citations, and bibliography formatting.
+
+In a normal R Markdown PDF, you might get a plain-looking document with default formatting. With this package, the same R Markdown source can become a Lab report, a working paper, a Snapshot, or a WordPress-ready blogpost companion.
+
+The important point is that your writing still happens in R Markdown. You write paragraphs in Markdown, run R code chunks, make figures with R, and cite sources with citation keys. The template handles the visual presentation.
+
+# The basic workflow
+
+Most users will follow this pattern:
+
+1. Install the package.
+2. Run `docdesigner::docdesigner_use()` in a project folder.
+3. Write an R Markdown file.
+4. Add the docdesigner template settings in the YAML header.
+5. Click **Knit** in RStudio.
+
+The helper function copies the files your project needs:
+
+```r
+docdesigner::docdesigner_use()
+```
+
+That gives your project a local copy of the template, fonts, and citation style file. After that, your `.Rmd` can refer to those files when it knits.
+
+# A minimal YAML header
+
+The YAML header is the block at the top of an R Markdown document between two lines of three dashes. It tells R Markdown how to build the output.
+
+Here is a small example:
+
+```yaml
+---
+title: "My First docdesigner Report"
+subtitle: "A short example"
+author:
+  - name: "Your Name"
+    dept: "Department or Lab"
+    inst: "Institution"
+    email: "you@example.edu"
+
+institution: "Household Finance Lab"
+series: "Research Note"
+number: 1
+
+fontset: docdesigner
+fontpath: fonts/
+
+output:
+  pdf_document:
+    template: docdesignertemplate.tex
+    latex_engine: xelatex
+---
+```
+
+You do not need to understand every line at first. The most important pieces are `title`, `author`, `fontset`, and the `output` block.
+
+# Choosing a fontset
+
+A fontset is a preset design style. It changes the document's typography and layout.
+
+| Fontset | Best use |
+|---|---|
+| `docdesigner` | Household Finance Lab reports and public-facing documents |
+| `demography` | Journal-style papers using a Times-like look |
+| `humanities` | Essays or theory-heavy writing with a book-like feel |
+| `methods` | Technical reports with code and compact spacing |
+| unset | Plain journal-submission style |
+
+For most Lab documents, start with:
+
+```yaml
+fontset: docdesigner
+```
+
+# Writing text and running code
+
+Inside the body of the file, you write ordinary R Markdown. Headings use `#`, emphasis uses `*italic*` or `**bold**`, and R code goes inside code chunks.
+
+For example, this code creates a small figure:
+
+```{r example-figure, echo=TRUE, fig.cap="Example bar chart produced from R code."}
+wealth <- c(42000, 91000, 265000, 410000)
+names(wealth) <- c("No diploma", "High school", "BA", "Graduate")
+
+barplot(
+  wealth,
+  col = c("#B8C7D9", "#8FB3D9", "#0066CC", "#004C99"),
+  border = NA,
+  las = 1,
+  ylab = "Median net worth",
+  cex.axis = 0.75,
+  cex.lab = 0.85,
+  cex.names = 0.8
+)
+```
+
+When you knit the document, R runs the code, creates the figure, and places it in the PDF.
+
+# Blogposts and WordPress
+
+This package can also help when a Lab document needs to become a WordPress post on the CUNY Academic Commons.
+
+For that workflow, use `docdesigner::blogpost_pdf`:
+
+```yaml
+output:
+  docdesigner::blogpost_pdf:
+    template: docdesignertemplate.tex
+    latex_engine: xelatex
+    wordpress: html
+    wordpress_assets: true
+    wordpress_checklist: true
+```
+
+When you click **Knit**, the package creates several files:
+
+| File | Purpose |
+|---|---|
+| `.pdf` | The polished PDF version |
+| `-wordpress.html` | HTML you can paste into WordPress |
+| `-wordpress-assets/` | Images used by the WordPress companion |
+| `-wordpress-checklist.txt` | A short publishing checklist |
+
+The HTML output is designed to be conservative. It does not assume that special WordPress plugins are active. In most cases, the research assistant can upload the image files to the Media Library, paste the HTML into WordPress, preview the post, and make final edits there.
+
+# Snapshots
+
+Snapshots are a special kind of Lab publication. They are short, public-facing, and built around one featured visualization.
+
+For Snapshots, use `docdesigner::snapshot_pdf` and add `snapshot: true`:
+
+```yaml
+snapshot: true
+snapshot_label: "Empirical Snapshot"
+snapshot_feature: "figures/my-chart.png"
+
+output:
+  docdesigner::snapshot_pdf:
+    template: docdesignertemplate.tex
+    latex_engine: xelatex
+    wordpress: html
+```
+
+The Snapshot PDF uses a compact first-page header instead of a full academic title page. That makes it better suited for short public reports.
+
+# What you should not worry about
+
+You do not need to edit the `.tex` file directly. You also do not need to learn LaTeX commands to use the template well.
+
+Most of the time, your job is to:
+
+1. Write clearly in R Markdown.
+2. Put accurate metadata in the YAML header.
+3. Make readable figures and tables.
+4. Knit the document.
+5. Inspect the PDF and WordPress companion before sharing.
+
+The template is there to make the final document look consistent with the Lab's style.
+
+# A good mental model
+
+Think of your `.Rmd` file as the source document. It contains your words, your code, and your document settings.
+
+Think of the docdesigner template as the design system. It decides how your source document should look when it becomes a PDF.
+
+Think of the WordPress companion as a publishing handoff. It gives you a web-friendly version of the same material so you do not have to rebuild the post by hand.
+
+That is the main promise of this package: write once in RStudio, then produce the formats the Lab needs.

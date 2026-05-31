@@ -1,0 +1,1342 @@
+\documentclass[12pt]{article}
+
+% =======================================================
+% 1. ENGINE + TYPOGRAPHY
+%
+% Font presets are controlled by the 'fontset' YAML variable.
+% Valid values: humanities | demography | methods | docdesigner | (unset = default)
+%
+%   fontset: humanities  -> EB Garamond         (XeLaTeX/LuaLaTeX)
+%                           mathpazo + warning  (pdfLaTeX)
+%   fontset: demography  -> XITS                (XeLaTeX/LuaLaTeX)
+%                           TeX Gyre Termes     (pdfLaTeX)
+%   fontset: methods     -> Source Serif 4 + Fira Code (XeLaTeX/LuaLaTeX)
+%                           mathpazo + Fira Code or LM Mono (pdfLaTeX)
+%   fontset: docdesigner        -> XITS, roman headings, CUNY Blue accent (XeLaTeX/LuaLaTeX)
+%                           mathpazo            (pdfLaTeX)
+%   (default/unset)      -> TeX Gyre Pagella    (XeLaTeX/LuaLaTeX)
+%                           mathpazo            (pdfLaTeX)
+%
+% XeLaTeX/LuaLaTeX fonts are loaded from a local fonts/ directory so the
+% bundle is self-contained regardless of system font installation.
+% The 'fontpath' YAML variable overrides the default 'fonts/' relative path
+% with an absolute path --- required when using the managed template layout
+% (e.g., template: ~/Templates/docdesigner/docdesignertemplate.tex).
+% Example: fontpath: /Users/yourname/Templates/docdesigner/fonts/
+% =======================================================
+\usepackage{iftex}
+
+%% --- FONT PRESET MACRO (set from YAML, used for \ifx branching below) ---
+\def\docdesignerfontset{docdesigner}
+\makeatletter
+\def\docdesignerfontset@h{humanities}
+\def\docdesignerfontset@d{demography}
+\def\docdesignerfontset@m{methods}
+\def\docdesignerfontset@w{docdesigner}
+%% Boolean flags — set once here, usable everywhere without \makeatletter
+\newif\ifdocdesignerhumanities
+\newif\ifdocdesignerdemography
+\newif\ifdocdesignermethods
+\newif\ifdocdesignerdocdesigner
+\ifx\docdesignerfontset\docdesignerfontset@h\docdesignerhumanitiestrue\else\docdesignerhumanitiesfalse\fi
+\ifx\docdesignerfontset\docdesignerfontset@d\docdesignerdemographytrue\else\docdesignerdemographyfalse\fi
+\ifx\docdesignerfontset\docdesignerfontset@m\docdesignermethodstrue\else\docdesignermethodsfalse\fi
+\ifx\docdesignerfontset\docdesignerfontset@w\docdesignerdocdesignertrue\else\docdesignerdocdesignerfalse\fi
+\newcommand{\docdesignermethodscodescale}{0.90}
+
+%% --- FONT PATH (override with 'fontpath:' YAML variable for managed templates) ---
+\def\docdesignerfontsdir{../inst/fonts/}
+
+%% --- FONT LOADING ---
+
+\ifPDFTeX
+  %% pdfLaTeX path: uses TeX distribution packages only (no font files needed).
+  \usepackage[T1]{fontenc}
+  \ifdocdesignerdemography
+    %% demography: TeX Gyre Termes (Times-family); ships with every TeXLive/MiKTeX.
+    \usepackage{tgtermes}
+  \else
+    \usepackage{mathpazo}
+    \ifdocdesignerhumanities
+      %% humanities: EB Garamond requires XeLaTeX/LuaLaTeX; mathpazo used instead.
+      \PackageWarning{docdesignertemplate}{fontset=humanities: EB Garamond requires
+        XeLaTeX/LuaLaTeX. Falling back to mathpazo under pdfLaTeX.}
+    \fi
+    \ifdocdesignermethods
+      %% methods: try Fira Code for monospace; fall back to Latin Modern Mono.
+      \IfFileExists{FiraCode.sty}{%
+        \usepackage[scale=\docdesignermethodscodescale]{FiraCode}%
+      }{%
+        \PackageWarning{docdesignertemplate}{fontset=methods: Fira Code not found in the
+          TeX distribution. Using Latin Modern Mono. Install the 'firacode'
+          package (TeXLive: tlmgr install firacode).}%
+      }
+    \fi
+    \ifdocdesignerdocdesigner
+      %% docdesigner: requires XeLaTeX/LuaLaTeX; mathpazo used instead under pdfLaTeX.
+      \PackageWarning{docdesignertemplate}{fontset=docdesigner: XITS
+        require XeLaTeX/LuaLaTeX. Falling back to mathpazo under pdfLaTeX.}
+    \fi
+  \fi
+\else
+  %% XeLaTeX / LuaLaTeX path: uses fontspec with bundled fonts from fonts/ dir.
+  %% Each preset uses \IfFileExists to fail gracefully if fonts/ is not populated.
+  %% Run scripts/get-fonts.sh to download font files into fonts/.
+  \usepackage{fontspec}
+  \ifdocdesignerhumanities
+    \IfFileExists{\docdesignerfontsdir EBGaramond-Regular.otf}{%
+      \setmainfont{EBGaramond}[
+        Path           = \docdesignerfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{docdesignertemplate}{fontset=humanities: \docdesignerfontsdir
+        EBGaramond-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{docdesignertemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+  \else\ifdocdesignerdemography
+    \IfFileExists{\docdesignerfontsdir XITS-Regular.otf}{%
+      \setmainfont{XITS}[
+        Path           = \docdesignerfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{docdesignertemplate}{fontset=demography: \docdesignerfontsdir
+        XITS-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{docdesignertemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+  \else\ifdocdesignermethods
+    \IfFileExists{\docdesignerfontsdir SourceSerif4-Regular.otf}{%
+      \setmainfont{SourceSerif4}[
+        Path           = \docdesignerfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-It,
+        BoldItalicFont = *-BoldIt,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{docdesignertemplate}{fontset=methods: \docdesignerfontsdir
+        SourceSerif4-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{docdesignertemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+    \IfFileExists{\docdesignerfontsdir FiraCode-Regular.ttf}{%
+      \setmonofont{FiraCode}[
+        Path        = \docdesignerfontsdir,
+        UprightFont = *-Regular,
+        BoldFont    = *-Bold,
+        Scale       = \docdesignermethodscodescale,
+        Extension   = .ttf]%
+    }{%
+      \PackageWarning{docdesignertemplate}{fontset=methods: \docdesignerfontsdir
+        FiraCode-Regular.ttf not found. Run scripts/get-fonts.sh to install
+        Fira Code. Using default monospace font.}%
+    }
+  \else\ifdocdesignerdocdesigner
+    %% docdesigner: XITS body + roman headings for a sharper, classic report style.
+    \IfFileExists{\docdesignerfontsdir XITS-Regular.otf}{%
+      \setmainfont{XITS}[
+        Path           = \docdesignerfontsdir,
+        UprightFont    = *-Regular,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-Italic,
+        BoldItalicFont = *-BoldItalic,
+        Extension      = .otf]%
+    }{%
+      \PackageWarning{docdesignertemplate}{fontset=docdesigner: \docdesignerfontsdir
+        XITS-Regular.otf not found. Run scripts/get-fonts.sh, or set
+        fontpath: in YAML if using a managed template. Falling back to default.}%
+      \IfFontExistsTF{TeX Gyre Pagella}{%
+        \setmainfont{TeX Gyre Pagella}%
+      }{%
+        \PackageWarning{docdesignertemplate}{TeX Gyre Pagella not found; using Latin Modern Roman.}%
+        \setmainfont{Latin Modern Roman}%
+      }%
+    }
+  \else
+    %% Default or unrecognized fontset: TeX Gyre Pagella with graceful fallback.
+    \ifx\docdesignerfontset\empty\else
+      \PackageWarning{docdesignertemplate}{Unknown fontset value '\docdesignerfontset'.
+        Valid values: humanities, demography, methods, docdesigner. Using default.}
+    \fi
+    \IfFontExistsTF{TeX Gyre Pagella}{%
+      \setmainfont{TeX Gyre Pagella}%
+    }{%
+      %% ISSUE 1 FIX: emit warning when TeX Gyre Pagella is unavailable.
+      \PackageWarning{docdesignertemplate}{TeX Gyre Pagella not found on this system.
+        Using Latin Modern Roman as fallback. Install tex-gyre for the intended
+        Palatino-family appearance.}%
+      \setmainfont{Latin Modern Roman}%
+    }
+  \fi\fi\fi\fi
+\fi
+\makeatother
+
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\providecommand{\citeproc}[2]{#2}
+
+% =======================================================
+% 1b. COLOR PALETTE
+% Loaded early so geometry, titlesec, and hyperref can all use docdesigneraccent.
+% The 'accent' YAML variable overrides all fontset defaults (hex, no '#').
+%   accent: E71939   # QC Red
+%   accent: 003DA5   # CUNY Blue (docdesigner default)
+% Fontset defaults (when accent is unset):
+%   methods:        deep tech-blue (#1B4F72) with lighter rule (#2E86C1)
+%   docdesigner:           CUNY Blue (#003DA5, Pantone 286 C)
+%   default/others: black
+% =======================================================
+\usepackage{xcolor}
+  \definecolor{docdesigneraccent}{HTML}{003DA5}
+  \definecolor{docdesignerrule}{HTML}{003DA5}
+
+% =======================================================
+% 2. PAGE LAYOUT
+% humanities:  wider, book-like margins
+% methods:     tighter, dense technical report margins
+% docdesigner:        compact, branded blog-post margins
+% default/demography: standard 1-inch
+% =======================================================
+\ifdocdesignerhumanities
+  \usepackage[left=1.3in,right=1.3in,top=1.1in,bottom=1.1in]{geometry}
+\else\ifdocdesignermethods
+  \usepackage[left=0.9in,right=0.9in,top=0.9in,bottom=0.9in]{geometry}
+\else\ifdocdesignerdocdesigner
+  \usepackage[left=1.15in,right=1.15in,top=1.1in,bottom=1.1in]{geometry}
+\else
+  \usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+\fi\fi\fi
+\usepackage{setspace}
+
+  %% humanities: slightly more generous leading; methods: tighter; docdesigner: balanced
+  \ifdocdesignerhumanities
+    \setstretch{1.55}
+  \else\ifdocdesignermethods
+    \setstretch{1.25}
+  \else\ifdocdesignerdocdesigner
+    \setstretch{1.45}
+  \else
+    \onehalfspacing
+  \fi\fi\fi
+
+%% humanities: wider paragraph indent for book-like feel
+\ifdocdesignerhumanities
+  \setlength{\parindent}{18pt}
+\else
+  \setlength{\parindent}{15pt}  %% applies to methods, docdesigner, demography, default
+\fi
+\setlength{\parskip}{0pt}
+
+% =======================================================
+% 3. GRAPHICS + FLOATS
+% =======================================================
+\usepackage{graphicx}
+%% eso-pic is only needed for title-page bars.
+%% Loading it conditionally keeps default/humanities free of the dependency.
+\ifdocdesignerdemography\usepackage{eso-pic}\else\ifdocdesignermethods\usepackage{eso-pic}\else\ifdocdesignerdocdesigner\usepackage{eso-pic}\fi\fi\fi
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{paracol}
+\usepackage{wrapfig}
+\usepackage{longtable,booktabs}
+\usepackage{pdflscape}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{caption}
+
+\captionsetup{
+  font=small,
+  labelfont=bf
+}
+
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{1}
+\setcounter{totalnumber}{3}
+
+\renewcommand{\arraystretch}{1.1}
+
+% More deterministic float spacing
+\setlength{\intextsep}{0.75\baselineskip}
+\setlength{\textfloatsep}{1.25\baselineskip}
+
+% --- Auto-scale images ---
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% =======================================================
+% 4. TABLE AUTOMATION (Pandoc longtable)
+% =======================================================
+\usepackage{etoolbox}
+
+\AtBeginEnvironment{longtable}{
+  \small
+  \singlespacing
+  \setlength{\LTleft}{\fill}
+  \setlength{\LTright}{\fill}
+  \setlength{\LTcapwidth}{\textwidth}
+  %% Treat special characters as ordinary text inside table cells.
+  %% Pandoc does not escape these when converting markdown tables,
+  %% so variable names (underscores), exponents (carets), and
+  %% percentage values (percent signs) cause LaTeX errors or silent
+  %% data loss. Catcode 12 (other) makes them literal characters
+  %% without affecting math mode or comments outside this environment.
+  \catcode95=12    %% underscore  (_): subscript operator
+  \catcode94=12    %% caret      (^): superscript operator
+  \catcode37=12    %% percent    (%): comment char -- silent data loss if unescaped
+}
+
+\newcommand{\docdesignercompactcolumnssetup}{%
+  \setlength{\columnsep}{0.24in}%
+  \raggedcolumns
+  \footnotesize
+  \setstretch{0.98}%
+  \setlength{\parindent}{0.85em}%
+  \setlength{\parskip}{0pt}%
+  \titleformat{\section}{\normalsize\bfseries\color{docdesigneraccent}}{}{0pt}{}%
+  \titleformat{\subsection}{\footnotesize\bfseries}{}{0pt}{}%
+  \titlespacing{\section}{0pt}{0.5em}{0.14em}%
+  \titlespacing{\subsection}{0pt}{0.38em}{0.1em}%
+}
+
+
+% =======================================================
+% 4b. SPECIAL CHARACTER HANDLING IN BODY TEXT
+% =======================================================
+%% \usepackage{underscore} makes _ safe in ordinary text mode
+%% (e.g. variable names mentioned inline in prose) while
+%% preserving its subscript role inside math environments.
+%% This complements the longtable catcode fix above.
+\usepackage{underscore}
+
+% =======================================================
+% 5. SECTION FORMATTING + NUMBERING TOGGLE
+%
+% default:    bold, no rule
+% humanities: small-caps, generous spacing
+% demography: bold + thin rule below (journal style)
+% methods:    bold + accent color + rule below (futuristic)
+% docdesigner:       roman bold + CUNY Blue accent + rule below (branded)
+% =======================================================
+\usepackage{titlesec}
+
+%% Named rule commands for \titleformat after-code.
+%% Necessary because \titleformat's optional [after-code] argument uses [],
+%% and LaTeX's optional-arg scanner doesn't handle nested [] depth, so
+%% \titleformat{...}{}{}{}{}[\titlerule[0.5pt]] would close the outer []
+%% at the first ] it encounters. Wrapping in a command avoids nesting.
+\newcommand{\docdesignerdemorule}{\titlerule[0.3pt]}
+\newcommand{\docdesignermetrule}{\color{docdesignerrule}\titlerule[0.5pt]}
+\newcommand{\docdesignerwgrule}{\color{docdesignerrule}\titlerule[0.4pt]}
+
+  \setcounter{secnumdepth}{0}
+  \setcounter{tocdepth}{0}
+  \ifdocdesignerhumanities
+    \titleformat{\section}{\large\scshape}{}{0pt}{}
+    \titleformat{\subsection}{\normalsize\bfseries\itshape}{}{0pt}{}
+    \titleformat{\subsubsection}{\normalsize\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2.5ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+  \else\ifdocdesignerdemography
+    \titleformat{\section}{\large\bfseries}{}{0pt}{}[\docdesignerdemorule\vspace{0.4em}]
+    \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
+    \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+  \else\ifdocdesignermethods
+    \titleformat{\section}{\large\bfseries\color{docdesigneraccent}}{}{0pt}{}[\docdesignermetrule\vspace{0.4em}]
+    \titleformat{\subsection}{\normalsize\bfseries\color{docdesigneraccent}}{}{0pt}{}
+    \titleformat{\subsubsection}{\normalsize\itshape\color{docdesigneraccent}}{}{0pt}{}
+    \titlespacing{\section}{0pt}{1.75ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1ex plus 0.25ex}{-0.5ex}
+  \else\ifdocdesignerdocdesigner
+    \titleformat{\section}{\large\bfseries\color{docdesigneraccent}}{}{0pt}{}[\docdesignerwgrule\vspace{0.4em}]
+    \titleformat{\subsection}{\normalsize\bfseries\color{docdesigneraccent}}{}{0pt}{}
+    \titleformat{\subsubsection}{\normalsize\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+  \else
+    \titleformat{\section}{\large\bfseries}{}{0pt}{}
+    \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
+    \titleformat{\subsubsection}{\normalsize\bfseries\itshape}{}{0pt}{}
+    \titlespacing{\section}{0pt}{2ex plus 0.5ex}{-0.5ex}
+    \titlespacing{\subsection}{0pt}{1.5ex plus 0.25ex}{-0.5ex}
+    \titlespacing{\subsubsection}{0pt}{1.25ex plus 0.25ex}{-0.5ex}
+  \fi\fi\fi\fi
+
+% =======================================================
+% 6. HYPERREF + HEADERS/FOOTERS
+% =======================================================
+%% methods + docdesigner: colored links reinforce the accent palette
+\ifdocdesignermethods
+  \usepackage[colorlinks=true,linkcolor=docdesigneraccent,urlcolor=docdesignerrule,citecolor=docdesigneraccent]{hyperref}
+\else\ifdocdesignerdocdesigner
+  \usepackage[colorlinks=true,linkcolor=docdesigneraccent,urlcolor=docdesignerrule,citecolor=docdesigneraccent]{hyperref}
+\else
+  \usepackage[hidelinks]{hyperref}
+\fi\fi
+
+%% PDF document metadata — populated from YAML front matter.
+%% Enables proper indexing in repositories, readers, and search engines.
+%% Multiple authors are semicolon-separated (PDF/XMP convention).
+\hypersetup{
+  pdftitle    = {Using the docdesigner TeX Template from R Markdown},
+  pdfauthor   = {Ada Template},
+  pdfsubject  = {},
+  pdfkeywords = {}
+}
+
+\usepackage{fancyhdr}
+
+% =======================================================
+% 7. OPTIONAL MODES
+% =======================================================
+\newif\ifdocdesigneranon
+\docdesigneranonfalse
+
+\newcommand{\docdesignermaincolumns}{1}
+
+
+% =======================================================
+% 8. PANDOC SUPPORT
+% =======================================================
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}%
+  \setlength{\parskip}{0pt}%
+}
+
+\providecommand{\pandocbounded}[1]{#1}
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+
+% =======================================================
+% 8b. CODE BLOCK STYLING
+%
+% Applies to:
+%   Shaded/Highlighting  — knitr/Pandoc code INPUT blocks
+%   verbatim             — knitr console OUTPUT blocks
+%
+% Design:
+%   Input:  blue-tinted background + 3pt left accent rule, footnotesize
+%   Output: neutral gray background, footnotesize, no page-split
+%
+% Implementation notes:
+%   - framed is already loaded by highlighting-macros (via snugshade).
+%   - \MakeFramed with a custom \FrameCommand draws a colored vrule then
+%     a \colorbox; MakeFramed passes the framed content as the argument
+%     to the last token of \FrameCommand.
+%   - Font size for Highlighting uses \fvset, NOT \RecustomVerbatimEnvironment.
+%     fancyvrb v4+ (MiKTeX/TeX Live 2024+) pre-defines \VerbBar internally;
+%     \RecustomVerbatimEnvironment re-triggers that initialisation, causing
+%     a "Command \VerbBar already defined" conflict with Pandoc's
+%     highlighting-macros.  \fvset sets options without re-registering
+%     the environment and avoids the conflict entirely.
+%   - Font size for verbatim uses \verbatim@font, the LaTeX hook that
+%     controls the typeface inside all verbatim environments, for the
+%     same reason.
+%   - \surroundwithmdframed wraps verbatim externally so its verbatim
+%     catcode regime is unaffected, then applies the shaded background.
+%   - nobreak=true on the verbatim frame prevents output blocks from
+%     splitting across pages; for input blocks, an outer \minipage
+%     wrapper achieves the same (blocks longer than \textheight still
+%     overflow, which is the acceptable edge-case trade-off).
+% =======================================================
+\ifdocdesignermethods
+
+  %% --- colors ---
+  \definecolor{codeinputbg}{HTML}{EBF0F7}   %% blue-tinted input background
+  \definecolor{codeoutputbg}{HTML}{F2F2F2}  %% neutral gray output background
+
+  %% --- code INPUT: Shaded + left accent rule, no page split ---
+  %% The outer minipage keeps the block together; MakeFramed draws the
+  %% colored vrule + background.  Long blocks that exceed \textheight
+  %% will still overflow (acceptable trade-off vs. splitting mid-block).
+  \renewenvironment{Shaded}{%
+    \vspace{3pt}%
+    \noindent\begin{minipage}{\linewidth}%
+    \def\FrameCommand{%
+      \hspace{1pt}%
+      {\color{docdesignerrule}\vrule width 3pt}%
+      \hspace{4pt}%
+      \colorbox{codeinputbg}%
+    }%
+    \MakeFramed{\advance\hsize by -\width \FrameRestore}%
+    \footnotesize
+    \setlength{\parskip}{0pt}%
+    \setlength{\partopsep}{0pt}%
+  }{%
+    \endMakeFramed
+    \end{minipage}%
+    \vspace{3pt}%
+  }
+
+  %% Fira Code at footnotesize for highlighted code blocks.
+  %% \fvset is safe with fancyvrb v4+; \RecustomVerbatimEnvironment is not.
+  \fvset{fontsize=\footnotesize}
+
+  %% footnotesize for standard verbatim (console output).
+  %% \verbatim@font is the LaTeX hook called inside every verbatim environment
+  %% to set the typeface; overriding it here is fancyvrb-independent.
+  \makeatletter
+  \renewcommand{\verbatim@font}{\footnotesize\ttfamily}
+  \makeatother
+
+  %% --- code OUTPUT: shaded verbatim ---
+  %% mdframed is intentionally avoided: it loads pgf/tikz, which patches
+  %% \@ifnextchar globally and causes infinite recursion ("TeX capacity
+  %% exceeded [input stack size=10000]") when hyperref's \href is called
+  %% inside \docdesignerauthorblock.  The framed package (already loaded above by
+  %% highlighting-macros) is sufficient and carries no such risk.
+  %%
+  %% etoolbox's \AtBeginEnvironment runs before verbatim's catcode changes,
+  %% and \AtEndEnvironment runs after they are restored, so \MakeFramed and
+  %% \endMakeFramed execute in normal LaTeX mode on either side of the
+  %% verbatim content.
+  \AtBeginEnvironment{verbatim}{%
+    \vspace{3pt}%
+    \def\FrameCommand{\fboxsep=4pt\colorbox{codeoutputbg}}%
+    \MakeFramed{\FrameRestore}%
+  }
+  \AtEndEnvironment{verbatim}{%
+    \endMakeFramed
+    \vspace{3pt}%
+  }
+
+\fi
+
+\ifdocdesignermethods\else
+  %% Non-methods presets use manuscript spacing in prose, but code needs to
+  %% remain compact and readable.  Use a smaller monospace face with tight
+  %% leading so long lines are less likely to overflow the shaded box.
+  \fvset{fontsize=\footnotesize}
+  \makeatletter
+  \renewcommand{\verbatim@font}{\footnotesize\ttfamily}
+  \makeatother
+  \AtBeginEnvironment{Shaded}{%
+    \footnotesize
+    \setstretch{1.05}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\partopsep}{0pt}%
+  }
+  \AtBeginEnvironment{verbatim}{%
+    \footnotesize
+    \setstretch{1.05}%
+    \setlength{\parskip}{0pt}%
+  }
+\fi
+
+%% NOTE (Issue 5): knitr/Quarto may inject booktabs, float, longtable, or
+%% other packages already loaded above via header-includes. This is benign ---
+%% LaTeX's \usepackage deduplicates package loading --- but may produce harmless
+%% "already loaded" notes in verbose log output. No action required.
+
+
+% --- Pandoc table width arithmetic support ---
+\usepackage{calc}
+\providecommand{\real}[1]{#1}
+
+% =======================================================
+% RUNNING TITLE + PAGESTYLE
+% =======================================================
+\pagestyle{fancy}
+\setlength{\headheight}{14.5pt}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+
+% Ensure "plain" pages (e.g., first page after \section in some classes) match
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+}
+
+%% methods + docdesigner: tint the header rule to match the accent color palette.
+%% \headrule is the fancyhdr hook that draws the line below the header;
+%% redefining it with \color{docdesignerrule} keeps the rule weight unchanged
+%% while coordinating it with section rules and link colors.
+\ifdocdesignermethods
+  \renewcommand{\headrule}{%
+    {\color{docdesignerrule}\hrule width\headwidth height\headrulewidth}%
+    \vskip-\headrulewidth%
+  }
+\else\ifdocdesignerdocdesigner
+  \renewcommand{\headrule}{%
+    {\color{docdesignerrule}\hrule width\textwidth height\headrulewidth}%
+    \vskip-\headrulewidth%
+  }
+\fi\fi
+
+\fancyhead[R]{\small\itshape docdesigner: Using the docdesigner TeX Template}
+
+% =======================================================
+% 9. CSL REFERENCES (Pandoc)
+% =======================================================
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+
+\providecommand{\citeproctext}{}
+
+\newenvironment{CSLReferences}[2]
+ {%
+  %% ISSUE 3 FIX: revert to single column before references when maincolumns: 2.
+  %% \twocolumn persists through the body into the bibliography section otherwise.
+  %% \onecolumn forces a page break (standard behavior for two-column papers).
+  \ifnum\docdesignermaincolumns=2\relax\onecolumn\fi
+  \section*{References}
+  \begin{list}{}{%
+   \setlength{\itemindent}{0pt}
+   \setlength{\leftmargin}{0pt}
+   \setlength{\parsep}{0pt}
+   \ifodd #1
+    \setlength{\leftmargin}{\cslhangindent}
+    \setlength{\itemindent}{-\cslhangindent}
+   \fi
+   \ifnum #2 > 0
+    \setlength{\itemsep}{#2\baselineskip}
+   \else
+    \setlength{\itemsep}{0pt}
+   \fi
+  }%
+  \renewcommand{\bibitem}[2][]{\item}
+ }
+ {\end{list}}
+
+% =======================================================
+% 10. R / SOFTWARE MACROS
+% =======================================================
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\CRANpkg}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+% =======================================================
+% BEGIN DOCUMENT
+% =======================================================
+\begin{document}
+
+% =============================================================
+% TITLE PAGE / SNAPSHOT HEADER
+% methods:  centered, with thick accent rules top and bottom
+% others:   centered (humanities/demography/default)
+% =============================================================
+
+%% Shared author-block macro.
+%%
+%% Author names come from the for(author) loop — Quarto passes author.name
+%% through its normalize-author.lua filter. All other author sub-fields
+%% (department, institution, email, orcid, etc.) are stripped by that filter
+%% and never reach the Pandoc template.
+%%
+%% Solution: supply contact details via top-level author_* YAML variables,
+%% which Quarto does not process and therefore passes through unchanged.
+%%
+%%   author_dept:   Department of Sociology
+%%   author_inst:   Queens College, City University of New York
+%%   author_addr:   65-30 Kissena Blvd., Queens, NY 11367, USA
+%%   author_email:  docdesigner@qc.cuny.edu
+%%   author_web:    https://docdesigner.qc.cuny.edu
+%%   author_orcid:  0000-0002-6197-4453
+%%
+\newcommand{\docdesignerauthorblock}{%
+\ifdocdesigneranon\else
+%
+%% Object author: name + per-author sub-fields (R Markdown / direct Pandoc).
+%% NOTE: email/web sub-fields are used WITHOUT an extra \href wrapper.
+%% Pandoc processes YAML sub-field values as Markdown and autolinks bare
+%% addresses, so wrapping again would cause nested \href recursion.
+{\setlength{\parskip}{1pt}%
+\textbf{Ada Template}\par
+{\small%
+Household Finance Lab\par%
+Queens College, City University of New York\par%
+%
+\href{mailto:ada.template@example.edu}{\nolinkurl{ada.template@example.edu}}\par%
+%
+%
+}}%
+%
+\fi
+}
+
+\newcommand{\docdesignerseriesblock}{%
+{\small\setlength{\parskip}{1pt}%
+Household Finance Lab\par%
+%
+}%
+}
+
+\ifdocdesignermethods
+%% -------------------------------------------------------
+%% METHODS: centered title page with accent rules
+%% Top and bottom bars at 1in from page edge.
+%% The top rule is in the page flow so its gap to the title is explicit.
+%% -------------------------------------------------------
+\newgeometry{top=1in,bottom=1in,left=1.15in,right=1.15in}
+\begin{titlepage}
+\thispagestyle{empty}
+\AddToShipoutPictureBG*{%
+  \AtPageLowerLeft{%
+    \put(\LenToUnit{\dimexpr 1in+\oddsidemargin\relax},\LenToUnit{1in}){%
+      \textcolor{docdesigneraccent}{\rule{\textwidth}{2pt}}%
+    }%
+  }%
+}%
+\noindent\textcolor{docdesigneraccent}{\rule{\textwidth}{4pt}}\par
+%% Explicit rule-to-title gap.
+\vspace{0.5in}%
+\begin{center}
+\begin{singlespace}
+{\setstretch{0.9}\LARGE\bfseries Using the docdesigner TeX Template from R
+Markdown\par}
+
+\end{singlespace}
+\end{center}
+\vfill
+\begin{center}
+\begin{singlespace}
+
+\docdesignerauthorblock
+
+\par\vspace{2\baselineskip}
+\docdesignerseriesblock
+
+\ifdocdesigneranon\else
+{\small May 20, 2026}\par
+\fi
+
+\vspace{2\baselineskip}
+\textcolor{docdesignerrule}{\rule{0.35\textwidth}{0.5pt}}\par
+\vspace{0.5em}
+\begin{minipage}{0.9\linewidth}
+\small\singlespacing
+\textbf{Abstract}\par\vspace{0.25em}
+This post explains what the docdesigner TeX template does and how it fits into
+an R Markdown workflow. It is written for students who know the basics
+of R and R Markdown but have never worked directly with TeX or LaTeX.
+\end{minipage}
+
+
+\end{singlespace}
+\end{center}
+\vfill\null
+\end{titlepage}
+\restoregeometry
+
+\else\ifdocdesignerdocdesigner
+%% -------------------------------------------------------
+%% docdesigner: one-page blog/post layout.
+%% Generic public-facing posts use a designed masthead, compact columns,
+%% inline figures, author box, and footer. Use methods for working papers.
+%% -------------------------------------------------------
+\newgeometry{top=0.55in,bottom=0.55in,left=0.6in,right=0.6in}
+\setlength{\headwidth}{\textwidth}
+\thispagestyle{empty}
+\begingroup
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\singlespacing
+\footnotesize
+\noindent\textcolor{docdesigneraccent}{\rule{\textwidth}{2.2pt}}\par
+\vspace{0.45em}
+
+\noindent
+\begin{minipage}[t]{\textwidth}
+\vspace{0pt}
+{\small\sffamily\bfseries\color{docdesigneraccent}TeX Notes}\hfill
+\ifdocdesigneranon\else
+{\small May 20, 2026}%
+\fi
+\par\vspace{0.35em}
+
+\begingroup
+\setbox0=\hbox{\large\bfseries Using the docdesigner TeX Template from R
+Markdown}%
+\ifdim\wd0>\linewidth
+  \noindent\resizebox{\linewidth}{!}{\large\bfseries Using the docdesigner TeX
+Template from R Markdown}\par
+\else
+  {\large\bfseries Using the docdesigner TeX Template from R Markdown\par}%
+\fi
+\endgroup
+
+\vspace{0.3em}
+{\scriptsize\bfseries
+Ada Template%
+}\par
+{\scriptsize Household Finance Lab}\par
+
+\end{minipage}
+\par
+
+\vspace{0.5em}
+\noindent\textcolor{docdesignerrule}{\rule{\textwidth}{0.7pt}}\par
+\vspace{0.45em}
+
+\else
+%% -------------------------------------------------------
+%% DEFAULT / HUMANITIES / DEMOGRAPHY: distinct title pages
+%% -------------------------------------------------------
+\ifdocdesignerhumanities
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{0.08\textheight}
+\noindent\rule{0.42\textwidth}{0.4pt}\par
+\vspace{2.2em}
+{\setstretch{0.92}\huge\scshape Using the docdesigner TeX Template from R
+Markdown\par}
+\vspace{2.5em}
+\begin{singlespace}
+\docdesignerauthorblock
+\par\vspace{1.6\baselineskip}
+\docdesignerseriesblock
+\ifdocdesigneranon\else
+\vspace{0.4em}
+{\small May 20, 2026}\par
+\fi
+\end{singlespace}
+\vfill
+\begin{minipage}{0.72\textwidth}
+\small\singlespacing
+\noindent\rule{0.25\textwidth}{0.35pt}\par
+\textsc{Abstract}\par\vspace{0.3em}
+This post explains what the docdesigner TeX template does and how it fits into
+an R Markdown workflow. It is written for students who know the basics
+of R and R Markdown but have never worked directly with TeX or LaTeX.
+\end{minipage}
+\end{titlepage}
+\else\ifdocdesignerdemography
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{0.12\textheight}
+\begin{center}
+\begin{singlespace}
+
+{\setstretch{0.92}\LARGE\bfseries Using the docdesigner TeX Template from R
+Markdown\par}
+
+
+\vspace{2.2em}
+
+\docdesignerauthorblock
+
+\par\vspace{1.5\baselineskip}
+\docdesignerseriesblock
+
+\ifdocdesigneranon\else
+\vspace{0.35em}
+{\small May 20, 2026}\par
+\fi
+
+\vspace{2.2\baselineskip}
+\noindent\rule{0.35\textwidth}{0.4pt}\par
+\vspace{0.65em}
+\begin{minipage}{0.78\textwidth}
+\small\singlespacing
+\textbf{Abstract}\par\vspace{0.3em}
+This post explains what the docdesigner TeX template does and how it fits into
+an R Markdown workflow. It is written for students who know the basics
+of R and R Markdown but have never worked directly with TeX or LaTeX.
+\end{minipage}
+
+\end{singlespace}
+\end{center}
+\vfill
+\end{titlepage}
+\else
+\begin{titlepage}
+\thispagestyle{empty}
+
+\vspace*{0.14\textheight}
+\begin{center}
+
+
+{\setstretch{0.9}\LARGE\bfseries Using the docdesigner TeX Template from R
+Markdown\par}
+
+
+\vspace{2em}
+
+\begin{singlespace}
+{\normalsize
+
+\docdesignerauthorblock
+
+\par\vspace{2\baselineskip}
+\docdesignerseriesblock
+
+% --- DATE ---
+%% NOTE (Issue 4): To preserve a human-readable date string, use inline R:
+%%   date: "`r format(Sys.Date(), '%B %d, %Y')`"
+\ifdocdesigneranon\else
+\vspace{0.5em}
+{\small May 20, 2026}\par
+\fi
+
+}
+\end{singlespace}
+
+
+\vspace{2em}
+
+\begin{minipage}{0.8\textwidth}
+\small\singlespacing
+\textbf{Abstract}\par\vspace{0.25em}
+This post explains what the docdesigner TeX template does and how it fits into
+an R Markdown workflow. It is written for students who know the basics
+of R and R Markdown but have never worked directly with TeX or LaTeX.
+\end{minipage}
+
+\vfill
+
+
+\end{center}
+\end{titlepage}
+\fi\fi
+\fi\fi
+
+\ifdocdesignerdocdesigner
+\renewenvironment{longtable}[2][]{%
+  \par\smallskip\noindent\footnotesize
+  \renewcommand{\caption}[2][]{\textbf{##2}}%
+  \begin{adjustbox}{max width=\linewidth}%
+  \begin{tabular}{#2}%
+}{%
+  \end{tabular}%
+  \end{adjustbox}\par\smallskip
+}
+\renewcommand{\endhead}{}
+\renewcommand{\endfirsthead}{}
+\renewcommand{\endfoot}{}
+\renewcommand{\endlastfoot}{}
+\makeatletter
+\renewenvironment{figure}[1][]{%
+  \par\smallskip\noindent\begin{minipage}{\linewidth}\centering
+  \def\@captype{figure}%
+}{%
+  \end{minipage}\par\smallskip
+}
+\makeatother
+\begin{multicols}{2}
+\setlength{\columnsep}{0.24in}
+\raggedcolumns
+\footnotesize
+\setstretch{0.98}
+\setlength{\parindent}{0.85em}
+\setlength{\parskip}{0pt}
+\titleformat{\section}{\normalsize\bfseries\color{docdesigneraccent}}{}{0pt}{}
+\titleformat{\subsection}{\footnotesize\bfseries}{}{0pt}{}
+\titlespacing{\section}{0pt}{0.5em}{0.14em}
+\titlespacing{\subsection}{0pt}{0.38em}{0.1em}
+\noindent{\scriptsize\bfseries This post explains what the docdesigner TeX
+template does and how it fits into an R Markdown workflow. It is written
+for students who know the basics of R and R Markdown but have never
+worked directly with TeX or LaTeX.}\par\vspace{0.45em}
+\else
+\clearpage
+\fi
+\setcounter{page}{1}
+
+% =======================================================
+% MAIN BODY
+% =======================================================
+
+% Main text column layout toggle
+\ifdocdesignerdocdesigner\else
+\ifnum\docdesignermaincolumns=2\relax
+  \twocolumn
+\fi
+\fi
+
+\ifdocdesigneranon
+\begingroup
+\small
+\noindent\textit{This manuscript is set to anonymous mode. Identifying metadata fields are suppressed on the title page.}\par
+\endgroup
+\vspace{1em}
+\fi
+
+\section{What this package is for}\label{what-this-package-is-for}
+
+If you have just learned R Markdown, you already know the basic idea:
+you write text, code, tables, and figures in one \texttt{.Rmd} file,
+then click \textbf{Knit} to turn that file into a finished document.
+
+The \texttt{docdesigner} package helps with the last part of that workflow.
+It gives R Markdown a polished academic document design, so you do not
+have to learn TeX before you can make a professional-looking PDF.
+
+TeX and LaTeX are the typesetting systems that sit underneath many
+academic PDFs. They are powerful, but they can be intimidating if you
+are new to them. This template hides most of that complexity. You
+control the document with familiar YAML fields at the top of your R
+Markdown file.
+
+\section{What the template does}\label{what-the-template-does}
+
+The template controls the appearance of the PDF. It sets the page
+margins, fonts, title page, headers, section headings, spacing, tables,
+figures, citations, and bibliography formatting.
+
+In a normal R Markdown PDF, you might get a plain-looking document with
+default formatting. With this package, the same R Markdown source can
+become a Lab report, a working paper, a Snapshot, or a WordPress-ready
+blogpost companion.
+
+The important point is that your writing still happens in R Markdown.
+You write paragraphs in Markdown, run R code chunks, make figures with
+R, and cite sources with citation keys. The template handles the visual
+presentation.
+
+\section{The basic workflow}\label{the-basic-workflow}
+
+Most users will follow this pattern:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Install the package.
+\item
+  Run \texttt{docdesigner::docdesigner\_use()} in a project folder.
+\item
+  Write an R Markdown file.
+\item
+  Add the docdesigner template settings in the YAML header.
+\item
+  Click \textbf{Knit} in RStudio.
+\end{enumerate}
+
+The helper function copies the files your project needs:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docdesigner}\SpecialCharTok{::}\FunctionTok{docdesigner\_use}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+That gives your project a local copy of the template, fonts, and
+citation style file. After that, your \texttt{.Rmd} can refer to those
+files when it knits.
+
+\section{A minimal YAML header}\label{a-minimal-yaml-header}
+
+The YAML header is the block at the top of an R Markdown document
+between two lines of three dashes. It tells R Markdown how to build the
+output.
+
+Here is a small example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\PreprocessorTok{{-}{-}{-}}
+\FunctionTok{title}\KeywordTok{:}\AttributeTok{ }\StringTok{"My First docdesigner Report"}
+\FunctionTok{subtitle}\KeywordTok{:}\AttributeTok{ }\StringTok{"A short example"}
+\FunctionTok{author}\KeywordTok{:}
+\AttributeTok{  }\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{name}\KeywordTok{:}\AttributeTok{ }\StringTok{"Your Name"}
+\AttributeTok{    }\FunctionTok{dept}\KeywordTok{:}\AttributeTok{ }\StringTok{"Department or Lab"}
+\AttributeTok{    }\FunctionTok{inst}\KeywordTok{:}\AttributeTok{ }\StringTok{"Institution"}
+\AttributeTok{    }\FunctionTok{email}\KeywordTok{:}\AttributeTok{ }\StringTok{"you@example.edu"}
+
+\FunctionTok{institution}\KeywordTok{:}\AttributeTok{ }\StringTok{"Household Finance Lab"}
+\FunctionTok{series}\KeywordTok{:}\AttributeTok{ }\StringTok{"Research Note"}
+\FunctionTok{number}\KeywordTok{:}\AttributeTok{ }\DecValTok{1}
+
+\FunctionTok{fontset}\KeywordTok{:}\AttributeTok{ docdesigner}
+\FunctionTok{fontpath}\KeywordTok{:}\AttributeTok{ fonts/}
+
+\FunctionTok{output}\KeywordTok{:}
+\AttributeTok{  }\FunctionTok{pdf\_document}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{template}\KeywordTok{:}\AttributeTok{ docdesignertemplate.tex}
+\AttributeTok{    }\FunctionTok{latex\_engine}\KeywordTok{:}\AttributeTok{ xelatex}
+\PreprocessorTok{{-}{-}{-}}
+\end{Highlighting}
+\end{Shaded}
+
+You do not need to understand every line at first. The most important
+pieces are \texttt{title}, \texttt{author}, \texttt{fontset}, and the
+\texttt{output} block.
+
+\section{Choosing a fontset}\label{choosing-a-fontset}
+
+A fontset is a preset design style. It changes the document's typography
+and layout.
+
+{\def\LTcaptype{} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Fontset & Best use \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{docdesigner} & Household Finance Lab reports and public-facing
+documents \\
+\texttt{demography} & Journal-style papers using a Times-like look \\
+\texttt{humanities} & Essays or theory-heavy writing with a book-like
+feel \\
+\texttt{methods} & Technical reports with code and compact spacing \\
+unset & Plain journal-submission style \\
+\end{longtable}
+}
+
+For most Lab documents, start with:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{fontset}\KeywordTok{:}\AttributeTok{ docdesigner}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Writing text and running
+code}\label{writing-text-and-running-code}
+
+Inside the body of the file, you write ordinary R Markdown. Headings use
+\texttt{\#}, emphasis uses \texttt{*italic*} or \texttt{**bold**}, and R
+code goes inside code chunks.
+
+For example, this code creates a small figure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wealth }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{42000}\NormalTok{, }\DecValTok{91000}\NormalTok{, }\DecValTok{265000}\NormalTok{, }\DecValTok{410000}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(wealth) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"No diploma"}\NormalTok{, }\StringTok{"High school"}\NormalTok{, }\StringTok{"BA"}\NormalTok{, }\StringTok{"Graduate"}\NormalTok{)}
+
+\FunctionTok{barplot}\NormalTok{(}
+\NormalTok{  wealth,}
+  \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#B8C7D9"}\NormalTok{, }\StringTok{"\#8FB3D9"}\NormalTok{, }\StringTok{"\#0066CC"}\NormalTok{, }\StringTok{"\#004C99"}\NormalTok{),}
+  \AttributeTok{border =} \ConstantTok{NA}\NormalTok{,}
+  \AttributeTok{las =} \DecValTok{1}\NormalTok{,}
+  \AttributeTok{ylab =} \StringTok{"Median net worth"}\NormalTok{,}
+  \AttributeTok{cex.axis =} \FloatTok{0.75}\NormalTok{,}
+  \AttributeTok{cex.lab =} \FloatTok{0.85}\NormalTok{,}
+  \AttributeTok{cex.names =} \FloatTok{0.8}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Example bar chart produced from R code.}]{intro-to-docdesigner-blogpost_files/intro-to-docdesigner-blogpost_files/figure-latex/example-figure-1.pdf}}
+\caption{Example bar chart produced from R code.}
+\end{figure}
+
+When you knit the document, R runs the code, creates the figure, and
+places it in the PDF.
+
+\section{Blogposts and WordPress}\label{blogposts-and-wordpress}
+
+This package can also help when a Lab document needs to become a
+WordPress post on the CUNY Academic Commons.
+
+For that workflow, use \texttt{docdesigner::blogpost\_pdf}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{output}\KeywordTok{:}
+\AttributeTok{  docdesigner:}\FunctionTok{:blogpost\_pdf}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{template}\KeywordTok{:}\AttributeTok{ docdesignertemplate.tex}
+\AttributeTok{    }\FunctionTok{latex\_engine}\KeywordTok{:}\AttributeTok{ xelatex}
+\AttributeTok{    }\FunctionTok{wordpress}\KeywordTok{:}\AttributeTok{ html}
+\AttributeTok{    }\FunctionTok{wordpress\_assets}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\AttributeTok{    }\FunctionTok{wordpress\_checklist}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\end{Highlighting}
+\end{Shaded}
+
+When you click \textbf{Knit}, the package creates several files:
+
+{\def\LTcaptype{} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+File & Purpose \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{.pdf} & The polished PDF version \\
+\texttt{-wordpress.html} & HTML you can paste into WordPress \\
+\texttt{-wordpress-assets/} & Images used by the WordPress companion \\
+\texttt{-wordpress-checklist.txt} & A short publishing checklist \\
+\end{longtable}
+}
+
+The HTML output is designed to be conservative. It does not assume that
+special WordPress plugins are active. In most cases, the research
+assistant can upload the image files to the Media Library, paste the
+HTML into WordPress, preview the post, and make final edits there.
+
+\section{Snapshots}\label{snapshots}
+
+Snapshots are a special kind of Lab publication. They are short,
+public-facing, and built around one featured visualization.
+
+For Snapshots, use \texttt{docdesigner::snapshot\_pdf} and add
+\texttt{snapshot:\ true}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{snapshot}\KeywordTok{:}\AttributeTok{ }\CharTok{true}
+\FunctionTok{snapshot\_label}\KeywordTok{:}\AttributeTok{ }\StringTok{"Empirical Snapshot"}
+\FunctionTok{snapshot\_feature}\KeywordTok{:}\AttributeTok{ }\StringTok{"figures/my{-}chart.png"}
+
+\FunctionTok{output}\KeywordTok{:}
+\AttributeTok{  docdesigner:}\FunctionTok{:snapshot\_pdf}\KeywordTok{:}
+\AttributeTok{    }\FunctionTok{template}\KeywordTok{:}\AttributeTok{ docdesignertemplate.tex}
+\AttributeTok{    }\FunctionTok{latex\_engine}\KeywordTok{:}\AttributeTok{ xelatex}
+\AttributeTok{    }\FunctionTok{wordpress}\KeywordTok{:}\AttributeTok{ html}
+\end{Highlighting}
+\end{Shaded}
+
+The Snapshot PDF uses a compact first-page header instead of a full
+academic title page. That makes it better suited for short public
+reports.
+
+\section{What you should not worry
+about}\label{what-you-should-not-worry-about}
+
+You do not need to edit the \texttt{.tex} file directly. You also do not
+need to learn LaTeX commands to use the template well.
+
+Most of the time, your job is to:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Write clearly in R Markdown.
+\item
+  Put accurate metadata in the YAML header.
+\item
+  Make readable figures and tables.
+\item
+  Knit the document.
+\item
+  Inspect the PDF and WordPress companion before sharing.
+\end{enumerate}
+
+The template is there to make the final document look consistent with
+the Lab's style.
+
+\section{A good mental model}\label{a-good-mental-model}
+
+Think of your \texttt{.Rmd} file as the source document. It contains
+your words, your code, and your document settings.
+
+Think of the docdesigner template as the design system. It decides how your
+source document should look when it becomes a PDF.
+
+Think of the WordPress companion as a publishing handoff. It gives you a
+web-friendly version of the same material so you do not have to rebuild
+the post by hand.
+
+That is the main promise of this package: write once in RStudio, then
+produce the formats the Lab needs.
+
+
+\ifdocdesignerdocdesigner
+\par\vspace{0.65em}
+\noindent\textcolor{docdesignerrule}{\rule{\linewidth}{0.45pt}}\par
+\vspace{0.25em}
+{\scriptsize\bfseries\color{docdesigneraccent} About the Author}\par
+\vspace{0.2em}
+\begin{minipage}{\linewidth}
+\scriptsize\singlespacing
+\begin{minipage}[c]{0.20\linewidth}
+\colorbox{docdesigneraccent!10}{\rule{0pt}{0.58in}\rule{0.58in}{0pt}}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.74\linewidth}
+\textbf{Ada Template}\par
+Research Associate, Household Finance Lab\par
+Household Finance Lab\par
+
+Creates practical guides and short public posts for Household Finance
+Lab readers.
+\end{minipage}
+\end{minipage}\par
+\end{multicols}
+\vfill
+\noindent\textcolor{docdesignerrule}{\rule{\textwidth}{0.7pt}}\par
+\vspace{0.25em}
+\noindent
+\begin{minipage}[t]{0.24\textwidth}
+\scriptsize\bfseries\color{docdesigneraccent}TeX Notes
+\end{minipage}\hfill
+\begin{minipage}[t]{0.72\textwidth}
+\scriptsize\raggedleft
+Household Finance Lab. May 20, 2026.
+\end{minipage}\par
+\endgroup
+\restoregeometry
+\fi
+
+% =======================================================
+% REFERENCES
+% =======================================================
+
+\end{document}

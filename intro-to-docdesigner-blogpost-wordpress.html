@@ -1,0 +1,187 @@
+<section id="what-this-package-is-for" class="level1">
+<h1>What this package is for</h1>
+<p>If you have just learned R Markdown, you already know the basic idea: you write text, code, tables, and figures in one <code>.Rmd</code> file, then click <strong>Knit</strong> to turn that file into a finished document.</p>
+<p>The <code>hfwgtex</code> package helps with the last part of that workflow. It gives R Markdown a polished academic document design, so you do not have to learn TeX before you can make a professional-looking PDF.</p>
+<p>TeX and LaTeX are the typesetting systems that sit underneath many academic PDFs. They are powerful, but they can be intimidating if you are new to them. This template hides most of that complexity. You control the document with familiar YAML fields at the top of your R Markdown file.</p>
+</section>
+<section id="what-the-template-does" class="level1">
+<h1>What the template does</h1>
+<p>The template controls the appearance of the PDF. It sets the page margins, fonts, title page, headers, section headings, spacing, tables, figures, citations, and bibliography formatting.</p>
+<p>In a normal R Markdown PDF, you might get a plain-looking document with default formatting. With this package, the same R Markdown source can become a Lab report, a working paper, a Snapshot, or a WordPress-ready blogpost companion.</p>
+<p>The important point is that your writing still happens in R Markdown. You write paragraphs in Markdown, run R code chunks, make figures with R, and cite sources with citation keys. The template handles the visual presentation.</p>
+</section>
+<section id="the-basic-workflow" class="level1">
+<h1>The basic workflow</h1>
+<p>Most users will follow this pattern:</p>
+<ol type="1">
+<li>Install the package.</li>
+<li>Run <code>hfwgtex::hfwg_use()</code> in a project folder.</li>
+<li>Write an R Markdown file.</li>
+<li>Add the HFWG template settings in the YAML header.</li>
+<li>Click <strong>Knit</strong> in RStudio.</li>
+</ol>
+<p>The helper function copies the files your project needs:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>hfwgtex<span class="sc">::</span><span class="fu">hfwg_use</span>()</span></code></pre></div>
+<p>That gives your project a local copy of the template, fonts, and citation style file. After that, your <code>.Rmd</code> can refer to those files when it knits.</p>
+</section>
+<section id="a-minimal-yaml-header" class="level1">
+<h1>A minimal YAML header</h1>
+<p>The YAML header is the block at the top of an R Markdown document between two lines of three dashes. It tells R Markdown how to build the output.</p>
+<p>Here is a small example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;My First HFWG Report&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;A short example&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Your Name&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dept</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Department or Lab&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">inst</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Institution&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">email</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;you@example.edu&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">institution</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Household Finance Lab&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">series</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Research Note&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">number</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">fontset</span><span class="kw">:</span><span class="at"> hfwg</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">fontpath</span><span class="kw">:</span><span class="at"> fonts/</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pdf_document</span><span class="kw">:</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">template</span><span class="kw">:</span><span class="at"> hfwgtemplate.tex</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">latex_engine</span><span class="kw">:</span><span class="at"> xelatex</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<p>You do not need to understand every line at first. The most important pieces are <code>title</code>, <code>author</code>, <code>fontset</code>, and the <code>output</code> block.</p>
+</section>
+<section id="choosing-a-fontset" class="level1">
+<h1>Choosing a fontset</h1>
+<p>A fontset is a preset design style. It changes the document’s typography and layout.</p>
+<table>
+<thead>
+<tr>
+<th>Fontset</th>
+<th>Best use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hfwg</code></td>
+<td>Household Finance Lab reports and public-facing documents</td>
+</tr>
+<tr>
+<td><code>demography</code></td>
+<td>Journal-style papers using a Times-like look</td>
+</tr>
+<tr>
+<td><code>humanities</code></td>
+<td>Essays or theory-heavy writing with a book-like feel</td>
+</tr>
+<tr>
+<td><code>methods</code></td>
+<td>Technical reports with code and compact spacing</td>
+</tr>
+<tr>
+<td>unset</td>
+<td>Plain journal-submission style</td>
+</tr>
+</tbody>
+</table>
+<p>For most Lab documents, start with:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fontset</span><span class="kw">:</span><span class="at"> hfwg</span></span></code></pre></div>
+</section>
+<section id="writing-text-and-running-code" class="level1">
+<h1>Writing text and running code</h1>
+<p>Inside the body of the file, you write ordinary R Markdown. Headings use <code>#</code>, emphasis uses <code>*italic*</code> or <code>**bold**</code>, and R code goes inside code chunks.</p>
+<p>For example, this code creates a small figure:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wealth <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">42000</span>, <span class="dv">91000</span>, <span class="dv">265000</span>, <span class="dv">410000</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(wealth) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;No diploma&quot;</span>, <span class="st">&quot;High school&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;Graduate&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  wealth,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;#B8C7D9&quot;</span>, <span class="st">&quot;#8FB3D9&quot;</span>, <span class="st">&quot;#0066CC&quot;</span>, <span class="st">&quot;#004C99&quot;</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">border =</span> <span class="cn">NA</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Median net worth&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.axis =</span> <span class="fl">0.75</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.lab =</span> <span class="fl">0.85</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex.names =</span> <span class="fl">0.8</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<figure>
+<img src="intro-to-hfwgtex-blogpost-wordpress-assets/example-figure-1.png"  />
+<figcaption aria-hidden="true">Example bar chart produced from R code.</figcaption>
+</figure>
+<p>When you knit the document, R runs the code, creates the figure, and places it in the PDF.</p>
+</section>
+<section id="blogposts-and-wordpress" class="level1">
+<h1>Blogposts and WordPress</h1>
+<p>This package can also help when a Lab document needs to become a WordPress post on the CUNY Academic Commons.</p>
+<p>For that workflow, use <code>hfwgtex::blogpost_pdf</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  hfwgtex:</span><span class="fu">:blogpost_pdf</span><span class="kw">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">template</span><span class="kw">:</span><span class="at"> hfwgtemplate.tex</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">latex_engine</span><span class="kw">:</span><span class="at"> xelatex</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wordpress</span><span class="kw">:</span><span class="at"> html</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wordpress_assets</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wordpress_checklist</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+<p>When you click <strong>Knit</strong>, the package creates several files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.pdf</code></td>
+<td>The polished PDF version</td>
+</tr>
+<tr>
+<td><code>-wordpress.html</code></td>
+<td>HTML you can paste into WordPress</td>
+</tr>
+<tr>
+<td><code>-wordpress-assets/</code></td>
+<td>Images used by the WordPress companion</td>
+</tr>
+<tr>
+<td><code>-wordpress-checklist.txt</code></td>
+<td>A short publishing checklist</td>
+</tr>
+</tbody>
+</table>
+<p>The HTML output is designed to be conservative. It does not assume that special WordPress plugins are active. In most cases, the research assistant can upload the image files to the Media Library, paste the HTML into WordPress, preview the post, and make final edits there.</p>
+</section>
+<section id="snapshots" class="level1">
+<h1>Snapshots</h1>
+<p>Snapshots are a special kind of Lab publication. They are short, public-facing, and built around one featured visualization.</p>
+<p>For Snapshots, use <code>hfwgtex::snapshot_pdf</code> and add <code>snapshot: true</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">snapshot</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">snapshot_label</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Empirical Snapshot&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">snapshot_feature</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;figures/my-chart.png&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">  hfwgtex:</span><span class="fu">:snapshot_pdf</span><span class="kw">:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">template</span><span class="kw">:</span><span class="at"> hfwgtemplate.tex</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">latex_engine</span><span class="kw">:</span><span class="at"> xelatex</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">wordpress</span><span class="kw">:</span><span class="at"> html</span></span></code></pre></div>
+<p>The Snapshot PDF uses a compact first-page header instead of a full academic title page. That makes it better suited for short public reports.</p>
+</section>
+<section id="what-you-should-not-worry-about" class="level1">
+<h1>What you should not worry about</h1>
+<p>You do not need to edit the <code>.tex</code> file directly. You also do not need to learn LaTeX commands to use the template well.</p>
+<p>Most of the time, your job is to:</p>
+<ol type="1">
+<li>Write clearly in R Markdown.</li>
+<li>Put accurate metadata in the YAML header.</li>
+<li>Make readable figures and tables.</li>
+<li>Knit the document.</li>
+<li>Inspect the PDF and WordPress companion before sharing.</li>
+</ol>
+<p>The template is there to make the final document look consistent with the Lab’s style.</p>
+</section>
+<section id="a-good-mental-model" class="level1">
+<h1>A good mental model</h1>
+<p>Think of your <code>.Rmd</code> file as the source document. It contains your words, your code, and your document settings.</p>
+<p>Think of the HFWG template as the design system. It decides how your source document should look when it becomes a PDF.</p>
+<p>Think of the WordPress companion as a publishing handoff. It gives you a web-friendly version of the same material so you do not have to rebuild the post by hand.</p>
+<p>That is the main promise of this package: write once in RStudio, then produce the formats the Lab needs.</p>
+</section>

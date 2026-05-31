@@ -1,0 +1,13 @@
+WordPress publishing checklist: Using the docdesigner TeX Template from R Markdown
+
+1. Open the WordPress companion file in a browser or text editor.
+2. Upload any files in the assets folder to the WordPress Media Library.
+3. Paste the companion HTML into the WordPress editor.
+4. Replace local image paths with Media Library image URLs if needed.
+5. Set the post title, excerpt, categories, tags, and featured image.
+6. Preview the post on desktop and mobile before publishing.
+7. Confirm the post images are PNG/JPG assets; link the PDF separately only if needed.
+
+PDF: C:/Users/jcohen/Documents/GitHub/docdesigner-template/tests/intro-to-docdesigner-blogpost.pdf
+Companion: C:/Users/jcohen/Documents/GitHub/docdesigner-template/tests/intro-to-docdesigner-blogpost-wordpress.html
+Assets: C:/Users/jcohen/Documents/GitHub/docdesigner-template/tests/intro-to-docdesigner-blogpost-wordpress-assets

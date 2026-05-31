@@ -1,0 +1,17 @@
+Package: docdesigner
+Title: Publication-Inspired Templates for Research PDFs and Slides
+Version: 1.0.1
+Authors@R: person("Joseph N.", "Cohen", role = c("aut", "cre"),
+    email = "joseph.cohen@qc.cuny.edu")
+Description: Pandoc/R Markdown templates for research papers, book chapters,
+    reports, briefs, snapshots, and ioslides presentations. Provides
+    publication-inspired style presets for researchers who want polished,
+    audience-aware PDF and slide outputs from R.
+License: MIT + file LICENSE
+Imports:
+    rmarkdown
+Suggests:
+    pdftools
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
