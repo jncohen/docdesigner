@@ -13,7 +13,7 @@
 #' ```
 #'
 #' @param ... Arguments passed to [rmarkdown::pdf_document()].
-#' @param template LaTeX template path. Defaults to `docdesignertemplate.tex`.
+#' @param template LaTeX template path. Defaults to the bundled template.
 #' @param latex_engine LaTeX engine for the PDF. Defaults to `xelatex`.
 #' @param wordpress Companion output type: `"html"`, `"markdown"`, or `"none"`.
 #' @param wordpress_file Optional companion output filename. When `NULL`,
@@ -27,7 +27,7 @@
 #' @export
 snapshot_pdf <- function(...,
                          style = "policy",
-                         template = "docdesignertemplate.tex",
+                         template = dd_template(),
                          latex_engine = "xelatex",
                          wordpress = c("html", "markdown", "none"),
                          wordpress_file = NULL,
@@ -64,7 +64,7 @@ snapshot_pdf <- function(...,
 #' ```
 #'
 #' @param ... Arguments passed to [rmarkdown::pdf_document()].
-#' @param template LaTeX template path. Defaults to `docdesignertemplate.tex`.
+#' @param template LaTeX template path. Defaults to the bundled template.
 #' @param latex_engine LaTeX engine for the PDF. Defaults to `xelatex`.
 #' @param wordpress Companion output type: `"html"`, `"markdown"`, or `"none"`.
 #' @param wordpress_file Optional companion output filename. When `NULL`,
@@ -78,7 +78,7 @@ snapshot_pdf <- function(...,
 #' @export
 blogpost_pdf <- function(...,
                          style = "policy",
-                         template = "docdesignertemplate.tex",
+                         template = dd_template(),
                          latex_engine = "xelatex",
                          wordpress = c("html", "markdown", "none"),
                          wordpress_file = NULL,
