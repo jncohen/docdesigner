@@ -1,0 +1,9 @@
+name: minimal
+label: Minimal
+description: Clean arXiv/modern university preprint style
+fontset: default
+accent: "333333"
+highlight: tango
+maincolumns: 1
+numbersections: true
+link_citations: true

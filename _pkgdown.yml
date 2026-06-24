@@ -1,0 +1,39 @@
+url: https://jncohen.github.io/docdesigner/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [github]
+
+articles:
+  - title: Start
+    contents:
+      - getting-started
+      - user-manual
+  - title: Styles
+    contents:
+      - style-gallery
+  - title: Publishing
+    contents:
+      - publishing-workflows
+      - font-installation-troubleshooting
+
+reference:
+  - title: Outputs
+    contents:
+      - pdf
+      - html
+      - snapshot
+  - title: Setup and Diagnostics
+    contents:
+      - designer_use
+      - designer_update_templates
+      - designer_check
+  - title: Styles
+    contents:
+      - designer_styles
+      - designer_style
+      - designer_gallery

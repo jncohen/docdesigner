@@ -1,0 +1,24 @@
+---
+title: "Finding-Forward Headline"
+author: "Your Name"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+snapshot_feature: "figures/featured-visualization.png"
+snapshot_feature_caption: "One-sentence caption naming the measure, population, data source, and year."
+snapshot_byline_name: "Your Name"
+snapshot_byline_title: "Title or Role"
+snapshot_byline_affiliation: "Household Finance Working Group"
+snapshot_byline_bio: "One-line bio describing the author's relevant expertise."
+snapshot_data_note: "Data: source note."
+
+abstract: |
+  One or two sentences stating the main finding.
+
+output:
+  docdesigner::snapshot:
+    html: true
+---
+
+# Context
+
+Start writing here.

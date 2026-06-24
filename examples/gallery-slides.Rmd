@@ -1,0 +1,48 @@
+---
+title: "Style Gallery Slides"
+subtitle: "A compact ioslides test deck"
+author: "Ada Template"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Research Question
+
+How does a style system change the feel of the same research material?
+
+## Key Finding
+
+Median wealth rises sharply across the synthetic education groups.
+
+```{r, echo=FALSE}
+summary_table <- data.frame(
+  group = c("No degree", "BA", "Graduate"),
+  median_wealth = c(42000, 180000, 325000)
+)
+barplot(
+  summary_table$median_wealth,
+  names.arg = summary_table$group,
+  col = c("#D9E2EC", "#8FB3D9", "#2E6FA3"),
+  border = NA,
+  ylab = "Median wealth",
+  las = 1
+)
+```
+
+## Methods Note
+
+```{r}
+model <- lm(median_wealth ~ seq_along(group), data = summary_table)
+coef(model)
+```
+
+## Implication
+
+The same empirical content can read as a working paper, policy brief, public
+essay, scientific communication, or technical presentation depending on the
+chosen style.
+

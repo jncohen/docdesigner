@@ -1,0 +1,44 @@
+# R package
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+.Rlib/
+/docdesignertemplate.tex
+/default.csl
+/fonts/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+
+# Test output PDFs (do not commit)
+tmp/
+rendered-examples/
+examples/*_files/
+examples/*.aux
+examples/*.log
+examples/*.out
+examples/*.toc
+examples/*.tex
+examples/*-wordpress.html
+examples/*-wordpress.md
+examples/*-wordpress-checklist.txt
+examples/*-wordpress-assets/
+test-*.pdf
+gallery/*.pdf
+gallery/*.html
+gallery/*.tex
+gallery/*_files/
+
+# R CMD build/check artifacts (never commit these)
+*.Rcheck/
+*.tar.gz

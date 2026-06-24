@@ -1,0 +1,9 @@
+name: economist
+label: Economist
+description: The Economist and public data journalism
+fontset: docdesigner
+accent: "B21F24"
+highlight: pygments
+maincolumns: 1
+numbersections: false
+link_citations: true

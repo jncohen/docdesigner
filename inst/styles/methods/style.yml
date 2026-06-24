@@ -1,0 +1,9 @@
+name: methods
+label: Methods
+description: Computational social science and methods journals
+fontset: methods
+accent: "003DA5"
+highlight: tango
+maincolumns: 1
+numbersections: true
+link_citations: true

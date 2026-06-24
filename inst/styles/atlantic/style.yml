@@ -1,0 +1,9 @@
+name: atlantic
+label: Atlantic
+description: The Atlantic/long-form public scholarship
+fontset: humanities
+accent: "8F1D14"
+highlight: kate
+maincolumns: 1
+numbersections: false
+link_citations: true

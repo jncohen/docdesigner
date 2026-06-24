@@ -1,0 +1,104 @@
+---
+title: "Fontset Test: humanities"
+subtitle: "Synthetic document for visual regression checks"
+date: "May 2026"
+
+author:
+  - name: "Ada Template"
+  - name: "Sam Sample"
+
+surname: "Template"
+runningtitle: "Fontset Test: humanities"
+
+author_dept: "Department of Sociology"
+author_inst: "Queens College, City University of New York"
+author_addr: "65-30 Kissena Blvd., Queens, NY 11367, USA"
+author_email: "ada.template@example.edu"
+author_web: "https://example.edu/fontset-test"
+author_orcid: "0000-0002-1825-0097"
+
+institution: "Household Finance Working Group"
+series: "Fontset Test Series"
+number: 3
+
+fontset: humanities
+fontpath: "../inst/fonts/"
+bibliography: "fontset-test.bib"
+csl: "../inst/csl/default.csl"
+
+anonymize: false
+doublespace: false
+linenumbers: false
+numbersections: true
+maincolumns: 1
+
+abstract: |
+  This fake manuscript tests title-page metadata, body typography,
+  citations, headings, mathematical notation, tables, figures, and code
+  formatting across the available docdesigner template fontsets.
+
+keywords:
+  - font testing
+  - R Markdown
+  - LaTeX template
+
+acknowledgements: |
+  This synthetic acknowledgement is included to test the title-page
+  acknowledgement block and its spacing.
+
+output:
+  pdf_document:
+    template: "../inst/templates/docdesignertemplate.tex"
+    latex_engine: xelatex
+    keep_tex: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 5, fig.height = 3)
+```
+
+# Introduction
+
+This paragraph exercises ordinary prose, *emphasis*, **strong emphasis**,
+inline code such as `median_income`, and citations [@burnham2002; @warren2015].
+The metadata citation should also resolve cleanly [@docdesigner2026].
+
+## Mathematical Notation
+
+Inline math should sit comfortably in text, as in $y_i = \alpha + \beta x_i + \epsilon_i$.
+
+$$
+\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
+$$
+
+## Table and Code
+
+```{r table-example}
+summary_table <- data.frame(
+  group = c("No degree", "BA", "Graduate"),
+  median_wealth = c(42000, 180000, 325000),
+  share = c(0.52, 0.31, 0.17)
+)
+knitr::kable(summary_table, caption = "Synthetic household wealth by education")
+```
+
+## Figure
+
+```{r figure-example}
+barplot(
+  summary_table$median_wealth,
+  names.arg = summary_table$group,
+  col = c("#D9E2EC", "#8FB3D9", "#2E6FA3"),
+  border = NA,
+  ylab = "Median wealth",
+  las = 1,
+  cex.axis = 0.75,
+  cex.lab = 0.85,
+  cex.names = 0.8
+)
+```
+
+# Conclusion
+
+The final section gives section headings, spacing, references, and running
+headers a little more room to show themselves.

@@ -1,0 +1,9 @@
+name: humanities
+label: Humanities
+description: Critical Inquiry/university press essay style
+fontset: humanities
+accent: "000000"
+highlight: kate
+maincolumns: 1
+numbersections: false
+link_citations: true

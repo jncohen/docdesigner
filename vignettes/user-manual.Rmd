@@ -1,0 +1,42 @@
+---
+title: "User Manual"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{User Manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This manual gathers the main package documentation in one place.
+
+## Outputs
+
+- `docdesigner::pdf` creates a designed PDF document.
+- `docdesigner::html` creates plain body HTML for WordPress or another CMS.
+- `docdesigner::snapshot` creates the official Snapshot PDF and, by default, a plain HTML companion.
+
+## Start
+
+```r
+docdesigner::designer_use(template = "pdf")
+docdesigner::designer_use(template = "html")
+docdesigner::designer_use(template = "snapshot")
+```
+
+## Styles
+
+Use `docdesigner::designer_styles()` to inspect built-in PDF styles. Use `docdesigner::designer_gallery()` to write a local HTML style gallery.
+
+## Update Local Assets
+
+Most projects use bundled package assets. Projects with local editable copies can refresh them:
+
+```r
+docdesigner::designer_update_templates()
+```
+
+## Diagnostics
+
+```r
+docdesigner::designer_check()
+```

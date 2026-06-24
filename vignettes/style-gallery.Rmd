@@ -1,0 +1,74 @@
+---
+title: "Style Gallery"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Style Gallery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`, and Snapshot uses its official house style.
+
+You can inspect styles from R:
+
+```r
+docdesigner::designer_styles()
+docdesigner::designer_style("policy")
+docdesigner::designer_gallery()
+```
+
+## Built-In Styles
+
+| Style | Visual Use | Fontset | Accent | Sections | Columns |
+|---|---|---|---|---|---|
+| `minimal` | Clean university preprint | `default` | `333333` | numbered | 1 |
+| `policy` | Public policy report | `docdesigner` | `006A71` | unnumbered | 1 |
+| `methods` | Technical or methods paper | `methods` | `003DA5` | numbered | 1 |
+| `demography` | Social-science journal article | `demography` | `000000` | numbered | 1 |
+| `humanities` | Essay or chapter style | `humanities` | `000000` | unnumbered | 1 |
+| `economist` | Public data journalism | `docdesigner` | `B21F24` | unnumbered | 1 |
+| `nature` | Scientific article style | `methods` | `2F6F8F` | numbered | 2 |
+| `ssrn` | Working paper style | `demography` | `000000` | numbered | 1 |
+| `atlantic` | Long-form public scholarship | `humanities` | `8F1D14` | unnumbered | 1 |
+| `government` | Statistical bulletin style | `demography` | `2F4F3E` | numbered | 1 |
+
+Use a style:
+
+```yaml
+output:
+  docdesigner::pdf:
+    style: methods
+```
+
+## Create a Style
+
+A style is a folder with a `style.yml` file.
+
+```text
+my-style/
+  style.yml
+```
+
+Write a manifest:
+
+```yaml
+name: my-style
+label: My Style
+description: A concise description of where this style should be used
+fontset: methods
+accent: "005EA8"
+highlight: tango
+maincolumns: 1
+numbersections: true
+link_citations: true
+```
+
+Use the local style by path:
+
+```yaml
+output:
+  docdesigner::pdf:
+    style: "my-style"
+```
+
+Keep style bundles declarative. They should describe a visual system, not add arbitrary R code.
