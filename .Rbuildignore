@@ -28,3 +28,15 @@
 ^gallery/.*_files$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^dev$
+^tools$
+^inst/sets/.*/\.git$
+^LICENSE\.md$
+^USER-MANUAL\.md$
+^publishing-workflows\.md$
+^style-guide\.md$
+^render-gallery\.R$
+^run-tests\.R$
+^get-fonts\.sh$
+^examples$
+^docdesigner\.md$

@@ -1,0 +1,17 @@
+id: policy
+label: Policy
+description: Brookings / Urban Institute / OECD policy report style
+color:
+  accent: "006A71"
+  rule: "006A71"
+typography:
+  body: "Source Serif 4"
+  heading: "Source Serif 4"
+  base_size: "10pt"
+headings:
+  number_sections: false
+  h1: { scale: 1.4, weight: bold, case: none, rule: true }
+  h2: { scale: 1.15, weight: bold }
+title:
+  style: rule
+highlight: pygments

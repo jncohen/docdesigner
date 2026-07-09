@@ -1,0 +1,11 @@
+id: humanities
+label: Humanities
+description: Critical Inquiry / university press essay style
+typography: { body: "EB Garamond", heading: "EB Garamond", base_size: "11pt" }
+color: { accent: "000000", rule: "000000" }
+headings:
+  number_sections: false
+  h1: { scale: 1.40, weight: bold }
+  h2: { scale: 1.16, weight: bold }
+title: { style: plain }
+highlight: kate

@@ -42,3 +42,7 @@ gallery/*_files/
 # R CMD build/check artifacts (never commit these)
 *.Rcheck/
 *.tar.gz
+
+# Python bytecode cache (dev harness)
+__pycache__/
+*.pyc

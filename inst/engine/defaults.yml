@@ -1,0 +1,29 @@
+# docdesigner engine default tokens.
+# Every style inherits these; a style overrides only what differs.
+engine:
+  latex: xelatex
+page:
+  papersize: letter
+  margin: "1in"
+  columns: 1
+typography:
+  body: "Source Serif 4"
+  heading: "Source Serif 4"
+  mono: "Fira Code"
+  base_size: "10pt"
+  line_height: 1.30
+color:
+  accent: "333333"
+  text: "000000"
+  muted: "5B6470"
+  rule: "333333"
+headings:
+  number_sections: false
+  h1: { scale: 1.35, weight: bold, case: none, rule: false }
+  h2: { scale: 1.15, weight: bold, case: none }
+  h3: { scale: 1.00, weight: bold, case: none }
+title:
+  style: plain          # plain | rule | bars
+highlight: tango
+citations:
+  link: true

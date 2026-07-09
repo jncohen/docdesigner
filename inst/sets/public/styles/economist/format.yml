@@ -1,0 +1,11 @@
+id: economist
+label: Economist
+description: The Economist and public data journalism
+typography: { body: "Source Serif 4", heading: "Source Serif 4", base_size: "10pt" }
+color: { accent: "B21F24", rule: "B21F24" }
+headings:
+  number_sections: false
+  h1: { scale: 1.32, weight: bold }
+  h2: { scale: 1.12, weight: bold }
+title: { style: bars }
+highlight: pygments

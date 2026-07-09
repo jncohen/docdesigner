@@ -1,0 +1,11 @@
+id: minimal
+label: Minimal
+description: Clean arXiv / modern university preprint style
+typography: { body: "Source Serif 4", heading: "Source Serif 4", base_size: "10pt" }
+color: { accent: "333333", rule: "CCCCCC" }
+headings:
+  number_sections: true
+  h1: { scale: 1.30, weight: bold, rule: false }
+  h2: { scale: 1.12, weight: bold }
+title: { style: plain }
+highlight: tango

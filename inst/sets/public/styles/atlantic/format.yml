@@ -1,0 +1,11 @@
+id: atlantic
+label: Atlantic
+description: The Atlantic / long-form public scholarship
+typography: { body: "EB Garamond", heading: "EB Garamond", base_size: "11pt" }
+color: { accent: "8F1D14", rule: "8F1D14" }
+headings:
+  number_sections: false
+  h1: { scale: 1.45, weight: bold }
+  h2: { scale: 1.18, weight: bold }
+title: { style: rule }
+highlight: kate

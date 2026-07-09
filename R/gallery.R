@@ -17,16 +17,17 @@ designer_gallery <- function(output_dir = "rendered-examples/gallery",
   styles <- designer_styles()
 
   rows <- vapply(seq_len(nrow(styles)), function(i) {
-    accent <- styles$accent[i]
+    spec <- designer_style(styles$style[i])
+    accent <- sub("^#", "", spec$color$accent %||% "333333")
     paste0(
       "<tr>",
       "<td><code>", html_escape(styles$style[i]), "</code></td>",
       "<td>", html_escape(styles$label[i]), "</td>",
       "<td>", html_escape(styles$description[i]), "</td>",
-      "<td><code>", html_escape(styles$fontset[i]), "</code></td>",
+      "<td><code>", html_escape(styles$set[i]), "</code></td>",
       "<td><span class=\"swatch\" style=\"background:#", html_escape(accent),
       "\"></span><code>", html_escape(accent), "</code></td>",
-      "<td><code>", html_escape(styles$highlight[i]), "</code></td>",
+      "<td><code>", html_escape(spec$highlight %||% "tango"), "</code></td>",
       "</tr>"
     )
   }, character(1))
@@ -55,7 +56,7 @@ designer_gallery <- function(output_dir = "rendered-examples/gallery",
     "<h1>docdesigner Style Gallery</h1>",
     "<p>Styles apply to <code>docdesigner::pdf</code>. Snapshot uses the official house style, and HTML is intentionally plain.</p>",
     "<table>",
-    "<thead><tr><th>Style</th><th>Label</th><th>Description</th><th>Fontset</th><th>Accent</th><th>Highlight</th></tr></thead>",
+    "<thead><tr><th>Style</th><th>Label</th><th>Description</th><th>Set</th><th>Accent</th><th>Highlight</th></tr></thead>",
     "<tbody>",
     rows,
     "</tbody>",

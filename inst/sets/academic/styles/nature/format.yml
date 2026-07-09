@@ -1,0 +1,12 @@
+id: nature
+label: Nature
+description: Nature / Science scientific article style
+typography: { body: "Source Serif 4", heading: "Source Serif 4", base_size: "9pt" }
+color: { accent: "2F6F8F", rule: "2F6F8F" }
+page: { columns: 2, margin: "0.85in" }
+headings:
+  number_sections: true
+  h1: { scale: 1.20, weight: bold, case: upper }
+  h2: { scale: 1.05, weight: bold }
+title: { style: plain }
+highlight: kate
