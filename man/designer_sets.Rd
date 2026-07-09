@@ -7,7 +7,8 @@
 designer_sets()
 }
 \value{
-A data frame of sets with their source and style count.
+A data frame of sets with the library they live in (\code{core} or
+\code{user}), the upstream repo they were installed from, and a style count.
 }
 \description{
 Built-in sets ship with the package; user sets install under the user data

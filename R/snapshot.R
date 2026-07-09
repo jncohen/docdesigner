@@ -34,11 +34,13 @@ snapshot <- function(...,
 # now sources its style tokens (accent, columns, numbering) from the new
 # token engine's `policy` style rather than the retired inst/styles/ resolver.
 # `fontset` is fixed: snapshot is a single official house style.
-dd_snapshot_spec <- function(style = "policy") {
+DD_SNAPSHOT_STYLE <- "policy"
+
+dd_snapshot_spec <- function(style = DD_SNAPSHOT_STYLE) {
   s <- dd_resolve_style(style)
   list(
     fontset = "docdesigner",
-    accent = toupper(sub("^#", "", s$color$accent %||% "006A71")),
+    accent = dd_hex(s$color$accent, default = "006A71"),
     maincolumns = as.character(s$page$columns %||% 1),
     numbersections = if (isTRUE(s$headings$number_sections)) "true" else "false"
   )
@@ -58,7 +60,7 @@ snapshot_output_format <- function(...,
     ...,
     template = template,
     latex_engine = latex_engine,
-    style = "policy",
+    style = DD_SNAPSHOT_STYLE,
     document_type = "snapshot",
     style_spec = spec,
     companion = companion,
@@ -367,10 +369,6 @@ convert_pdf_asset_to_png <- function(src, dest) {
   }
 
   FALSE
-}
-
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
 }
 
 write_publishing_checklist <- function(output_file,

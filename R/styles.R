@@ -2,8 +2,8 @@
 # designer_use(), designer_check()): the bundled LaTeX template and font
 # directory. The token-driven document engine lives in R/engine.R; snapshot
 # now resolves its style tokens through that engine (see R/snapshot.R).
-
-`%||%` <- function(x, y) if (is.null(x)) y else x
+#
+# `%||%` lives in R/utils.R.
 
 dd_template <- function() {
   template <- system.file("templates/docdesignertemplate.tex", package = "docdesigner")

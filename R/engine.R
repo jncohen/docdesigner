@@ -3,8 +3,13 @@
 # resolves inheritance, maps fonts, builds a LaTeX preamble, and returns an
 # R Markdown PDF output format. Port of tools/render_style.py (the dev harness),
 # which is the executable spec verified by rendering all shipped styles.
+#
+# `%||%` and dd_hex() live in R/utils.R.
 
-`%||%` <- function(x, y) if (is.null(x)) y else x
+# The style-set bundle format this engine understands. A set that declares a
+# higher `format_version` was authored against a newer engine; we refuse to
+# load it rather than silently mis-render it.
+DD_FORMAT_VERSION <- 1L
 
 # ---- asset locations -------------------------------------------------------
 dd_pkg_file <- function(...) {
@@ -14,8 +19,12 @@ dd_pkg_file <- function(...) {
 }
 dd_fontpath <- function() paste0(normalizePath(dd_pkg_file("fonts"), winslash = "/", mustWork = FALSE), "/")
 
-# ---- font registry (family -> bundled files) -------------------------------
-dd_font_registry <- function() list(
+# ---- font registry ---------------------------------------------------------
+# Families bundled with the core package. A style set may declare additional
+# families in its own format.yml / set.yml under `fonts:`, shipping the files
+# in <style>/assets/fonts/ or <set>/assets/fonts/. This is what lets fonts
+# travel with a set instead of living in the core package.
+dd_builtin_fonts <- function() list(
   "Source Serif 4" = list(regular = "SourceSerif4-Regular.otf", bold = "SourceSerif4-Bold.otf",
                           italic = "SourceSerif4-It.otf", bolditalic = "SourceSerif4-BoldIt.otf"),
   "EB Garamond"    = list(regular = "EBGaramond-Regular.otf", bold = "EBGaramond-Bold.otf",
@@ -24,6 +33,53 @@ dd_font_registry <- function() list(
                           italic = "XITS-Italic.otf", bolditalic = "XITS-BoldItalic.otf"),
   "Fira Code"      = list(regular = "FiraCode-Regular.ttf", bold = "FiraCode-Bold.ttf")
 )
+
+# Built-in families, overlaid with any families the resolved spec declares.
+dd_font_registry <- function(spec = NULL) {
+  reg <- dd_builtin_fonts()
+  extra <- spec$fonts
+  for (fam in names(extra)) {
+    reg[[fam]] <- dd_deep_merge(reg[[fam]] %||% list(), extra[[fam]])
+  }
+  reg
+}
+
+# Where to look for a font file, nearest first: the style's own assets, then
+# the set's shared assets, then the core package.
+dd_font_dirs <- function(spec = NULL) {
+  dir <- attr(spec, "dir")
+  dirs <- character()
+  if (!is.null(dir)) {
+    dirs <- c(dirs,
+              file.path(dir, "assets", "fonts"),                    # style-local
+              file.path(dirname(dirname(dir)), "assets", "fonts"))  # set-wide
+  }
+  c(dirs, dd_pkg_file("fonts"))
+}
+
+# fontspec's Path= applies to a whole family, so every file in a family must
+# sit in one directory. Resolve on the regular face and require the rest there.
+dd_font_family_dir <- function(family, reg, dirs) {
+  files <- reg[[family]]
+  if (is.null(files) || is.null(files$regular)) {
+    stop("Unknown font family: ", family,
+         "\nDeclare it under `fonts:` in the style, or use one of: ",
+         paste(names(dd_builtin_fonts()), collapse = ", "), call. = FALSE)
+  }
+  hit <- dirs[file.exists(file.path(dirs, files$regular))]
+  if (!length(hit)) {
+    stop("Font file not found for family '", family, "': ", files$regular,
+         "\nSearched: ", paste(dirs, collapse = ", "), call. = FALSE)
+  }
+  dir <- hit[[1]]
+  missing <- vapply(files, function(f) !file.exists(file.path(dir, f)), logical(1))
+  if (any(missing)) {
+    stop("Font family '", family, "' is split across directories; ",
+         "these faces are missing from ", dir, ": ",
+         paste(unlist(files)[missing], collapse = ", "), call. = FALSE)
+  }
+  paste0(normalizePath(dir, winslash = "/", mustWork = FALSE), "/")
+}
 
 # ---- yaml loading + inheritance --------------------------------------------
 dd_deep_merge <- function(base, over) {
@@ -37,63 +93,144 @@ dd_deep_merge <- function(base, over) {
 
 dd_defaults <- function() yaml::read_yaml(dd_pkg_file("engine", "defaults.yml"))
 
+# The declared id of the set a style directory belongs to. Not the folder name:
+# a set may be checked out or installed under any directory name, and the index
+# keys on the id from set.yml.
+dd_owning_set <- function(dir) {
+  set_dir <- dirname(dirname(dir))
+  man <- file.path(set_dir, "set.yml")
+  if (file.exists(man)) yaml::read_yaml(man)$id %||% basename(set_dir) else basename(set_dir)
+}
+
+# Walk the `inherits` chain from `dir` up to its root, newest last. A parent is
+# looked up by id, preferring the same set before falling back to any set, so a
+# set can extend a style it ships alongside without depending on load order.
+dd_inherit_chain <- function(dir) {
+  chain <- list(); seen <- character()
+  repeat {
+    y <- yaml::read_yaml(file.path(dir, "format.yml"))
+    id <- y$id %||% basename(dir)
+    if (id %in% seen) {
+      stop("Circular `inherits` in style '", id, "': ",
+           paste(c(seen, id), collapse = " -> "), call. = FALSE)
+    }
+    seen <- c(seen, id)
+    chain[[length(chain) + 1]] <- y
+    parent <- y$inherits
+    if (is.null(parent)) break
+    pdir <- dd_style_dir(parent, prefer_set = dd_owning_set(dir))
+    if (is.null(pdir)) {
+      stop("Style '", id, "' inherits from '", parent, "', which is not installed.",
+           call. = FALSE)
+    }
+    dir <- pdir
+  }
+  rev(chain)   # root first, so later entries override earlier ones
+}
+
 dd_resolve_style <- function(style) {
   dir <- dd_style_dir(style)
   if (is.null(dir)) {
     stop("Unknown docdesigner style: ", style,
          "\nAvailable: ", paste(designer_styles()$style, collapse = ", "), call. = FALSE)
   }
-  spec  <- dd_defaults()
-  style_yml <- yaml::read_yaml(file.path(dir, "format.yml"))
-  parent <- style_yml$inherits
-  if (!is.null(parent)) {
-    ppath <- file.path(dirname(dir), parent, "format.yml")
-    if (file.exists(ppath)) spec <- dd_deep_merge(spec, yaml::read_yaml(ppath))
-  }
-  dd_deep_merge(spec, style_yml)
+  spec <- dd_defaults()
+  for (layer in dd_inherit_chain(dir)) spec <- dd_deep_merge(spec, layer)
+  # `inherits` is a resolution instruction, not a design token; drop it so it
+  # cannot leak into scaffolds or be mistaken for part of the resolved output.
+  spec$inherits <- NULL
+  attr(spec, "dir") <- dir
+  spec
 }
 
 # ---- style discovery across sets (core + user library) ---------------------
 dd_set_roots <- function() {
-  roots <- dd_pkg_file("sets")
-  user  <- file.path(tools::R_user_dir("docdesigner", "data"), "sets")
-  c(roots, if (dir.exists(user)) user else NULL)
+  # Order matters: later roots shadow earlier ones on an id collision, so a
+  # user set can deliberately override a core style of the same name.
+  user <- file.path(tools::R_user_dir("docdesigner", "data"), "sets")
+  c(core = dd_pkg_file("sets"), user = user)
 }
-dd_all_style_dirs <- function() {
-  dirs <- character()
-  for (root in dd_set_roots()) {
+
+# One scan of every set root, returning a data frame of styles keyed on the id
+# declared in format.yml (which need not match the folder name).
+dd_style_index <- function() {
+  rows <- list()
+  roots <- dd_set_roots()
+  for (src in names(roots)) {
+    root <- roots[[src]]
     if (!dir.exists(root)) next
     for (set in list.dirs(root, recursive = FALSE)) {
       sdir <- file.path(set, "styles")
-      if (dir.exists(sdir)) {
-        cand <- list.dirs(sdir, recursive = FALSE)
-        dirs <- c(dirs, cand[file.exists(file.path(cand, "format.yml"))])
+      if (!dir.exists(sdir)) next
+      man <- file.path(set, "set.yml")
+      set_id <- basename(set)
+      if (file.exists(man)) {
+        sy <- yaml::read_yaml(man)
+        set_id <- sy$id %||% set_id
+        fv <- as.integer(sy$format_version %||% 1L)
+        if (is.na(fv) || fv > DD_FORMAT_VERSION) {
+          warning("Skipping set '", set_id, "': it declares format_version ", sy$format_version,
+                  " but this engine supports ", DD_FORMAT_VERSION,
+                  ". Upgrade docdesigner.", call. = FALSE)
+          next
+        }
+      }
+      for (d in list.dirs(sdir, recursive = FALSE)) {
+        f <- file.path(d, "format.yml")
+        if (!file.exists(f)) next
+        y <- yaml::read_yaml(f)
+        rows[[length(rows) + 1]] <- data.frame(
+          style = y$id %||% basename(d),
+          label = y$label %||% basename(d),
+          description = y$description %||% "",
+          set = set_id, source = src, dir = d,
+          stringsAsFactors = FALSE)
       }
     }
   }
-  dirs
+  if (!length(rows)) {
+    return(data.frame(style = character(), label = character(), description = character(),
+                      set = character(), source = character(), dir = character(),
+                      stringsAsFactors = FALSE))
+  }
+  idx <- do.call(rbind, rows)
+
+  dup <- unique(idx$style[duplicated(idx$style)])
+  for (id in dup) {
+    hits <- idx[idx$style == id, , drop = FALSE]
+    winner <- hits[nrow(hits), ]
+    warning("Style id '", id, "' is defined by more than one set (",
+            paste(hits$set, collapse = ", "), "). Using the one from '",
+            winner$set, "' (", winner$source, "). Rename one to disambiguate.",
+            call. = FALSE)
+  }
+  idx
 }
-dd_style_dir <- function(style) {
-  if (dir.exists(style) && file.exists(file.path(style, "format.yml"))) return(style)
-  hit <- dd_all_style_dirs()[basename(dd_all_style_dirs()) == style]
-  if (length(hit)) hit[[1]] else NULL
+
+# Resolve a style id, a style directory path, or NULL. On an id collision the
+# last match wins (user sets shadow core); `prefer_set` overrides that.
+dd_style_dir <- function(style, prefer_set = NULL) {
+  if (length(style) == 1L && dir.exists(style) &&
+      file.exists(file.path(style, "format.yml"))) {
+    return(style)
+  }
+  idx <- suppressWarnings(dd_style_index())
+  hits <- idx[idx$style == style, , drop = FALSE]
+  if (!nrow(hits)) return(NULL)
+  if (!is.null(prefer_set) && any(hits$set == prefer_set)) {
+    hits <- hits[hits$set == prefer_set, , drop = FALSE]
+  }
+  hits$dir[nrow(hits)]
 }
 
 #' List available docdesigner styles
 #' @return A data frame of styles with the set they come from.
 #' @export
 designer_styles <- function() {
-  dirs <- dd_all_style_dirs()
-  if (!length(dirs)) return(data.frame())
-  rows <- lapply(dirs, function(d) {
-    y <- yaml::read_yaml(file.path(d, "format.yml"))
-    data.frame(style = y$id %||% basename(d),
-               label = y$label %||% basename(d),
-               description = y$description %||% "",
-               set = basename(dirname(dirname(d))),
-               stringsAsFactors = FALSE)
-  })
-  do.call(rbind, rows)
+  idx <- dd_style_index()
+  if (!nrow(idx)) return(data.frame())
+  idx[!duplicated(idx$style, fromLast = TRUE),
+      c("style", "label", "description", "set"), drop = FALSE]
 }
 
 #' Inspect one style's resolved tokens
@@ -104,28 +241,33 @@ designer_style <- function(style = "minimal") dd_resolve_style(style)
 # ---- preamble generation (port of harness) ---------------------------------
 dd_pt <- function(x) as.numeric(sub("pt", "", x))
 
-dd_fontspec <- function(cmd, family, fontpath) {
-  reg <- dd_font_registry()[[family]]
-  if (is.null(reg)) stop("Unknown font family: ", family, call. = FALSE)
-  tail <- paste0("[Path=", fontpath, ",BoldFont=", reg$bold)
-  if (!is.null(reg$italic)) tail <- paste0(tail, ",ItalicFont=", reg$italic,
-                                           ",BoldItalicFont=", reg$bolditalic)
-  paste0(cmd, "{", reg$regular, "}", tail, "]")
+dd_fontspec <- function(cmd, family, reg, dirs) {
+  files <- reg[[family]]
+  fontpath <- dd_font_family_dir(family, reg, dirs)
+  tail <- paste0("[Path=", fontpath, ",BoldFont=", files$bold)
+  if (!is.null(files$italic)) tail <- paste0(tail, ",ItalicFont=", files$italic,
+                                             ",BoldItalicFont=", files$bolditalic)
+  paste0(cmd, "{", files$regular, "}", tail, "]")
 }
 
-dd_preamble <- function(s, fontpath = dd_fontpath()) {
+dd_preamble <- function(s) {
   ty <- s$typography; col <- s$color; hd <- s$headings; ti <- s$title
+  reg <- dd_font_registry(s); dirs <- dd_font_dirs(s)
   base <- dd_pt(ty$base_size); L <- c()
   add <- function(...) L[[length(L) + 1]] <<- paste0(...)
   add("\\usepackage{fontspec}"); add("\\usepackage{anyfontsize}")
-  add(dd_fontspec("\\setmainfont", ty$body, fontpath))
-  mono <- dd_font_registry()[[ty$mono]]
-  add("\\setmonofont{", mono$regular, "}[Path=", fontpath, ",BoldFont=", mono$bold, ",Scale=0.82]")
+  add(dd_fontspec("\\setmainfont", ty$body, reg, dirs))
+  mono <- reg[[ty$mono]]
+  monopath <- dd_font_family_dir(ty$mono, reg, dirs)
+  add("\\setmonofont{", mono$regular, "}[Path=", monopath, ",BoldFont=", mono$bold, ",Scale=0.82]")
   head_cmd <- ""
-  if (!identical(ty$heading, ty$body)) { add(dd_fontspec("\\newfontfamily\\ddheadfont", ty$heading, fontpath)); head_cmd <- "\\ddheadfont" }
+  if (!identical(ty$heading, ty$body)) {
+    add(dd_fontspec("\\newfontfamily\\ddheadfont", ty$heading, reg, dirs))
+    head_cmd <- "\\ddheadfont"
+  }
   add("\\usepackage{xcolor}")
   for (role in c("accent","text","muted","rule"))
-    add("\\definecolor{", role, "}{HTML}{", toupper(sub("^#","",col[[role]])), "}")
+    add("\\definecolor{", role, "}{HTML}{", dd_hex(col[[role]]), "}")
   add("\\color{text}")
   add("\\usepackage[explicit]{titlesec}")
   hspec <- function(level, cmd) {
