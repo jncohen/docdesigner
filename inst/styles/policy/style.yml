@@ -1,9 +1,0 @@
-name: policy
-label: Policy
-description: Brookings/Urban Institute/OECD policy report style
-fontset: docdesigner
-accent: "006A71"
-highlight: pygments
-maincolumns: 1
-numbersections: false
-link_citations: true

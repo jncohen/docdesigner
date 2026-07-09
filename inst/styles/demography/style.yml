@@ -1,9 +1,0 @@
-name: demography
-label: Demography
-description: Demography/Social Forces social-science article style
-fontset: demography
-accent: "000000"
-highlight: tango
-maincolumns: 1
-numbersections: true
-link_citations: true

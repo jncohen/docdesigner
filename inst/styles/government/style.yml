@@ -1,9 +1,0 @@
-name: government
-label: Government
-description: Census/Federal Reserve/statistical bulletin style
-fontset: demography
-accent: "2F4F3E"
-highlight: tango
-maincolumns: 1
-numbersections: true
-link_citations: true

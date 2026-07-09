@@ -11,12 +11,14 @@ designer_check <- function(path = ".",
                            engine = c("xelatex", "pdflatex", "lualatex")) {
   path <- normalizePath(path, winslash = "/", mustWork = FALSE)
 
+  style_names <- tryCatch(designer_styles()$style, error = function(e) character())
+
   checks <- list(
     check_item("template", file.exists(dd_template()), dd_template()),
     check_item("fonts", dir.exists(dd_fonts_dir()), dd_fonts_dir()),
     check_item("csl", file.exists(dd_csl()), dd_csl()),
-    check_item("styles", length(dd_style_dirs()) > 0,
-               paste(basename(dd_style_dirs()), collapse = ", ")),
+    check_item("styles", length(style_names) > 0,
+               paste(style_names, collapse = ", ")),
     check_item("rmarkdown", requireNamespace("rmarkdown", quietly = TRUE),
                "R package required for rendering"),
     check_item("project", dir.exists(path), path)

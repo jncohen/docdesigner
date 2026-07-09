@@ -104,7 +104,7 @@ copy_local_assets <- function(path, overwrite = FALSE) {
   template_src <- dd_template()
   fonts_src <- dd_fonts_dir()
   csl_src <- dd_csl()
-  styles_src <- dd_styles_root()
+  sets_src <- dd_pkg_file("sets")
 
   copy_one <- function(src, dst) {
     if (!nzchar(src) || !file.exists(src)) {
@@ -139,7 +139,7 @@ copy_local_assets <- function(path, overwrite = FALSE) {
   copy_one(template_src, file.path(path, "docdesignertemplate.tex"))
   copy_one(fonts_src, file.path(path, "fonts"))
   copy_one(csl_src, file.path(path, "default.csl"))
-  copy_one(styles_src, file.path(path, "styles"))
+  copy_one(sets_src, file.path(path, "sets"))
 
   invisible(path)
 }
@@ -162,14 +162,22 @@ download_github_assets <- function(path, branch = "main", overwrite = TRUE) {
   download_one("inst/templates/docdesignertemplate.tex",
                file.path(path, "docdesignertemplate.tex"))
   download_one("inst/csl/default.csl", file.path(path, "default.csl"))
+  download_one("inst/engine/defaults.yml",
+               file.path(path, "engine", "defaults.yml"))
 
   for (font in dd_asset_files("inst/fonts")) {
     download_one(file.path("inst/fonts", font), file.path(path, "fonts", font))
   }
 
-  for (style in designer_styles()$style) {
-    download_one(file.path("inst/styles", style, "style.yml"),
-                 file.path(path, "styles", style, "style.yml"))
+  styles <- designer_styles()
+  for (set in unique(styles$set)) {
+    download_one(file.path("inst/sets", set, "set.yml"),
+                 file.path(path, "sets", set, "set.yml"))
+  }
+  for (i in seq_len(nrow(styles))) {
+    rel <- file.path("inst/sets", styles$set[i], "styles",
+                     styles$style[i], "format.yml")
+    download_one(rel, file.path(path, sub("^inst/", "", rel)))
   }
 
   invisible(path)

@@ -1,9 +1,0 @@
-name: nature
-label: Nature
-description: Nature/Science scientific article style
-fontset: methods
-accent: "2F6F8F"
-highlight: tango
-maincolumns: 2
-numbersections: true
-link_citations: true

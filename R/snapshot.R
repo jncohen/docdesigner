@@ -30,6 +30,20 @@ snapshot <- function(...,
   )
 }
 
+# Snapshot's official look. It keeps the bundled snapshot LaTeX template but
+# now sources its style tokens (accent, columns, numbering) from the new
+# token engine's `policy` style rather than the retired inst/styles/ resolver.
+# `fontset` is fixed: snapshot is a single official house style.
+dd_snapshot_spec <- function(style = "policy") {
+  s <- dd_resolve_style(style)
+  list(
+    fontset = "docdesigner",
+    accent = toupper(sub("^#", "", s$color$accent %||% "006A71")),
+    maincolumns = as.character(s$page$columns %||% 1),
+    numbersections = if (isTRUE(s$headings$number_sections)) "true" else "false"
+  )
+}
+
 snapshot_output_format <- function(...,
                                    template = dd_template(),
                                    latex_engine = "xelatex",
@@ -38,7 +52,7 @@ snapshot_output_format <- function(...,
                                    companion_assets = TRUE,
                                    companion_checklist = TRUE) {
   companion <- match.arg(companion)
-  spec <- dd_style("policy")
+  spec <- dd_snapshot_spec()
 
   companion_pdf_document(
     ...,
