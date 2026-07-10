@@ -1,11 +1,18 @@
 id: ssrn
 label: SSRN
 description: SSRN / NBER working paper style
-typography: { body: "XITS", heading: "XITS", base_size: "11pt" }
-color: { accent: "000000", rule: "888888" }
-headings:
-  number_sections: true
-  h1: { scale: 1.25, weight: bold }
-  h2: { scale: 1.10, weight: bold }
-title: { style: plain }
-highlight: tango
+
+typography.body: "XITS"
+typography.heading: "XITS"
+typography.base_size: "11pt"
+
+color.accent: "000000"
+color.rule: "888888"
+
+headings.number_sections: true
+headings.h1.scale: 1.25
+headings.h2.scale: 1.10
+
+title.layout: plain
+
+code.highlight: tango

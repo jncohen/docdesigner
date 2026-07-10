@@ -4,7 +4,7 @@
 \alias{designer_new_style}
 \title{Scaffold a new style}
 \usage{
-designer_new_style(id, from = "minimal", path = ".")
+designer_new_style(id, from = "minimal", path = ".", complete = TRUE)
 }
 \arguments{
 \item{id}{New style id.}
@@ -12,6 +12,10 @@ designer_new_style(id, from = "minimal", path = ".")
 \item{from}{Existing style to copy tokens from.}
 
 \item{path}{Destination directory (a style bundle folder is created inside).}
+
+\item{complete}{If \code{TRUE} (default), scaffold every token in the schema, one
+flat dotted key per line, as an editable reference. If \code{FALSE}, seed only
+the tokens the source style actually declares.}
 }
 \value{
 The new style directory, invisibly.

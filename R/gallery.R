@@ -27,7 +27,7 @@ designer_gallery <- function(output_dir = "rendered-examples/gallery",
       "<td><code>", html_escape(styles$set[i]), "</code></td>",
       "<td><span class=\"swatch\" style=\"background:#", html_escape(accent),
       "\"></span><code>", html_escape(accent), "</code></td>",
-      "<td><code>", html_escape(spec$highlight %||% "tango"), "</code></td>",
+      "<td><code>", html_escape(spec$code$highlight %||% "tango"), "</code></td>",
       "</tr>"
     )
   }, character(1))

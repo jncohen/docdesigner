@@ -41,7 +41,7 @@ dd_snapshot_spec <- function(style = DD_SNAPSHOT_STYLE) {
   list(
     fontset = "docdesigner",
     accent = dd_hex(s$color$accent, default = "006A71"),
-    maincolumns = as.character(s$page$columns %||% 1),
+    maincolumns = as.character(s$page$columns %||% 1L),
     numbersections = if (isTRUE(s$headings$number_sections)) "true" else "false"
   )
 }

@@ -1,11 +1,23 @@
 id: government
 label: Government
 description: Census / Federal Reserve / statistical bulletin style
-typography: { body: "XITS", heading: "XITS", base_size: "10pt" }
-color: { accent: "2F4F3E", rule: "2F4F3E" }
-headings:
-  number_sections: true
-  h1: { scale: 1.32, weight: bold, rule: true }
-  h2: { scale: 1.12, weight: bold }
-title: { style: rule }
-highlight: tango
+
+typography.body: "XITS"
+typography.heading: "XITS"
+typography.base_size: "10pt"
+
+color.accent: "2F4F3E"
+color.rule: "2F4F3E"
+
+headings.number_sections: true
+headings.h1.scale: 1.32
+headings.h1.rule.position: below
+headings.h1.rule.weight: medium
+headings.h2.scale: 1.12
+
+title.layout: report
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: rule
+
+code.highlight: tango

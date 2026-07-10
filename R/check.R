@@ -13,15 +13,17 @@ designer_check <- function(path = ".",
 
   style_names <- tryCatch(designer_styles()$style, error = function(e) character())
 
-  defaults <- dd_pkg_file("engine", "defaults.yml")
+  schema <- dd_pkg_file("engine", "schema.yml")
 
   checks <- list(
     check_item("template", file.exists(dd_template()), dd_template()),
     check_item("fonts", dir.exists(dd_fonts_dir()), dd_fonts_dir()),
     check_item("csl", file.exists(dd_csl()), dd_csl()),
-    # The engine cannot resolve a single token without this file, so an
-    # otherwise-green check is misleading when it is missing.
-    check_item("engine defaults", file.exists(defaults), defaults),
+    # The schema is the source of truth for the token vocabulary AND supplies
+    # every engine default. Without it nothing resolves.
+    check_item("schema", file.exists(schema), schema),
+    check_item("lua filter", file.exists(dd_pkg_file("engine", "twocolumn-tables.lua")),
+               dd_pkg_file("engine", "twocolumn-tables.lua")),
     check_item("styles", length(style_names) > 0,
                paste(style_names, collapse = ", ")),
     check_item("rmarkdown", requireNamespace("rmarkdown", quietly = TRUE),

@@ -1,11 +1,24 @@
 id: methods
 label: Methods
 description: Computational social science and methods journals
-typography: { body: "Source Serif 4", heading: "Source Serif 4", mono: "Fira Code", base_size: "10pt" }
-color: { accent: "003DA5", rule: "003DA5" }
-headings:
-  number_sections: true
-  h1: { scale: 1.30, weight: bold, rule: true }
-  h2: { scale: 1.12, weight: bold }
-title: { style: rule }
-highlight: tango
+
+typography.body: "Source Serif 4"
+typography.heading: "Source Serif 4"
+typography.mono: "Fira Code"
+typography.base_size: "10pt"
+
+color.accent: "003DA5"
+color.rule: "003DA5"
+
+headings.number_sections: true
+headings.h1.scale: 1.30
+headings.h1.rule.position: below
+headings.h1.rule.weight: medium
+headings.h2.scale: 1.12
+
+title.layout: journal
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: rule
+
+code.highlight: tango

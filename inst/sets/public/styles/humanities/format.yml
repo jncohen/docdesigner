@@ -1,11 +1,18 @@
 id: humanities
 label: Humanities
-description: Critical Inquiry / university press essay style
-typography: { body: "EB Garamond", heading: "EB Garamond", base_size: "11pt" }
-color: { accent: "000000", rule: "000000" }
-headings:
-  number_sections: false
-  h1: { scale: 1.40, weight: bold }
-  h2: { scale: 1.16, weight: bold }
-title: { style: plain }
-highlight: kate
+description: Critical Inquiry / university press essay style. Monotype Bembo substituted with EB Garamond.
+
+typography.body: "EB Garamond"
+typography.heading: "EB Garamond"
+typography.base_size: "11pt"
+
+color.accent: "000000"
+color.rule: "000000"
+
+headings.number_sections: false
+headings.h1.scale: 1.40
+headings.h2.scale: 1.16
+
+title.layout: essay
+
+code.highlight: kate

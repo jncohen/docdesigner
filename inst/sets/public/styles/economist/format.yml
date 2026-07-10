@@ -1,11 +1,21 @@
 id: economist
 label: Economist
-description: The Economist and public data journalism
-typography: { body: "Source Serif 4", heading: "Source Serif 4", base_size: "10pt" }
-color: { accent: "B21F24", rule: "B21F24" }
-headings:
-  number_sections: false
-  h1: { scale: 1.32, weight: bold }
-  h2: { scale: 1.12, weight: bold }
-title: { style: bars }
-highlight: pygments
+description: The Economist and public data journalism. Milo Serif substituted with Source Serif 4.
+
+typography.body: "Source Serif 4"
+typography.heading: "Source Serif 4"
+typography.base_size: "10pt"
+
+color.accent: "B21F24"
+color.rule: "B21F24"
+
+headings.number_sections: false
+headings.h1.scale: 1.32
+headings.h2.scale: 1.12
+
+title.layout: masthead
+title.rule.position: below
+title.rule.weight: heavy
+title.rule.color: accent
+
+code.highlight: pygments

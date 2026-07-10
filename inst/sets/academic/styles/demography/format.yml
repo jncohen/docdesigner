@@ -1,11 +1,18 @@
 id: demography
 label: Demography
 description: Demography / Social Forces social-science article style
-typography: { body: "XITS", heading: "XITS", base_size: "10pt" }
-color: { accent: "000000", rule: "000000" }
-headings:
-  number_sections: true
-  h1: { scale: 1.28, weight: bold }
-  h2: { scale: 1.12, weight: bold }
-title: { style: plain }
-highlight: tango
+
+typography.body: "XITS"
+typography.heading: "XITS"
+typography.base_size: "10pt"
+
+color.accent: "000000"
+color.rule: "000000"
+
+headings.number_sections: true
+headings.h1.scale: 1.28
+headings.h2.scale: 1.12
+
+title.layout: journal
+
+code.highlight: tango

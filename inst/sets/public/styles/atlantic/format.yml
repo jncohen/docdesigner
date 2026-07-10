@@ -1,11 +1,21 @@
 id: atlantic
 label: Atlantic
-description: The Atlantic / long-form public scholarship
-typography: { body: "EB Garamond", heading: "EB Garamond", base_size: "11pt" }
-color: { accent: "8F1D14", rule: "8F1D14" }
-headings:
-  number_sections: false
-  h1: { scale: 1.45, weight: bold }
-  h2: { scale: 1.18, weight: bold }
-title: { style: rule }
-highlight: kate
+description: The Atlantic / long-form public scholarship. Adobe Caslon substituted with EB Garamond.
+
+typography.body: "EB Garamond"
+typography.heading: "EB Garamond"
+typography.base_size: "11pt"
+
+color.accent: "8F1D14"
+color.rule: "8F1D14"
+
+headings.number_sections: false
+headings.h1.scale: 1.45
+headings.h2.scale: 1.18
+
+title.layout: masthead
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: rule
+
+code.highlight: kate
