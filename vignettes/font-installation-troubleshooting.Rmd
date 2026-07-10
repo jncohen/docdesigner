@@ -13,15 +13,17 @@ Most users should not install fonts manually. `docdesigner` ships the text and c
 
 The bundled fonts live in `inst/fonts/` and are used automatically by `docdesigner::pdf` and `docdesigner::snapshot`.
 
-Built-in fontsets:
+Bundled font families:
 
-- `default`
-- `humanities`
-- `demography`
-- `methods`
-- `docdesigner`
+- Source Serif 4
+- EB Garamond
+- XITS
+- Fira Code
 
-Matching math fonts are optional. When a matching math font is unavailable, the template uses the engine default instead of treating that as a render failure.
+A style may declare additional families under `fonts.<Family>` and ship the
+face files in its own `assets/fonts/` directory. Matching math fonts are
+optional; when one is unavailable, the engine default is used instead of
+treating it as a render failure.
 
 ## Check Your Setup
 
@@ -54,7 +56,7 @@ This updates:
 - `docdesignertemplate.tex`
 - `default.csl`
 - `fonts/`
-- `styles/`
+- `sets/`
 
 To pull the latest assets from GitHub:
 

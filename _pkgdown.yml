@@ -37,3 +37,14 @@ reference:
       - designer_styles
       - designer_style
       - designer_gallery
+      - designer_specimens
+  - title: Authoring styles
+    contents:
+      - designer_new_style
+      - designer_validate_style
+      - designer_tokens
+  - title: Style sets
+    contents:
+      - designer_sets
+      - designer_install_set
+      - designer_update_sets

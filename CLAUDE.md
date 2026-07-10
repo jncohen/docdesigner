@@ -36,7 +36,7 @@ This was a bypass, not a refactor. Three consequences follow, and most confusion
 
 | File | Role |
 |---|---|
-| `inst/engine/defaults.yml` | Engine token defaults. Every style inherits these. |
+| `inst/engine/schema.yml` | Token schema + defaults. Every style inherits these. |
 | `R/engine.R` | `dd_style_index()`, `dd_resolve_style()`, font registry, `dd_preamble()`, `pdf()` |
 | `R/sets.R` | install / list / update / scaffold |
 | `R/specimens.R` | `designer_specimens()` — renders one PDF per style + gallery index |

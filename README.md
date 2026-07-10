@@ -77,36 +77,34 @@ designer_specimens()          # render a PDF specimen per style + gallery index
 
 ### A style file
 
-`format.yml` declares only what differs from `inst/engine/defaults.yml`. Anything omitted falls back to the engine defaults.
+`format.yml` is a flat list of dotted-key tokens — one `key: value` per line. It declares only its identity (`id`, `label`, `description`) and the tokens that differ from the engine defaults; anything omitted falls back to the schema (`inst/engine/schema.yml`). Run `designer_tokens()` or read [STYLE-SPEC.md](STYLE-SPEC.md) for the full vocabulary.
 
 ```yaml
 id: methods
 label: Methods
 description: Computational social science and methods journals
 inherits: minimal            # optional; resolves a full chain
-typography:
-  body: "Source Serif 4"
-  heading: "Source Serif 4"
-  mono: "Fira Code"
-  base_size: "10pt"
-  line_height: 1.30
-color:
-  accent: "003DA5"
-  text: "000000"
-  muted: "5B6470"
-  rule: "003DA5"
-page:
-  papersize: letter
-  margin: "1in"
-  columns: 1
-headings:
-  number_sections: true
-  h1: { scale: 1.30, weight: bold, case: none, rule: true }
-  h2: { scale: 1.12, weight: bold }
-  h3: { scale: 1.00, weight: bold }
-title:
-  style: rule                # plain | rule | bars
-highlight: tango
+
+typography.body: "Source Serif 4"
+typography.heading: "Source Serif 4"
+typography.mono: "Fira Code"
+typography.base_size: "10pt"
+
+color.accent: "003DA5"
+color.rule: "003DA5"
+
+headings.number_sections: true
+headings.h1.scale: 1.30
+headings.h1.rule.position: below
+headings.h1.rule.weight: medium
+headings.h2.scale: 1.12
+
+title.layout: journal
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: rule
+
+code.highlight: tango
 ```
 
 Point a document at a style directory to try it without installing:
@@ -151,11 +149,10 @@ my-set/
 ```
 
 ```yaml
-fonts:
-  Inter:
-    regular: Inter-Regular.otf
-    bold: Inter-Bold.otf
-typography: { body: Inter, heading: Inter }
+fonts.Inter.regular: Inter-Regular.otf
+fonts.Inter.bold: Inter-Bold.otf
+typography.body: Inter
+typography.heading: Inter
 ```
 
 All faces of a family must live in one directory — `fontspec`'s `Path=` applies per family.
@@ -166,7 +163,7 @@ All faces of a family must live in one directory — `fontspec`'s `Path=` applie
 designer_check()
 ```
 
-Reports whether the template, fonts, CSL, engine defaults, styles, Pandoc, and a LaTeX engine are all findable. PDF output requires **xelatex** (TinyTeX is fine) and **Pandoc**.
+Reports whether the template, fonts, CSL, styles, Pandoc, and a LaTeX engine are all findable. PDF output requires **xelatex** (TinyTeX is fine) and **Pandoc**.
 
 ## Known limitations
 
@@ -187,7 +184,7 @@ R/                          package functions
   sets.R                    install / list / update / scaffold
   specimens.R               designer_specimens(): the only path that runs xelatex
   snapshot.R  html.R  gallery.R  check.R  use.R  styles.R  utils.R
-inst/engine/defaults.yml    engine token defaults; every style inherits these
+inst/engine/schema.yml      token schema + defaults; every style inherits these
 inst/engine/*.lua           pandoc filters (two-column tables)
 inst/sets/                  bundled style sets
 inst/specimen/specimen.md   the document rendered by designer_specimens()

@@ -35,32 +35,33 @@ docdesigner::designer_styles()
 docdesigner::designer_gallery()
 ```
 
-Built-in styles live in `inst/styles/<style-name>/style.yml`.
+Built-in styles live in `inst/sets/<set>/styles/<style>/format.yml`.
 
 ## Style Bundle Rules
 
-A style bundle is declarative. It should describe typography and visual defaults without adding R code.
-
-Required fields:
+A style is declarative. It describes typography and visual defaults through
+design tokens, without adding R code. Tokens are flat dotted keys — one
+`key: value` per line. A style declares only its identity and the tokens that
+differ from the defaults:
 
 ```yaml
-name: policy
+id: policy
 label: Policy
 description: Public policy report style
-fontset: docdesigner
-accent: "006A71"
-highlight: pygments
-maincolumns: 1
-numbersections: false
-link_citations: true
+
+typography.body: "Source Serif 4"
+color.accent: "006A71"
+color.rule: "006A71"
+headings.number_sections: false
+title.layout: report
+title.rule.position: below
+code.highlight: pygments
 ```
 
-Allowed fontsets:
+Scaffold and validate with `designer_new_style()` and
+`designer_validate_style()`. `designer_tokens()` and `STYLE-SPEC.md` list the
+full vocabulary.
 
-- `default`
-- `humanities`
-- `demography`
-- `methods`
-- `docdesigner`
-
-Use six-character hex colors without `#`.
+Bundled font families: `Source Serif 4`, `EB Garamond`, `XITS`, `Fira Code`.
+A style may declare others under `fonts.<Family>` and ship the faces in its own
+`assets/fonts/`. Use six-character hex colors without `#`.

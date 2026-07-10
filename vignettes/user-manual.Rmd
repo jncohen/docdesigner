@@ -25,7 +25,9 @@ docdesigner::designer_use(template = "snapshot")
 
 ## Styles
 
-Use `docdesigner::designer_styles()` to inspect built-in PDF styles. Use `docdesigner::designer_gallery()` to write a local HTML style gallery.
+Use `docdesigner::designer_styles()` to inspect built-in PDF styles. Use `docdesigner::designer_gallery()` to write a local HTML style gallery, or `docdesigner::designer_specimens()` to render a specimen PDF of every style.
+
+A style is a `format.yml` file of design tokens. Scaffold one with `docdesigner::designer_new_style()`, check it with `docdesigner::designer_validate_style()`, and see `docdesigner::designer_tokens()` or `STYLE-SPEC.md` for the full token vocabulary. See the *Style Gallery* article for details.
 
 ## Update Local Assets
 

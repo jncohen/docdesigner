@@ -65,7 +65,7 @@ output:
 ---
 ```
 
-Snapshot has one official style. Do not add `style`, `fontset`, or `accent` to Snapshot YAML.
+Snapshot has one official style. Do not add `style` or `accent` to Snapshot YAML.
 
 ## Handoff Checks
 

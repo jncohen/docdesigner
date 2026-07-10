@@ -68,7 +68,7 @@ output:
 ---
 ```
 
-Snapshot has one official style. Do not add `style`, `fontset`, or `accent` to Snapshot YAML unless you are deliberately testing template internals.
+Snapshot has one official style. Do not add `style` or `accent` to Snapshot YAML unless you are deliberately testing template internals.
 
 ## Check Your Setup
 
