@@ -6,11 +6,11 @@ Read this before touching anything. It exists so a fresh session does not have t
 
 A token-driven rendering engine for R Markdown → PDF, plus distributable style sets. A style is a YAML file of design tokens; `dd_preamble()` turns tokens into a LaTeX preamble.
 
-## State as of 2026-07-09
+## State as of 2026-07-10
 
-Version 1.0.2, on local branch `feature/phase-a`. `origin/main` is at `16e6e3b`. **The branch has not been pushed.**
+Version 1.0.2, on branch `feature/phase-a`, **pushed** to `origin/feature/phase-a`. `origin/main` is at `16e6e3b`; the branch is 5 commits ahead and **not yet merged** (the design layer is unfinished — see below and the README's "Known limitations"). Do not merge to `main` until the template port lands.
 
-`devtools::check()` passes. `designer_specimens()` renders all styles.
+`devtools::check()` passes clean (0/0/0). `designer_specimens()` renders all ten styles.
 
 ## The one thing you must understand
 
