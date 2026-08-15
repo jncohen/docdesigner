@@ -77,11 +77,11 @@ tokens:
   # -- page ------------------------------------------------------------------
   page.papersize:   {type: enum, values: [letter, a4], default: letter, status: impl}
   page.margin:      {type: "scale:margin", default: normal, status: impl, doc: "Shorthand for all four sides."}
-  page.margins.top:    {type: inches, min: 0.4, max: 2.0, status: new, doc: "Overrides page.margin when set."}
-  page.margins.bottom: {type: inches, min: 0.4, max: 2.0, status: new}
-  page.margins.inner:  {type: inches, min: 0.4, max: 2.0, status: new, doc: "Binding edge when twoside; else left."}
-  page.margins.outer:  {type: inches, min: 0.4, max: 2.0, status: new}
-  page.twoside:     {type: bool, default: false, status: new, doc: "Mirror margins, alternate running heads."}
+  page.margins.top:    {type: inches, min: 0.4, max: 2.0, status: impl, doc: "Overrides page.margin when set."}
+  page.margins.bottom: {type: inches, min: 0.4, max: 2.0, status: impl}
+  page.margins.inner:  {type: inches, min: 0.4, max: 2.0, status: impl, doc: "Binding edge when twoside; else left."}
+  page.margins.outer:  {type: inches, min: 0.4, max: 2.0, status: impl}
+  page.twoside:     {type: bool, default: false, status: impl, doc: "Mirror margins, alternate running heads."}
   page.columns:     {type: int, values: [1, 2], default: 1, status: impl}
   page.gutter:      {type: "scale:gutter", default: md, status: new}
   page.column_rule: {type: bool, default: false, status: new, doc: "Hairline between columns."}
@@ -91,6 +91,7 @@ tokens:
   typography.heading:     {type: font, default: "Source Serif 4", status: impl}
   typography.mono:        {type: font, default: "Fira Code", status: impl}
   typography.display:     {type: font, status: new, doc: "Title/masthead face. Falls back to heading."}
+  typography.label:       {type: font, nullable: true, status: impl, doc: "Sans furniture face for kickers, callout titles, table headers. Loaded by name via \\IfFontExistsTF; falls back to body if the named font is absent."}
   typography.base_size:   {type: enum, values: ["8pt","8.5pt","9pt","9.5pt","10pt","10.5pt","11pt","11.5pt","12pt"], default: "10pt", status: impl}
   typography.line_height: {type: num, min: 1.0, max: 2.0, default: 1.30, status: impl}
   typography.mono_scale:  {type: num, min: 0.6, max: 1.0, default: 0.82, status: impl}
@@ -118,12 +119,12 @@ tokens:
   headings.<h>.scale:        {type: num, min: 0.5, max: 4.0, status: impl, doc: "Multiple of typography.base_size."}
   headings.<h>.weight:       {type: enum, values: [light, regular, bold], default: bold, status: impl}
   # Per-level defaults follow the <h> block and override it. Every level must
-  # carry a `scale` default: dd_preamble() dereferences h1..h3 unconditionally,
-  # and a style that declares only h1 and h2 must still resolve h3.
-  headings.<h>.style:        {type: enum, values: [normal, italic], default: normal, status: new}
+  # carry a `scale` default: dd_preamble() dereferences h1..h4 unconditionally,
+  # and a style that declares only h1 and h2 must still resolve h3/h4.
+  headings.<h>.style:        {type: enum, values: [normal, italic], default: normal, status: impl}
   headings.<h>.case:         {type: enum, values: [none, upper, lower, smallcaps], default: none, status: impl}
   headings.<h>.color:        {type: role, default: accent, status: impl}
-  headings.<h>.align:        {type: enum, values: [left, center, right], default: left, status: new}
+  headings.<h>.align:        {type: enum, values: [left, center, right], default: left, status: impl}
   headings.<h>.space_before: {type: "scale:space", default: lg, status: impl}
   headings.<h>.space_after:  {type: "scale:space", default: sm, status: impl}
   headings.<h>.rule.position: {type: enum, values: [above, below, none], default: none, status: impl,
@@ -137,16 +138,16 @@ tokens:
   headings.h1.scale: {type: num, min: 0.5, max: 4.0, default: 1.35, status: impl}
   headings.h2.scale: {type: num, min: 0.5, max: 4.0, default: 1.15, status: impl}
   headings.h3.scale: {type: num, min: 0.5, max: 4.0, default: 1.00, status: impl}
-  # dd_preamble() maps h1..h3 onto \section, \subsection, \subsubsection.
-  # There is no fourth level yet, so every headings.h4.* token is inert.
-  headings.h4.scale: {type: num, min: 0.5, max: 4.0, default: 1.00, status: new}
-  headings.h4.color: {type: role, default: accent, status: new}
-  headings.h4.case:  {type: enum, values: [none, upper, lower, smallcaps], default: none, status: new}
-  headings.h4.space_before: {type: "scale:space", default: md, status: new}
-  headings.h4.space_after:  {type: "scale:space", default: xs, status: new}
-  headings.h4.rule.position: {type: enum, values: [above, below, none], default: none, status: new}
-  headings.h4.rule.weight:   {type: "scale:rule_weight", default: medium, status: new}
-  headings.h4.rule.color:    {type: role, default: rule, status: new}
+  # dd_preamble() maps h1..h4 onto \section, \subsection, \subsubsection, \paragraph
+  # (the last as a titlesec [runin] heading, never numbered).
+  headings.h4.scale: {type: num, min: 0.5, max: 4.0, default: 1.00, status: impl}
+  headings.h4.color: {type: role, default: accent, status: impl}
+  headings.h4.case:  {type: enum, values: [none, upper, lower, smallcaps], default: none, status: impl}
+  headings.h4.space_before: {type: "scale:space", default: md, status: impl}
+  headings.h4.space_after:  {type: "scale:space", default: xs, status: impl}
+  headings.h4.rule.position: {type: enum, values: [above, below, none], default: none, status: impl}
+  headings.h4.rule.weight:   {type: "scale:rule_weight", default: medium, status: impl}
+  headings.h4.rule.color:    {type: role, default: rule, status: impl}
 
   headings.h1.space_before: {type: "scale:space", default: lg, status: impl}
   headings.h2.space_before: {type: "scale:space", default: md, status: impl}
@@ -155,25 +156,34 @@ tokens:
   headings.h2.space_after:  {type: "scale:space", default: xs, status: impl}
   headings.h3.space_after:  {type: "scale:space", default: xs, status: impl}
 
-  headings.h4.weight: {type: enum, values: [light, regular, bold], default: regular, status: new}
-  headings.h4.style:  {type: enum, values: [normal, italic], default: italic, status: new}
+  headings.h4.weight: {type: enum, values: [light, regular, bold], default: regular, status: impl}
+  headings.h4.style:  {type: enum, values: [normal, italic], default: italic, status: impl}
 
   # -- title -----------------------------------------------------------------
   title.layout: {type: enum, values: [plain, essay, journal, report, masthead], default: plain, status: port,
                  doc: "plain: flush left. essay: centred, book-like. journal: centred with rules, abstract, keywords. report: flush left, heavy rule, institution line. masthead: compact accent bar, one page."}
-  title.align:  {type: enum, values: [left, center], default: left, status: port}
+  title.align:  {type: enum, values: [left, center], default: left, status: impl}
   title.scale:  {type: num, min: 1.0, max: 5.0, default: 2.6, status: impl}
+  title.color:  {type: role, default: text, status: impl, doc: "Near-black is what every design-sets mockup specifies; accent titles are the exception, not the rule."}
   title.family: {type: enum, values: [body, heading, display], default: heading, status: new}
   title.case:   {type: enum, values: [none, upper, smallcaps], default: none, status: new}
   title.rule.position: {type: enum, values: [above, below, both, none], default: none, status: impl,
                         doc: "Only `below` and `none` are rendered today; `above`/`both` behave as `below`."}
   title.rule.weight:   {type: "scale:rule_weight", default: thick, status: impl}
+  title.rule.length: {type: inches, min: 0.3, max: 8.0, nullable: true, status: impl, doc: "Rule width in inches; omit for the full measure."}
   title.rule.color:    {type: role, default: rule, status: impl}
   title.page_break_after: {type: bool, default: false, status: new, doc: "true = a full title page."}
 
-  title.subtitle.scale: {type: num, min: 0.8, max: 2.5, default: 1.3, status: port}
-  title.subtitle.style: {type: enum, values: [normal, italic], default: italic, status: port}
-  title.subtitle.color: {type: role, default: muted, status: port}
+  # Kicker: a short eyebrow label set above the title (venue/section/series).
+  title.kicker.text:  {type: string, nullable: true, status: impl, doc: "Eyebrow label above the title. Unset = no kicker."}
+  title.kicker.color: {type: role, default: accent, status: impl}
+  title.kicker.case:  {type: enum, values: [none, upper, lower, smallcaps], default: upper, status: impl}
+  title.kicker.scale: {type: num, min: 0.5, max: 1.5, default: 0.8, status: impl, doc: "Multiple of typography.base_size."}
+  title.kicker.font:  {type: enum, values: [label, heading, body], default: label, status: impl}
+
+  title.subtitle.scale: {type: num, min: 0.8, max: 2.5, default: 1.3, status: impl}
+  title.subtitle.style: {type: enum, values: [normal, italic], default: italic, status: impl}
+  title.subtitle.color: {type: role, default: muted, status: impl}
 
   title.byline.position: {type: enum, values: [above, below], default: below, status: port}
   title.byline.case:     {type: enum, values: [none, upper, smallcaps], default: none, status: port}
@@ -183,9 +193,22 @@ tokens:
   title.date.color: {type: role, default: muted, status: impl}
 
   title.abstract.width: {type: "scale:width", default: text, status: port}
-  title.abstract.size:  {type: num, min: 0.7, max: 1.2, default: 0.95, status: port}
-  title.abstract.label: {type: string, default: "Abstract", status: port}
+  title.abstract.size:  {type: num, min: 0.7, max: 1.2, default: 0.95, status: impl}
+  title.abstract.label: {type: string, default: "Abstract", status: impl}
   title.abstract.rule:  {type: bool, default: false, status: port}
+  title.abstract.show:  {type: bool, default: true, status: impl,
+                         doc: "false suppresses it entirely — a magazine feature has a deck, not an abstract."}
+  title.abstract.label_style: {type: enum, values: [heading, runin, none], default: heading, status: impl,
+                               doc: "heading: centred bold over the block. runin: small-caps label inline with the first line. none: no label."}
+  title.abstract.indent: {type: "scale:indent", default: none, status: impl, doc: "Inset from BOTH margins."}
+  title.abstract.weight: {type: enum, values: [regular, bold], default: regular, status: impl,
+                          doc: "bold gives a standfirst rather than an abstract."}
+  title.abstract.color:  {type: role, default: text, status: impl}
+  title.abstract.box:         {type: bool, default: false, status: impl, doc: "Wrap the abstract in a filled/bordered panel."}
+  title.abstract.background:  {type: role, nullable: true, status: impl, doc: "Panel fill when box is true; defaults to code_bg."}
+  title.abstract.label_color: {type: role, default: text, status: impl}
+  title.abstract.label_align: {type: enum, values: [left, center, right], default: center, status: impl}
+  title.abstract.label_case:  {type: enum, values: [none, upper, smallcaps], default: none, status: impl}
 
   title.keywords.show:  {type: bool, default: true, status: port}
   title.keywords.label: {type: string, default: "Keywords", status: port}
@@ -221,8 +244,8 @@ tokens:
 
   # -- code ------------------------------------------------------------------
   code.highlight:    {type: enum, values: [pygments, tango, espresso, zenburn, kate, monochrome, breezedark, haddock, none], default: tango, status: impl}
-  code.background:   {type: role, nullable: true, status: new}
-  code.border:       {type: bool, default: false, status: new}
+  code.background:   {type: role, nullable: true, status: impl}
+  code.border:       {type: bool, default: false, status: impl}
   code.line_numbers: {type: bool, default: false, status: new}
 
   # -- quote -----------------------------------------------------------------
@@ -236,16 +259,17 @@ tokens:
   footnotes.numbering: {type: enum, values: [arabic, symbol], default: arabic, status: new}
 
   # -- running heads ---------------------------------------------------------
-  header_footer.header.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: port}
-  header_footer.header.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: port}
-  header_footer.header.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: port}
-  header_footer.header.rule:   {type: bool, default: false, status: port}
+  header_footer.header.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
+  header_footer.header.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
+  header_footer.header.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
+  header_footer.header.rule:   {type: bool, default: false, status: impl}
   header_footer.footer.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: page, status: impl}
   header_footer.footer.rule:   {type: bool, default: true, status: impl}
   header_footer.page_number.format: {type: enum, values: [arabic, roman], default: arabic, status: new}
-  header_footer.first_page:    {type: enum, values: [plain, none], default: plain, status: new}
+  header_footer.first_page:    {type: enum, values: [plain, none, header], default: plain, status: impl,
+                                doc: "plain: LaTeX default (footer folio, no running head on page 1). none: nothing. header: carry the running head onto page 1 too."}
 
   # -- links and citations ---------------------------------------------------
   links.color:     {type: role, default: accent, status: impl}

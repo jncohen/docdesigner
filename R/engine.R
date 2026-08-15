@@ -252,6 +252,16 @@ dd_preamble <- function(s) {
   base <- dd_pt(ty$base_size); L <- c()
   add <- function(...) L[[length(L) + 1]] <<- paste0(...)
 
+  # rmarkdown's pdf_document appends its own `geometry:margin=1in` AFTER our
+  # pandoc -V args. geometry lets later options win and `margin` sets all four
+  # sides at once, so that default silently clobbered every per-side value —
+  # and page.margin too, which is why every style rendered at 1in regardless of
+  # its tokens. This preamble is injected via header-includes, i.e. after
+  # \usepackage{geometry}, so \geometry{} here is the last word. The -V args in
+  # dd_geometry() are kept so the package is still loaded with our values even
+  # if rmarkdown ever stops supplying its default.
+  add("\\geometry{", paste(dd_geometry_opts(s), collapse = ","), "}")
+
   add("\\usepackage{fontspec}"); add("\\usepackage{anyfontsize}")
   add(dd_fontspec("\\setmainfont", ty$body, reg, dirs))
   mono <- reg[[ty$mono]]
@@ -262,6 +272,16 @@ dd_preamble <- function(s) {
     add(dd_fontspec("\\newfontfamily\\ddheadfont", ty$heading, reg, dirs))
     head_cmd <- "\\ddheadfont"
   }
+  # Label/furniture face (kickers, callout titles, table headers). Loaded by
+  # NAME so a style can point at a system grotesque (Arial, Archivo, ...)
+  # without bundling it. \IfFontExistsTF guards a missing font, so \ddlabelfont
+  # is always defined and safe to use — it degrades to the body face.
+  if (!is.null(ty$label)) {
+    add("\\IfFontExistsTF{", ty$label, "}{\\newfontfamily\\ddlabelfont{", ty$label,
+        "}}{\\providecommand{\\ddlabelfont}{}}")
+  } else {
+    add("\\providecommand{\\ddlabelfont}{}")
+  }
 
   add("\\usepackage{xcolor}")
   for (role in dd_schema()$roles) {
@@ -270,44 +290,161 @@ dd_preamble <- function(s) {
   add("\\color{text}")
 
   add("\\usepackage[explicit]{titlesec}")
-  hspec <- function(level, cmd) {
+  case_cmd <- function(case) switch(case %||% "none",
+    upper = "\\MakeUppercase{#1}",
+    lower = "\\MakeLowercase{#1}",
+    smallcaps = "\\textsc{\\MakeLowercase{#1}}",
+    "#1")
+  align_cmd <- function(align) switch(align %||% "left",
+    center = "\\centering ", right = "\\raggedleft ", "")
+  # [block] puts the heading on its own line (h1-h3); [runin] keeps it flush
+  # with the paragraph that follows (h4) and never carries a numeric label,
+  # regardless of headings.number_sections.
+  hspec <- function(level, cmd, shape = "block") {
     h <- hd[[level]]
     size <- round(base * as.numeric(h$scale), 1); lead <- round(size * 1.2, 1)
     wt <- if ((h$weight %||% "bold") == "bold") "\\bfseries" else "\\mdseries"
-    txt <- if (identical(h$case, "upper")) "\\MakeUppercase{#1}" else "#1"
-    label <- if (isTRUE(hd$number_sections) && cmd == "\\section") "\\thesection\\hspace{0.6em}" else ""
-    fmt <- paste0(head_cmd, "\\fontsize{", size, "}{", lead, "}\\selectfont", wt,
+    it <- if (identical(h$style, "italic")) "\\itshape" else ""
+    txt <- case_cmd(h$case)
+    # Each level takes its own counter (\thesection, \thesubsection, ...), so
+    # number_sections numbers h1-h3 rather than h1 alone. [runin] (h4) is never
+    # numbered: pandoc's --number-sections raises secnumdepth past h4, and a
+    # cascading "1.1.1.1" in front of a run-in heading is never wanted.
+    label <- if (isTRUE(hd$number_sections) && !identical(shape, "runin")) {
+      paste0("\\the", sub("^\\\\", "", cmd), "\\hspace{0.6em}")
+    } else ""
+    fmt <- paste0(align_cmd(h$align), head_cmd, "\\fontsize{", size, "}{", lead, "}\\selectfont", wt, it,
                   "\\color{", h$color %||% "accent", "}")
-    line <- paste0("\\titleformat{", cmd, "}[block]{", fmt, "}{", label, "}{0pt}{", txt, "}")
+    line <- paste0("\\titleformat{", cmd, "}[", shape, "]{", fmt, "}{", label, "}{0pt}{", txt, "}")
     rule <- dd_rule_tex(h$rule, "medium")
     if (nzchar(rule)) line <- paste0(line, "[\\vspace{2pt}", rule, "]")
     line
   }
   add(hspec("h1", "\\section")); add(hspec("h2", "\\subsection")); add(hspec("h3", "\\subsubsection"))
-  for (lvl in c("h1", "h2", "h3")) {
-    cmd <- c(h1 = "\\section", h2 = "\\subsection", h3 = "\\subsubsection")[[lvl]]
+  add(hspec("h4", "\\paragraph", shape = "runin"))
+  for (lvl in c("h1", "h2", "h3", "h4")) {
+    cmd <- c(h1 = "\\section", h2 = "\\subsection", h3 = "\\subsubsection", h4 = "\\paragraph")[[lvl]]
     add("\\titlespacing*{", cmd, "}{0pt}{",
         dd_len("space", hd[[lvl]]$space_before, "lg"), "}{",
         dd_len("space", hd[[lvl]]$space_after, "sm"), "}")
   }
 
   add("\\usepackage{titling}")
+  add("\\usepackage{etoolbox}")
   tsize <- round(base * ti$scale, 1)
-  add("\\pretitle{\\begin{flushleft}", head_cmd, "\\fontsize{", tsize, "}{",
-      round(tsize * 1.1, 1), "}\\selectfont\\bfseries\\color{accent}}")
+  # title.align (center/left) governs the whole title block, not just the
+  # title line itself, so byline/date share the same environment.
+  align_env <- if (identical(ti$align, "center")) "center" else "flushleft"
+
+  # pandoc's LaTeX template appends the subtitle to \@title at a fixed \large,
+  # inheriting the title's face and colour -- which is why every title.subtitle.*
+  # token sat at status: port. It defines \subtitle with \providecommand, i.e.
+  # only if undefined, and rmarkdown injects this preamble BEFORE that line. So
+  # defining \subtitle here pre-empts pandoc's and is what makes the subtitle
+  # independently styleable at all. \normalfont\mdseries resets the \bfseries
+  # inherited from \pretitle.
+  sub <- ti$subtitle
+  ssize <- round(base * as.numeric(sub$scale %||% 1.3), 1)
+  sit <- if (identical(sub$style %||% "italic", "italic")) "\\itshape" else ""
+  add("\\makeatletter")
+  # Capture the clean title BEFORE the subtitle is appended, so running heads
+  # (\thetitle would otherwise carry the appended subtitle markup and render as
+  # garbage/"0" wherever runningtitle is used).
+  add("\\newcommand{\\subtitle}[1]{\\global\\let\\ddrtitle\\@title\\apptocmd{\\@title}{\\par\\vspace{0.3em}",
+      "{\\normalfont\\mdseries", head_cmd, "\\fontsize{", ssize, "}{",
+      round(ssize * 1.35, 1), "}\\selectfont", sit, "\\color{",
+      sub$color %||% "muted", "}#1\\par}}{}{}}")
+  add("\\makeatother")
+
+  # Kicker: a short eyebrow label emitted ABOVE the title, inside \pretitle's
+  # alignment environment. Defaults to the sans label face so it reads as
+  # furniture against the serif headline (the economist/government/policy move).
+  kick <- ti$kicker
+  kicker_tex <- ""
+  if (!is.null(kick$text)) {
+    ksize <- round(base * as.numeric(kick$scale %||% 0.8), 1)
+    kfont <- switch(kick$font %||% "label", label = "\\ddlabelfont", heading = head_cmd, "")
+    kcased <- switch(kick$case %||% "upper",
+      upper = paste0("\\MakeUppercase{", kick$text, "}"),
+      lower = paste0("\\MakeLowercase{", kick$text, "}"),
+      smallcaps = paste0("\\textsc{\\MakeLowercase{", kick$text, "}}"),
+      kick$text)
+    kicker_tex <- paste0("{", kfont, "\\fontsize{", ksize, "}{", round(ksize * 1.2, 1),
+      "}\\selectfont\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
+  }
+  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, head_cmd, "\\fontsize{", tsize, "}{",
+      round(tsize * 1.18, 1), "}\\selectfont\\bfseries\\color{", ti$color %||% "text", "}}")
   # \titlerule takes [weight]; \rule takes {width}{height}. Build inline rather
   # than reuse dd_rule_tex(), whose output suits titlesec's after-code only.
   if (!is.null(ti$rule) && !identical(ti$rule$position %||% "none", "none")) {
     w <- dd_len("rule_weight", ti$rule$weight, "thick")
-    add("\\posttitle{\\par\\end{flushleft}\\vskip0.3em{\\color{", ti$rule$color %||% "rule",
-        "}\\rule{\\linewidth}{", w, "}}\\vskip0.4em}")
+    # A short centred rule is a distinct design move from a full-measure one
+    # (atlantic's masthead uses 64px), so title.rule.length overrides \linewidth.
+    len <- if (!is.null(ti$rule$length)) paste0(ti$rule$length, "in") else "\\linewidth"
+    rule_tex <- paste0("{\\color{", ti$rule$color %||% "rule", "}\\rule{", len, "}{", w, "}}")
+    # The rule is emitted after \end{center}, i.e. back in ordinary flush-left
+    # mode. A full-measure rule fills the line so it looks centred either way,
+    # but a short one would sit at the left margin without this.
+    if (identical(align_env, "center")) rule_tex <- paste0("\\centerline{", rule_tex, "}")
+    add("\\posttitle{\\par\\end{", align_env, "}\\vskip0.3em", rule_tex, "\\vskip0.4em}")
   } else {
-    add("\\posttitle{\\par\\end{flushleft}\\vskip0.4em}")
+    add("\\posttitle{\\par\\end{", align_env, "}\\vskip0.4em}")
   }
-  add("\\preauthor{\\begin{flushleft}\\large\\color{", ti$byline$color %||% "muted", "}}")
-  add("\\postauthor{\\end{flushleft}}")
-  add("\\predate{\\begin{flushleft}\\color{", ti$date$color %||% "muted", "}}")
-  add("\\postdate{\\end{flushleft}}")
+  # `abstract` is an environment the document class defines and pandoc emits
+  # verbatim, so renewing it here takes it over completely -- the same lever as
+  # \subtitle above, and why every title.abstract.* token could sit at
+  # status: port. A trivlist gives symmetric margins without pulling in
+  # changepage. Three label treatments, because the mockups want three:
+  # demography a run-in small-caps label, nature none at all (a bold
+  # standfirst), atlantic none (it has a deck instead).
+  ab <- ti$abstract
+  if (identical(ab$show %||% TRUE, FALSE)) {
+    add("\\renewenvironment{abstract}{\\setbox0\\vbox\\bgroup}{\\egroup}")
+  } else {
+    asize <- round(base * as.numeric(ab$size %||% 0.95), 1)
+    aind <- dd_len("indent", ab$indent, "none")
+    awt <- if (identical(ab$weight %||% "regular", "bold")) "\\bfseries" else ""
+    lab <- ab$label %||% "Abstract"
+    lstyle <- ab$label_style %||% "heading"
+    # The heading label honours label_align / label_case / label_color, so it
+    # works both plain and as the title of a boxed abstract (methods wants a
+    # right-justified, all-caps, accent label inside the panel).
+    lalign <- switch(ab$label_align %||% "center",
+                     right = "\\raggedleft", left = "\\raggedright", "\\centering")
+    lcased <- switch(ab$label_case %||% "none",
+                     upper = paste0("\\MakeUppercase{", lab, "}"),
+                     smallcaps = paste0("\\textsc{\\MakeLowercase{", lab, "}}"), lab)
+    heading_lab <- paste0("{", lalign, "\\bfseries\\color{", ab$label_color %||% "text",
+                          "}", lcased, "\\par}\\vspace{0.35em}\\noindent\\ignorespaces")
+    lab_tex <- switch(lstyle,
+      runin = paste0("\\noindent{\\scshape ", lab, "}\\hspace{0.7em}\\ignorespaces"),
+      none  = "\\noindent\\ignorespaces",
+      heading_lab)
+    body_fmt <- paste0("\\fontsize{", asize, "}{", round(asize * 1.4, 1), "}\\selectfont",
+                       awt, "\\color{", ab$color %||% "text", "}%")
+    if (isTRUE(ab$box)) {
+      # Filled/bordered abstract panel; tcolorbox supplies the inset, so the
+      # \list margins give way to the box padding.
+      add("\\usepackage{tcolorbox}\\tcbuselibrary{skins,breakable}")
+      add("\\renewenvironment{abstract}{%")
+      add("  \\begin{tcolorbox}[breakable,boxrule=0.4pt,colback=", ab$background %||% "code_bg",
+          ",colframe=rule,arc=1pt,left=12pt,right=12pt,top=9pt,bottom=9pt]%")
+      add("  ", body_fmt)
+      add("  ", lab_tex)
+      add("}{\\end{tcolorbox}}")
+    } else {
+      add("\\renewenvironment{abstract}{%")
+      add("  \\list{}{\\leftmargin=", aind, "\\rightmargin=", aind, "}\\item\\relax")
+      add("  ", body_fmt)
+      add("  ", lab_tex)
+      add("}{\\endlist}")
+    }
+  }
+
+  add("\\preauthor{\\begin{", align_env, "}\\large\\color{", ti$byline$color %||% "muted", "}}")
+  add("\\postauthor{\\end{", align_env, "}}")
+  add("\\predate{\\begin{", align_env, "}\\color{", ti$date$color %||% "muted", "}}")
+  add("\\postdate{\\end{", align_env, "}}")
 
   if (isTRUE(ty$microtype)) add("\\usepackage{microtype}")
   add("\\usepackage{booktabs}")
@@ -316,17 +453,135 @@ dd_preamble <- function(s) {
   add("\\setlength{\\parskip}{", dd_len("space", s$paragraph$spacing, "sm"), "}")
   add("\\linespread{", ty$line_height, "}")
 
+  # --- Code + reference spacing (unconditional; strict improvements) ---------
+  # Listings keep single leading regardless of the body line_height, so a
+  # loosely-leaded style (essay/journal) does not double-space its code.
+  add("\\AtBeginEnvironment{Highlighting}{\\linespread{1}\\selectfont}")
+  add("\\AtBeginEnvironment{verbatim}{\\linespread{1}\\selectfont}")
+  add("\\ifdef{\\Verbatim}{\\AtBeginEnvironment{Verbatim}{\\linespread{1}\\selectfont}}{}")
+  # Pandoc's CSL reference list separated entries by a full blank line, which
+  # reads as an enormous gap; tighten it to an even, modest space. Guarded so
+  # it is inert when a document has no bibliography.
+  add("\\AtBeginDocument{\\ifcsname CSLReferences\\endcsname",
+      "\\AtBeginEnvironment{CSLReferences}{\\setlength{\\parskip}{0.3\\baselineskip}\\setlength{\\itemsep}{0pt}}\\fi}")
+
+  # Wrap long code lines so listings never overflow the measure (especially the
+  # narrow two-column body in nature). fvextra augments pandoc's fancyvrb.
+  add("\\usepackage{fvextra}")
+  add("\\fvset{breaklines=true,breakanywhere=true,breaksymbolleft={}}")
+
+  # --- Code panel: tint / border behind code blocks -------------------------
+  # tcolorbox's \tcolorboxenvironment wraps an existing environment; guarded by
+  # \ifcsname so it fires only for the code env a document actually uses
+  # (Shaded when highlighted, verbatim/Verbatim when plain). code_bg role must
+  # be defined by the style when code.background points at it.
+  cb <- s$code
+  if (!is.null(cb$background) || isTRUE(cb$border)) {
+    add("\\usepackage{tcolorbox}\\tcbuselibrary{skins,breakable}")
+    cbg   <- if (!is.null(cb$background)) cb$background else "white"
+    crule <- if (isTRUE(cb$border)) "0.5pt" else "0pt"
+    copts <- paste0("breakable,boxrule=", crule, ",colback=", cbg,
+                    ",colframe=rule,arc=1pt,boxsep=1pt,left=6pt,right=6pt,top=5pt,bottom=5pt")
+    for (env in c("Shaded", "verbatim", "Verbatim")) {
+      add("\\AtBeginDocument{\\ifcsname ", env, "\\endcsname\\tcolorboxenvironment{",
+          env, "}{", copts, "}\\fi}")
+    }
+  }
+
   add("\\usepackage{fancyhdr}\\pagestyle{fancy}\\fancyhf{}")
-  add("\\renewcommand{\\headrulewidth}{0pt}")
+  add("\\renewcommand{\\headrulewidth}{", if (isTRUE(s$header_footer$header$rule)) "0.4pt" else "0pt", "}")
   add("\\renewcommand{\\footrulewidth}{", if (isTRUE(s$header_footer$footer$rule)) "0.4pt" else "0pt", "}")
   slot <- c(left = "L", center = "C", right = "R")
+  # LaTeX's default \headheight (12pt) is too small for a populated running
+  # head, and fancyhdr warns and overprints. Only widen it when a header is
+  # actually declared, so header-less styles keep their existing text block;
+  # \topmargin absorbs the extra so the body does not shift down.
+  hdr_on <- any(vapply(names(slot), function(p) {
+    !identical(s$header_footer$header[[p]] %||% "none", "none")
+  }, logical(1)))
+  if (hdr_on) {
+    add("\\setlength{\\headheight}{14pt}\\addtolength{\\topmargin}{-2pt}")
+  }
+  # titling's \thetitle/\theauthor stay live outside \maketitle. \rightmark is
+  # the article-class running mark \sectionmark updates (article has no
+  # \leftmark tracking); "surname" has no name-parsing yet, so it falls back
+  # to the full \theauthor like "author" until that's worth splitting out.
+  hf_content <- function(what) switch(what,
+    page = "\\thepage",
+    title = ,
+    runningtitle = "\\ifcsname ddrtitle\\endcsname\\ddrtitle\\else\\thetitle\\fi",
+    author = ,
+    surname = "\\theauthor",
+    section = "\\rightmark",
+    "\\thepage")
   for (pos in names(slot)) {
-    what <- s$header_footer$footer[[pos]] %||% "none"
-    if (identical(what, "none")) next
-    content <- switch(what, page = "\\thepage", title = "\\thetitle", "\\thepage")
-    add("\\fancyfoot[", slot[[pos]], "]{\\small\\color{muted}", content, "}")
+    hwhat <- s$header_footer$header[[pos]] %||% "none"
+    if (!identical(hwhat, "none")) {
+      add("\\fancyhead[", slot[[pos]], "]{\\small\\color{muted}", hf_content(hwhat), "}")
+    }
+    fwhat <- s$header_footer$footer[[pos]] %||% "none"
+    if (!identical(fwhat, "none")) {
+      add("\\fancyfoot[", slot[[pos]], "]{\\small\\color{muted}", hf_content(fwhat), "}")
+    }
+  }
+  # article's \maketitle forces \thispagestyle{plain} on the opening page, which
+  # drops the fancy running head there — so a header shows on page 2+ but never
+  # on page 1. When first_page: header, redefine the plain style to mirror the
+  # fancy head/foot so the running head also appears on the first page.
+  if (identical(s$header_footer$first_page %||% "plain", "header") && hdr_on) {
+    fp <- "\\fancyhf{}"
+    for (pos in names(slot)) {
+      hwhat <- s$header_footer$header[[pos]] %||% "none"
+      if (!identical(hwhat, "none"))
+        fp <- paste0(fp, "\\fancyhead[", slot[[pos]], "]{\\small\\color{muted}",
+                     hf_content(hwhat), "}")
+      fwhat <- s$header_footer$footer[[pos]] %||% "none"
+      if (!identical(fwhat, "none"))
+        fp <- paste0(fp, "\\fancyfoot[", slot[[pos]], "]{\\small\\color{muted}",
+                     hf_content(fwhat), "}")
+    }
+    fp <- paste0(fp,
+      "\\renewcommand{\\headrulewidth}{",
+      if (isTRUE(s$header_footer$header$rule)) "0.4pt" else "0pt", "}",
+      "\\renewcommand{\\footrulewidth}{",
+      if (isTRUE(s$header_footer$footer$rule)) "0.4pt" else "0pt", "}")
+    add("\\fancypagestyle{plain}{", fp, "}")
   }
   paste(unlist(L), collapse = "\n")
+}
+
+# page.margin is a 3-step scale (0.75/1/1.35in), but real page designs are
+# asymmetric — a wider head than foot, wider sides than top. page.margins.*
+# (inches) overrides it per side; any side left unset falls back to the
+# page.margin shorthand, so a style can adjust one edge without restating all
+# four. geometry's inner/outer are binding edges only under twoside; otherwise
+# they are plainly left/right, which is how they're mapped here.
+dd_geometry_opts <- function(s) {
+  shorthand <- dd_len("margin", s$page$margin, "normal")
+  mg <- s$page$margins
+  inch <- function(x) if (is.null(x)) NULL else paste0(x, "in")
+  top <- inch(mg$top); bottom <- inch(mg$bottom)
+  inner <- inch(mg$inner); outer <- inch(mg$outer)
+
+  if (is.null(top) && is.null(bottom) && is.null(inner) && is.null(outer)) {
+    return(paste0("margin=", shorthand))
+  }
+
+  top <- top %||% shorthand; bottom <- bottom %||% shorthand
+  inner <- inner %||% shorthand; outer <- outer %||% shorthand
+  twoside <- isTRUE(s$page$twoside)
+  c(paste0("top=", top), paste0("bottom=", bottom),
+    if (twoside) c(paste0("inner=", inner), paste0("outer=", outer))
+    else c(paste0("left=", inner), paste0("right=", outer)),
+    if (twoside) "twoside")
+}
+
+dd_geometry <- function(s) {
+  args <- as.vector(rbind("-V", paste0("geometry:", dd_geometry_opts(s))))
+  # geometry's twoside mirrors the margins, but only the class option makes
+  # LaTeX alternate the running heads to match.
+  if (isTRUE(s$page$twoside)) args <- c(args, "-V", "classoption=twoside")
+  args
 }
 
 #' Designed PDF output format
@@ -343,9 +598,8 @@ pdf <- function(..., style = "minimal") {
 
   base <- dd_pt(s$typography$base_size)
   fontsize <- if (base >= 11.5) "12pt" else if (base >= 10.5) "11pt" else "10pt"
-  margin <- dd_len("margin", s$page$margin, "normal")
 
-  pargs <- c("-V", paste0("geometry:margin=", margin),
+  pargs <- c(dd_geometry(s),
              "-V", paste0("papersize=", s$page$papersize),
              "-V", paste0("fontsize=", fontsize),
              "-V", "colorlinks=true",
