@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sociology-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #333333); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .xit { font-family: 'XITS', 'STIX Two Text', 'Times New Roman', Times, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="xit" data-screen-label="sociology — page 1" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 92px 108px 84px;  font-size: 15px; line-height: 1.6;">
+
+    <!-- running head -->
+    <div class="xit sc" style="position: absolute; top: 46px; left: 108px; right: 108px; display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; letter-spacing: 0.05em; color: #555;">
+      <span>American Journal of Social Research</span>
+      <span>763</span>
+    </div>
+
+    <!-- title: centered, caps -->
+    <h1 class="xit" style="text-align: center; font-size: 22px; line-height: 1.3; font-weight: 700; color: #111; margin: 0 auto; max-width: 30ch; text-transform: uppercase; letter-spacing: 0.02em;">Cross-Sectional Differences in Wealth by Education</h1>
+    <div class="xit" style="text-align: center; font-size: 15px; font-style: italic; color: #444; margin-top: 10px;">Measurement and Theory Alternatives</div>
+
+    <!-- centered byline + affiliation -->
+    <div class="xit" style="text-align: center; margin-top: 24px;">
+      <div class="sc" style="font-size: 15px; letter-spacing: 0.04em; color: #1A1A1A;">Joseph N. Cohen</div>
+      <div style="font-size: 13.5px; font-style: italic; color: #555; margin-top: 1px;">Meridian University</div>
+    </div>
+
+    <!-- labeled abstract, indented both sides -->
+    <div style="margin: 26px 34px 0;">
+      <p class="xit" style="margin: 0; font-size: 13.5px; line-height: 1.55; text-align: justify; hyphens: auto; color: #222;"><span class="sc" style="font-weight: 700; letter-spacing: 0.04em;">Abstract</span>&nbsp;&nbsp;This article examines the relationship between educational attainment and household wealth in the United States using the 2022 Survey of Consumer Finances. Net of age, race, and marital status, most detectable structure is captured by two credential benchmarks — high-school and bachelor's-degree completion — while finer gradations contribute little to model fit. The pattern is consistent with credentialist and institutional-sorting accounts of stratification, and is robust across the survey's replicate-weight design.</p>
+    </div>
+
+    <!-- Level-1 head: centered, bold, caps -->
+    <h2 class="xit" style="text-align: center; font-size: 15px; font-weight: 700; color: #111; margin: 28px 0 6px; text-transform: uppercase; letter-spacing: 0.03em;">Introduction</h2>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">Few regularities in social stratification are as well established as the association between education and wealth. The better educated accumulate more; the wealthy invest more in schooling. What remains contested is the functional form of that association — whether the wealth return to education is continuous in years of schooling, or concentrated at the completion of major credentials.</p>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.5em;">This distinction maps onto competing theoretical traditions. Human-capital theory anticipates a continuous return, as each year of schooling adds market-valued skills. Credentialist and signalling theories anticipate thresholds, as degrees sort individuals into discretely different opportunity structures.</p>
+
+    <!-- Level-2 head: flush-left, bold italic -->
+    <h3 class="xit" style="font-size: 15px; font-weight: 700; font-style: italic; color: #1A1A1A; margin: 20px 0 4px;">The Threshold Hypothesis</h3>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">If credentials rather than accumulated instruction govern access to wealth-building positions, then the wealth distribution should exhibit discontinuities at high-school and bachelor's completion that exceed what any single additional year of schooling could produce.</p>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.5em;">We formalize this by entering credential dummies alongside a continuous years term and testing whether the thresholds absorb the association.</p>
+
+    <!-- Level-3 head: run-in, bold italic, period -->
+    <p class="xit" style="margin: 14px 0 0; text-align: justify; hyphens: auto; text-indent: 1.5em;"><span style="font-weight: 700; font-style: italic;">Data and sample.</span>&nbsp; The Survey of Consumer Finances is a triennial, nationally representative study of household balance sheets, with an oversample of high-wealth households and a replicate-weight design suited to inference about the upper tail.</p>
+
+    <!-- footer -->
+    <div class="xit" style="position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; font-size: 13px; color: #555;">763</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#333333&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#333333&quot;, &quot;#8A1A1A&quot;, &quot;#1A3A5C&quot;, &quot;#000000&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links/rules only; ASA house style is near-monochrome&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#333333' };
+  }
+}
+</script>
+</body>
+</html>

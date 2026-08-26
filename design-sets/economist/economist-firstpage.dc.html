@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>economist-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d8d8d6; }
+  a { color: var(--accent, #E3120B); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .ecw { width: 760px; background: #fff; color: #111;  text-align: left; }
+  .lbl { font-family: 'Archivo', sans-serif; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="760px" content-height="1074px" hint-size="100%,100%">
+<article class="ecw" data-screen-label="economist — content page" style="--accent: {{ accent }}; --dc-float: {{ dcFloat }}; --dc-size: {{ dcSize }}; --dc-lh: {{ dcLh }}; --pi: {{ pi }}; position: relative; height: 1074px; padding: 80px 92px 64px; overflow: hidden;">
+
+      <!-- Running header: page no. in margin + red flag band -->
+      <div style="display: flex; align-items: flex-start; gap: 8px; padding-top: 0;">
+        <div style="flex: 1; background: var(--accent, #E3120B); display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; min-height: 40px;">
+          <div class="srf" style="color: #fff; font-weight: 700; font-size: 26px;">Security</div>
+          <div class="srf" style="color: #fff; font-size: 13px; white-space: nowrap;"><span style="font-weight: 700;">Working Papers</span> Vol. 4 · 2026</div>
+        </div>
+      </div>
+
+      <!-- Compact header-title block: headline -->
+      <div style="margin-top: 16px;">
+        <div>
+          <div class="lbl" style="font-weight: 700; font-size: 12px; color: var(--accent, #E3120B);">Menacing Taiwan</div>
+          <h1 class="srf" style="font-weight: 700; font-size: 33px; line-height: 1.02; color: #111; margin: 4px 0 0; letter-spacing: -0.01em;">Too close for comfort</h1>
+          <div class="lbl" style="font-weight: 700; font-size: 9.5px; letter-spacing: 0.1em; color: #1a1a1a; margin-top: 13px;">NEW YORK</div>
+          <div class="srf" style="font-weight: 700; font-size: 14px; line-height: 1.22; color: #111; margin-top: 2px;">China is sending near-daily sorties near Taiwan, raising fears of a crisis</div>
+          <div class="lbl" style="font-weight: 700; font-size: 9.5px; letter-spacing: 0.09em; color: #444; margin-top: 9px;">BY MAYA R. LINDQVIST</div>
+        </div>
+      </div>
+
+      <!-- Two-column body -->
+      <div class="srf" style="column-count: 2; column-gap: 22px; margin-top: 16px; font-size: 11.7px; line-height: 1.36; text-align: justify; hyphens: auto; color: #1a1a1a;">
+        <p style="margin: 0;"><span style="float: var(--dc-float, left); font-size: var(--dc-size, 3.6em); line-height: var(--dc-lh, 0.82); font-weight: 700; color: #111; padding: 0.02em 0.09em 0 0;">I</span><span style="font-variant: small-caps; letter-spacing: 0.01em;">t was</span> a deliberate provocation, patriotically timed. On the mainland's national day, dozens of fighters and bombers pressed toward the island, the largest single-day incursion the defence ministry had logged that year. The aircraft entered the air-defence identification zone, a buffer whose edges trigger alerts long before any territorial line is crossed.</p>
+        <p style="margin: 0; text-indent: var(--pi, 1em);">Over the days that followed the sorties did not stop; they multiplied. Jets were scrambled, warnings broadcast, radar locks maintained. A retired air-force officer called it the tensest stretch he had seen in four decades of service.</p>
+
+        <!-- Inline image, one column wide -->
+        <figure style="margin: 12px 0; break-inside: avoid;">
+          <div style="position: relative; width: 100%; height: 128px; background-image: repeating-linear-gradient(135deg, #e9eaec 0 11px, #e1e2e5 11px 22px); border: 1px solid #dcdde0;">
+            <div class="lbl" style="position: absolute; left: 8px; bottom: 6px; font-size: 9.5px; color: #7a7f86; background: rgba(255,255,255,0.72); padding: 1px 5px;">[ photo — J-16, inline ]</div>
+          </div>
+          <figcaption class="lbl" style="font-size: 9.5px; color: #6E6E6E; margin-top: 4px;">A show of force off the island's southern coast.</figcaption>
+        </figure>
+
+        <p style="margin: 0; text-indent: var(--pi, 1em);">Officials abroad were quick to register alarm. A meeting in Europe between the two powers' most senior diplomats produced the usual communiqués and the usual denials, but little reassurance. State media described the flights as routine training of no consequence.</p>
+        <p style="margin: 0; text-indent: var(--pi, 1em);">The identification zone extends well beyond the island's coast, and in recent months the aircraft have probed its southern reaches most persistently, skirting the unofficial line down the middle of the strait.</p>
+
+        <!-- Inline map, one column wide -->
+        <figure style="margin: 12px 0; break-inside: avoid; border: 1px solid #d7dade;">
+          <div style="position: relative; height: 150px; background: linear-gradient(90deg, #f6e2e2 0 46%, #eef2ee 46% 100%);">
+            <div class="lbl" style="position: absolute; left: 8px; top: 8px; font-size: 9px; font-weight: 700; color: var(--accent, #E3120B);">Air Defence<br>Identification Zone</div>
+            <div class="lbl" style="position: absolute; left: 8px; top: 66px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #8a8f96;">CHINA</div>
+            <div class="lbl" style="position: absolute; right: 20px; top: 78px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #4a7a5a;">TAIWAN</div>
+            <div style="position: absolute; left: 42%; top: 24px; width: 1px; height: 100px; border-left: 1.5px dashed #9aa0a6; transform: rotate(14deg);"></div>
+            <div class="lbl" style="position: absolute; right: 8px; bottom: 6px; font-size: 8.5px; color: #7a7f86;">200 km</div>
+          </div>
+          <figcaption style="padding: 6px 8px 7px; border-top: 1px solid #d7dade;">
+            <div class="lbl" style="font-weight: 700; font-size: 10px;">Selected Chinese sorties into Taiwanese airspace, 2021</div>
+            <div class="lbl" style="font-size: 8.5px; color: #6E6E6E; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 10px; line-height: 1.5;"><span style="color:#2b7bba; white-space:nowrap;">— Jun 15th</span><span style="color:#c98a1e; white-space:nowrap;">— Sep 5th</span><span style="color:#3a9a6a; white-space:nowrap;">— Oct 1st-4th</span></div>
+            <div class="lbl" style="font-size: 8.5px; color: #9aa0a6; margin-top: 3px;">Source: Taiwan Ministry of National Defence</div>
+          </figcaption>
+        </figure>
+
+        <p style="margin: 0; text-indent: var(--pi, 1em);">By treating ever-larger formations as unremarkable, a rival can wear down the defenders' vigilance and blur the distinction between an exercise and the opening move of something graver.</p>
+        <p style="margin: 0; text-indent: var(--pi, 1em);">Assessing intent is the hard part. Sabre-rattling tends to intensify whenever the island is judged to be drifting toward a more permanent separation, or whenever its friends abroad grow conspicuously warmer.</p>
+        <p style="margin: 0; text-indent: var(--pi, 1em);">For now the flights remain flights. But each near-daily sortie narrows the margin for miscalculation, and it is miscalculation, more than design, that the island's planners have come to fear most.</p>
+      </div>
+
+      <!-- Running foot -->
+      <div class="lbl" style="position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-size: 11px; color: #6E6E6E;">58</div>
+    </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 820, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#E3120B&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#E3120B&quot;, &quot;#A3120B&quot;, &quot;#0B3D91&quot;, &quot;#1A1A1A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — flag, kicker, nameplate, rules, links&quot; },
+  &quot;featuredImage&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;optional featured image on the title page&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap.lines (PROPOSED — engine change needed)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#E3120B';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '3.6em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1em' : '0px';
+    const featDisplay = (this.props.featuredImage ?? true) ? 'block' : 'none';
+    return { accent, dcFloat, dcSize, dcLh, pi, featDisplay };
+  }
+}
+</script>
+</body>
+</html>

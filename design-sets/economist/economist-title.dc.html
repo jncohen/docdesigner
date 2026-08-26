@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>economist-title</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d8d8d6; }
+  a { color: var(--accent, #E3120B); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .ecw { width: 760px; background: #fff; color: #111;  text-align: left; }
+  .lbl { font-family: 'Archivo', sans-serif; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="760px" content-height="1074px" hint-size="100%,100%">
+<article class="ecw" data-screen-label="economist — title page" style="--accent: {{ accent }}; --feat-display: {{ featDisplay }}; position: relative; height: 1074px; padding: 0;">
+
+      <!-- Flag masthead (full-bleed) -->
+      <div style="background: var(--accent, #E3120B); display: flex; align-items: center; justify-content: space-between; padding: 9px 34px; min-height: 50px;">
+        <div class="srf" style="color: #fff; font-weight: 700; font-size: 30px;">Security</div>
+        <div class="srf" style="color: #fff; font-size: 15px; white-space: nowrap;"><span style="font-weight: 700;">Working Papers</span> &nbsp;Vol. 4 · 2026</div>
+      </div>
+
+      <!-- Title area -->
+      <div style="padding: 96px 60px 0;">
+        <div class="lbl" style="font-weight: 700; font-size: 17px; color: var(--accent, #E3120B); letter-spacing: 0.01em;">Menacing Taiwan</div>
+        <h1 class="srf" style="font-weight: 700; font-size: 68px; line-height: 0.99; color: #111; margin: 14px 0 0; letter-spacing: -0.015em; max-width: 15ch;">Too close for comfort</h1>
+        <div style="height: 26px;"></div>
+        <div style="width: 90px; border-top: 3px solid var(--accent, #E3120B);"></div>
+        <div style="height: 26px;"></div>
+        <div class="srf" style="font-weight: 700; font-size: 23px; line-height: 1.26; color: #1a1a1a; max-width: 30ch;">China is sending near-daily sorties near Taiwan, raising fears of a crisis</div>
+        <div class="lbl" style="font-weight: 700; font-size: 11.5px; letter-spacing: 0.11em; color: #444; margin-top: 26px;">BY MAYA R. LINDQVIST &nbsp;·&nbsp; NEW YORK</div>
+      </div>
+
+      <!-- Optional featured image -->
+      <div style="display: var(--feat-display, block); padding: 44px 60px 0;">
+        <div style="position: relative; width: 100%; height: 330px; background-image: repeating-linear-gradient(135deg, #e9eaec 0 12px, #e1e2e5 12px 24px); border: 1px solid #dcdde0;">
+          <div class="lbl" style="position: absolute; left: 12px; bottom: 10px; font-size: 11px; color: #7a7f86; background: rgba(255,255,255,0.72); padding: 2px 7px;">[ featured photo — optional on page 1 ]</div>
+        </div>
+      </div>
+
+      <!-- Foot -->
+      <div style="position: absolute; left: 60px; right: 60px; bottom: 40px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #d7dade; padding-top: 8px;">
+        <div class="lbl" style="font-size: 10px; color: #9aa0a6;">Source: Taiwan Ministry of National Defence</div>
+      </div>
+    </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 820, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#E3120B&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#E3120B&quot;, &quot;#A3120B&quot;, &quot;#0B3D91&quot;, &quot;#1A1A1A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — flag, kicker, nameplate, rules, links&quot; },
+  &quot;featuredImage&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;optional featured image on the title page&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap.lines (PROPOSED — engine change needed)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#E3120B';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '3.6em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1em' : '0px';
+    const featDisplay = (this.props.featuredImage ?? true) ? 'block' : 'none';
+    return { accent, dcFloat, dcSize, dcLh, pi, featDisplay };
+  }
+}
+</script>
+</body>
+</html>

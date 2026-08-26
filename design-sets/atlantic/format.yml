@@ -1,0 +1,119 @@
+# docdesigner style — atlantic
+# The Atlantic's long-form magazine feature: a warm off-white page, a large
+# high-contrast serif display title over a red accent kicker, an italic deck,
+# a centred small-caps byline, a short accent rule, a drop-cap opening, spaced
+# small-caps cross-heads, and a single narrow measure of old-style body serif.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (atlantic-{stylesheet,title,firstpage,page}.dc.html). Original faces
+# (Playfair Display display + Libre Caslon Text body) substituted with EB
+# Garamond (bundled). FLAT dotted-key format (schema v2). Validates clean
+# against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
+id: atlantic
+label: Atlantic
+description: >
+  The Atlantic's long-form feature look: warm off-white paper, a large serif
+  display title over a red accent kicker, an italic deck, a centred byline, a
+  short accent rule, a drop-cap opening and spaced small-caps cross-heads.
+  Playfair Display / Libre Caslon Text substituted with EB Garamond.
+
+# ---- page (symmetric wide measure; margins measured from the models) --------
+# firstpage & body padding 62 / 132 / 78 px (top / sides / bottom, div 96 = in).
+# Sides 132px = 1.375in ~= scales.margin.wide. Two-side: the running heads and
+# the outer folio alternate recto/verso across the models.
+page.papersize: letter
+page.margins.top: 0.65
+page.margins.bottom: 0.81
+page.margins.inner: 1.375
+page.margins.outer: 1.375
+page.twoside: true
+page.columns: 1
+
+# ---- typography (old-style serif; no bundled didone for the display face) ---
+typography.body: EB Garamond
+typography.heading: EB Garamond      # model display face is Playfair; see fidelity
+typography.mono: Fira Code
+typography.base_size: "11.5pt"       # spec sheet "~11pt"; models render 16px=12pt
+typography.line_height: 1.62         # stylesheet spec
+typography.mono_scale: 0.75          # code extract 12px / 16px body
+typography.justification: justified
+typography.microtype: true
+
+# ---- colour (warm near-black + a single editorial red) ----------------------
+color.text: "#1C1913"
+color.accent: "#B2332A"              # kicker, title rule, pull quotes, links
+color.muted: "#8A857A"               # decks, captions, running heads
+color.rule: "#CFC9BD"                # head/foot hairlines, light table rule
+color.background: "#FBFAF6"          # warm off-white paper (status new)
+color.code_bg: "#F2EFE7"             # tinted document-extract block (status new)
+links.color: accent
+
+# ---- headings (spaced small-caps cross-heads; italic sub-heads) -------------
+headings.number_sections: false
+headings.run_in: [h3]                # h3 typeset run-in with the paragraph
+# h1 = # cross-head ("THE SHAPE OF THE CLIMB"): centred spaced small caps, small.
+headings.h1.scale: 0.8
+headings.h1.weight: bold
+headings.h1.case: smallcaps
+headings.h1.align: center
+headings.h1.color: text
+# h2 = ## sub-head ("A second look"): italic display, near body size.
+headings.h2.scale: 0.95
+headings.h2.weight: bold             # model 600 semibold -> nearest bundled bold
+headings.h2.style: italic
+headings.h2.color: text
+# h3 = ### run-in italic lead-in ("On completion. text follows on the same line").
+headings.h3.scale: 0.9
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text              # else falls through to the accent default
+
+# ---- title — follows the OPENER (atlantic-firstpage) ------------------------
+# Centred kicker / title / deck / byline over a short red rule; the body flows
+# on the SAME page (no separate cover). layout `essay` (centred) is the nearest
+# enum to the model's "feature" and is status: port (inert today). No abstract:
+# a magazine feature carries a deck, not a labelled block.
+title.layout: essay
+title.align: center
+title.scale: 3.4                     # title 54px / 16px body (opener)
+title.color: text                    # title is near-black; the kicker is accent
+title.subtitle.scale: 1.15           # deck 18px / 16px body
+title.subtitle.style: italic
+title.subtitle.color: muted          # model deck #3A352C is darker; see fidelity
+title.byline.color: text             # byline in text ink, not the muted default
+title.rule.position: below
+title.rule.weight: thick             # 2px
+title.rule.length: 0.667             # 64px centred short rule (not full measure)
+title.rule.color: accent             # the short rule is red, not the grey rule role
+title.abstract.show: false           # feature has a deck, not an abstract
+
+# ---- paragraphs (first-line indent, no extra spacing; drop-cap opener) -------
+paragraph.indent: lg                 # model text-indent 1.4em -> nearest step (1.5em)
+paragraph.spacing: none
+paragraph.drop_cap.lines: 3          # opening initial spans ~3 lines (status new)
+paragraph.drop_cap.color: text       # model drop cap is near-black, not accent
+
+# ---- figures / tables (editorial ruled) ------------------------------------
+figure.caption.position: below       # "caption below" (status new)
+figure.caption.label_style: italic   # "caption ... italic" (status new)
+table.style: booktabs                # heavy top/bottom rules, no verticals
+table.header.weight: bold
+table.caption.position: above        # table title above; source note below (new)
+
+# ---- quotes / code (left-ruled block quote; monospace extract) -------------
+quote.style: italic                  # block quotation set italic (status new)
+quote.rule: true                     # vertical accent rule at the left (new)
+quote.color: muted
+code.highlight: none                 # editorial extract set plain, unhighlighted
+code.background: code_bg             # tinted extract block (status new)
+
+# ---- running head + folio ---------------------------------------------------
+# Head carries the article running title; the models also show a masthead line
+# and a date, neither of which is a token (see fidelity). Folio is the outer
+# drop-folio in the foot; head and foot both carry a hairline rule.
+header_footer.header.right: runningtitle
+header_footer.header.rule: true
+header_footer.footer.right: page     # outer folio (schema default; kept explicit)
+header_footer.footer.rule: true

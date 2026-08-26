@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>methods-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #0F766E); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, 'SFMono-Regular', monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="srf" data-screen-label="methods — page 1" style="--accent: {{ accent }}; --cbg: {{ cbg }}; --cfg: {{ cfg }}; --cbd: {{ cbd }}; --ckw: {{ ckw }}; --cstr: {{ cstr }}; --cfn: {{ cfn }}; --cnum: {{ cnum }}; --ccom: {{ ccom }}; --cgut: {{ cgut }}; --cgutbd: {{ cgutbd }}; --ln: {{ ln }}; --num: {{ num }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1D21; padding: 84px 96px 78px;  font-size: 14.5px; line-height: 1.5;">
+
+    <!-- journal furniture -->
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #E2E7EB; padding-bottom: 8px;">
+      <span class="mono" style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent, #0F766E);">Research Note</span>
+      <span class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #667085;">Methods &amp; Measurement · 2026</span>
+    </div>
+
+    <!-- title -->
+    <h1 class="srf" style="font-size: 33px; line-height: 1.1; font-weight: 700; color: #16181C; letter-spacing: -0.015em; margin: 26px 0 0; text-wrap: balance;">Cross-Sectional Differences in Wealth by Education</h1>
+    <div class="srf" style="font-size: 18px; font-style: italic; color: #667085; margin-top: 9px;">Measurement and theory alternatives</div>
+    <div style="border-bottom: 1.5px solid var(--accent, #0F766E); margin: 16px 0 0; width: 100%;"></div>
+
+    <!-- byline -->
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 12px; flex-wrap: wrap; gap: 4px 16px;">
+      <div style="font-size: 15px; color: #1A1D21;">Joseph N. Cohen<span style="font-size: 10px; vertical-align: super; color: var(--accent, #0F766E);">1</span></div>
+      <div class="mono" style="font-size: 11.5px; color: #667085;">June 23, 2026</div>
+    </div>
+    <div style="font-size: 12.5px; color: #667085; font-style: italic; margin-top: 2px;"><sup>1</sup>Department of Sociology</div>
+
+    <!-- abstract -->
+    <div style="margin: 22px 0 0; padding: 16px 18px; background: #F8FAFB; border-left: 3px solid var(--accent, #0F766E);">
+      <div class="mono" style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent, #0F766E); margin-bottom: 6px;">Abstract</div>
+      <p style="margin: 0; font-size: 13.3px; line-height: 1.52; color: #2A2E34; text-align: justify; hyphens: auto;">This note examines the empirical relationship between education and household wealth accumulation in the United States using the 2022 Survey of Consumer Finances. Net of age, race, and marital status, most of the detectable structure is captured by two broad benchmarks — high-school and bachelor's-degree completion. Finer distinctions above those thresholds yield comparatively small improvements in model fit, a pattern consistent with credentialist, signaling, and institutional-sorting accounts of stratification.</p>
+    </div>
+    <div style="font-size: 12.5px; color: #2A2E34; margin-top: 10px;"><span style="font-weight: 700;">Keywords</span> &nbsp;household wealth · educational attainment · Survey of Consumer Finances · measurement · stratification</div>
+
+    <!-- section 1 -->
+    <h2 class="srf" style="font-size: 22px; font-weight: 700; color: var(--accent, #0F766E); line-height: 1.15; margin: 30px 0 9px; letter-spacing: -0.01em;"><span class="mono" style="display: var(--num, inline); font-size: 17px; font-weight: 600; color: var(--accent, #0F766E); margin-right: 11px;">1</span>Introduction</h2>
+    <p style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">It is well established that education and wealth move together: better-educated households are richer, and richer households acquire more education. The analytic question is the <em>shape</em> of that relationship. Is it best characterized as continuous — each additional year of schooling adding a proportional increment to lifetime accumulation — or as a <em>threshold</em> relationship, in which crossing major milestones such as high-school or college completion matters more than the marginal year?</p>
+    <p style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">A continuous return follows naturally from human-capital reasoning, where schooling supplies market-valued skills that compound over a career. A threshold return follows instead from accounts that emphasize credentials and institutional sorting: degrees function as markers that allocate individuals to discretely different opportunity structures. The two are observationally distinguishable, and the <span class="mono" style="font-size: 0.88em; background: #EEF2F4; padding: 1px 5px; border-radius: 3px; color: #1A4A6E;">networth</span> distribution in the SCF is well suited to telling them apart.</p>
+
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0F766E&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0F766E&quot;, &quot;#1F5FA8&quot;, &quot;#7A3E9C&quot;, &quot;#B4432E&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — headings, rules, code labels, links&quot; },
+  &quot;codeTheme&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;light&quot;, &quot;options&quot;: [&quot;light&quot;, &quot;dark&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;code.highlight — light (tango-family) vs dark (breezedark-family)&quot; },
+  &quot;lineNumbers&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;code.line_numbers&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#0F766E';
+    const dark = (this.props.codeTheme ?? 'light') === 'dark';
+    const c = dark
+      ? { bg: '#1E2430', fg: '#D6DEE8', bd: '#2C3646', kw: '#3DAEE9', str: '#2ECC71', fn: '#E6B450', num: '#F0883E', com: '#7A8494', gut: '#5A6472', gutbd: '#2C3646' }
+      : { bg: '#F4F6F8', fg: '#1A1D21', bd: '#E2E7EB', kw: '#1F4E9C', str: '#3F8F2E', fn: '#A03028', num: '#B35900', com: '#8A93A0', gut: '#AAB2BD', gutbd: '#E2E7EB' };
+    const ln = (this.props.lineNumbers ?? true) ? 'block' : 'none';
+    const num = (this.props.numberSections ?? true) ? 'inline' : 'none';
+    return {
+      accent, ln, num,
+      cbg: c.bg, cfg: c.fg, cbd: c.bd, ckw: c.kw, cstr: c.str,
+      cfn: c.fn, cnum: c.num, ccom: c.com, cgut: c.gut, cgutbd: c.gutbd
+    };
+  }
+}
+</script>
+</body>
+</html>

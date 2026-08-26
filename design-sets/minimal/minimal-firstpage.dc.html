@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>minimal-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #494c52; }
+  a { color: var(--accent, #244A7A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article data-screen-label="minimal — page 1" style="--accent: {{ accent }}; --num-display: {{ numDisplay }}; --heading-transform: {{ headingTransform }}; --para-indent: {{ paraIndent }}; --para-space: {{ paraSpace }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 96px 120px 76px;  font-size: 15.5px; line-height: 1.34;">
+
+    <!-- Title block: \pretitle / \posttitle / \preauthor / \predate -->
+    <div style="font-size: 34px; line-height: 1.08; font-weight: 700; color: var(--accent, #244A7A); letter-spacing: -0.01em; text-wrap: balance;">Estimating Neighborhood Effects under Partial Population Interference</div>
+    <div style="height: 6px;"></div>
+    <div style="border-bottom: 2px solid var(--accent, #244A7A); margin: 4px 0 8px;"></div>
+    <div style="font-size: 16.5px; color: #6B6B6B; line-height: 1.4;">Joanna R. Vance<span style="font-size: 12px; vertical-align: super;">1</span>&nbsp;&nbsp;·&nbsp;&nbsp;Daniel Okafor<span style="font-size: 12px; vertical-align: super;">1,2</span>&nbsp;&nbsp;·&nbsp;&nbsp;Priya Menon<span style="font-size: 12px; vertical-align: super;">2</span></div>
+    <div style="font-size: 13px; color: #6B6B6B; margin-top: 3px; font-style: italic;"><sup>1</sup>Department of Sociology, Meridian University &nbsp;&nbsp; <sup>2</sup>Center for Population Research</div>
+    <div style="font-size: 14px; color: #6B6B6B; margin-top: 6px;">July 11, 2026</div>
+
+    <!-- Abstract -->
+    <div style="margin: 22px 34px 4px; font-size: 13.7px; line-height: 1.42; color: #2a2a2a;">
+      <span style="font-weight: 700; color: #1A1A1A;">Abstract.</span> Standard estimators of neighborhood effects assume that a household's outcome depends only on its own treatment. We relax this to <em>partial interference</em>, allowing spillovers within but not across neighborhoods, and derive a two-stage estimator that remains consistent under moderate exposure mismatch. Applying it to a large residential-mobility experiment, we find direct effects roughly one-third smaller than the naive benchmark, and non-negligible spillover onto untreated neighbors. The gap widens with neighborhood density, suggesting that ignoring interference understates the reach of place-based policy.
+    </div>
+
+    <!-- Section 1 -->
+    <h2 style="font-size: 21px; font-weight: 700; color: var(--accent, #244A7A); text-transform: var(--heading-transform, none); margin: 28px 0 8px;"><span style="display: var(--num-display, inline); color: var(--accent, #244A7A);">1&nbsp;&nbsp;</span>Introduction</h2>
+    <p style="margin: 0; text-indent: 0; text-align: justify;">A large literature estimates how the neighborhood a family lives in shapes later outcomes. Almost all of it rests on an assumption borrowed from clinical trials: that one unit's treatment leaves its neighbors untouched. In residential settings this is implausible. When a household is induced to move, the families it leaves behind — and the ones it joins — plausibly experience some fraction of the same shock.</p>
+    <p style="margin: 0; text-indent: var(--para-indent, 1.25em); margin-bottom: var(--para-space, 0px); text-align: justify;">We take the interference seriously but bound it. Under <em>partial population interference</em>, spillovers operate within a neighborhood and stop at its boundary. This is weak enough to hold in most mobility designs and strong enough to identify both a direct effect and a spillover effect from the same data.</p>
+
+    <!-- Section 2 -->
+    <h2 style="font-size: 21px; font-weight: 700; color: var(--accent, #244A7A); text-transform: var(--heading-transform, none); margin: 28px 0 8px;"><span style="display: var(--num-display, inline); color: var(--accent, #244A7A);">2&nbsp;&nbsp;</span>Data and methods</h2>
+    <p style="margin: 0; text-indent: 0; text-align: justify;">Our sample links administrative address histories to earnings records for 41,860 households across 612 neighborhoods. We define each household's exposure as the treated share of its neighborhood in the prior year, and estimate the following two-stage specification.</p>
+
+    <!-- Display equation -->
+    <div style="display: flex; align-items: baseline; justify-content: center; gap: 18px; margin: 16px 0; font-size: 16px;">
+      <div style="font-style: italic;">Y<sub style="font-style: normal;">i</sub> = α + β·D<sub style="font-style: normal;">i</sub> + γ·E<sub style="font-style: normal;">i</sub> + <span style="font-style: normal;">𝘅</span><sub style="font-style: normal;">i</sub><sup style="font-style: normal;">⊤</sup>δ + ε<sub style="font-style: normal;">i</sub></div>
+      <div style="color: #6B6B6B; font-variant-numeric: tabular-nums;">(1)</div>
+    </div>
+    <p style="margin: 0; text-indent: 0; text-align: justify;">where <em>D<sub>i</sub></em> is own treatment, <em>E<sub>i</sub></em> is neighborhood exposure, and the coefficient <em>γ</em> captures the spillover of interest. We fit it in R:</p>
+
+    <!-- Code block: tango highlight, Fira Code at mono_scale 0.9 -->
+    <pre style="font-family: 'Fira Code', ui-monospace, monospace; font-size: 13.2px; line-height: 1.5; background: #f6f7f9; border: 1px solid #e6e8ec; border-radius: 3px; padding: 12px 14px; margin: 12px 0; overflow-x: auto;"><code style="white-space: pre;">{{ codeLine1 }}<span style="color: #1A1A1A;">fit</span> <span style="color: #204a87;">&lt;-</span> <span style="color: #a40000;">feols</span>(y <span style="color: #204a87;">~</span> treat <span style="color: #204a87;">+</span> exposure <span style="color: #204a87;">|</span> nbhd <span style="color: #204a87;">+</span> year, data <span style="color: #204a87;">=</span> moves)
+<span style="color: #a40000;">summary</span>(fit)<span style="color: #204a87;">$</span>coeftable</code></pre>
+
+    <h3 style="font-size: 15.5px; font-weight: 700; color: var(--accent, #244A7A); text-transform: var(--heading-transform, none); margin: 20px 0 6px;">Estimated effects</h3>
+    <p style="margin: 0; text-indent: 0; text-align: justify;">Table 1 reports the direct and spillover coefficients with neighborhood-clustered standard errors.</p>
+
+    <!-- Table: booktabs (rules only, no verticals), arraystretch 1.2 -->
+    <table style="width: 100%; border-collapse: collapse; margin: 14px 0 4px; font-size: 14px;">
+      <thead>
+        <tr style="border-top: 1.5px solid #1A1A1A; border-bottom: 1px solid #1A1A1A;">
+          <th style="text-align: left; padding: 6px 4px; font-weight: 700;">Term</th>
+          <th style="text-align: right; padding: 6px 4px; font-weight: 700; font-variant-numeric: tabular-nums;">Estimate</th>
+          <th style="text-align: right; padding: 6px 4px; font-weight: 700; font-variant-numeric: tabular-nums;">Std. error</th>
+          <th style="text-align: right; padding: 6px 4px; font-weight: 700; font-variant-numeric: tabular-nums;">t</th>
+        </tr>
+      </thead>
+      <tbody style="font-variant-numeric: tabular-nums;">
+        <tr><td style="padding: 6px 4px;">Direct (β)</td><td style="text-align: right; padding: 6px 4px;">0.184</td><td style="text-align: right; padding: 6px 4px;">0.031</td><td style="text-align: right; padding: 6px 4px;">5.94</td></tr>
+        <tr><td style="padding: 6px 4px;">Spillover (γ)</td><td style="text-align: right; padding: 6px 4px;">0.061</td><td style="text-align: right; padding: 6px 4px;">0.024</td><td style="text-align: right; padding: 6px 4px;">2.54</td></tr>
+        <tr style="border-bottom: 1.5px solid #1A1A1A;"><td style="padding: 6px 4px;">Naive benchmark</td><td style="text-align: right; padding: 6px 4px;">0.271</td><td style="text-align: right; padding: 6px 4px;">0.028</td><td style="text-align: right; padding: 6px 4px;">9.68</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size: 12.5px; color: #6B6B6B; margin: 2px 4px 0;">Table 1. Direct and spillover effects on log earnings. Standard errors clustered by neighborhood (n = 612).</div>
+
+    <!-- Section 3 with figure -->
+    <h2 style="font-size: 21px; font-weight: 700; color: var(--accent, #244A7A); text-transform: var(--heading-transform, none); margin: 28px 0 8px;"><span style="display: var(--num-display, inline); color: var(--accent, #244A7A);">3&nbsp;&nbsp;</span>Results</h2>
+    <p style="margin: 0; text-indent: 0; text-align: justify;">The direct effect is about a third smaller than the naive estimate, and the spillover is statistically distinguishable from zero. Figure 1 plots both against neighborhood density.</p>
+
+    <figure style="margin: 14px 0 4px;">
+      <div style="position: relative; width: 100%; height: 168px; border: 1px solid #d7dade; border-radius: 3px; background-image: repeating-linear-gradient(135deg, #f3f4f6 0 10px, #eceef1 10px 20px);"></div>
+      <figcaption style="font-size: 12.5px; color: #6B6B6B; margin-top: 4px;"><span style="font-family: 'Fira Code', monospace; font-size: 11px; color: #8a8f96;">[ coefficient plot — β and γ vs. neighborhood density ]</span> &nbsp; Figure 1. Effects widen with density.</figcaption>
+    </figure>
+
+    <!-- References -->
+    <h2 style="font-size: 21px; font-weight: 700; color: var(--accent, #244A7A); text-transform: var(--heading-transform, none); margin: 28px 0 8px;"><span style="display: var(--num-display, inline); color: var(--accent, #244A7A);">4&nbsp;&nbsp;</span>References</h2>
+    <div style="font-size: 13.5px; line-height: 1.4; color: #2a2a2a;">
+      <div style="padding-left: 1.6em; text-indent: -1.6em; margin-bottom: 5px;">Hudgens, M. &amp; Halloran, M. (2008). Toward causal inference with interference. <em>Journal of the American Statistical Association</em>, 103(482), 832–842.</div>
+      <div style="padding-left: 1.6em; text-indent: -1.6em; margin-bottom: 5px;">Sobel, M. (2006). What do randomized studies of housing mobility demonstrate? <em>JASA</em>, 101(476), 1398–1407.</div>
+      <div style="padding-left: 1.6em; text-indent: -1.6em;">Vazquez-Bare, G. (2023). Identification and estimation of spillover effects. <em>Journal of Econometrics</em>, 237(1).</div>
+    </div>
+
+    <!-- Running foot: \fancyfoot[C] -->
+    <div style="position: absolute; left: 0; right: 0; bottom: 40px; text-align: center; font-size: 12px; color: #6B6B6B;">1</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#244A7A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#244A7A&quot;, &quot;#7A2E2E&quot;, &quot;#1F5A3A&quot;, &quot;#3A3F4A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — headings, title rule, section numbers, links&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections&quot; },
+  &quot;headingCase&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;normal&quot;, &quot;options&quot;: [&quot;normal&quot;, &quot;upper&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.*.case&quot; },
+  &quot;paragraphStyle&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;indent&quot;, &quot;options&quot;: [&quot;indent&quot;, &quot;spaced&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent vs paragraph.spacing&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#244A7A';
+    const numDisplay = (this.props.numberSections ?? true) ? 'inline' : 'none';
+    const headingTransform = (this.props.headingCase ?? 'normal') === 'upper' ? 'uppercase' : 'none';
+    const para = this.props.paragraphStyle ?? 'indent';
+    const paraIndent = para === 'indent' ? '1.25em' : '0px';
+    const paraSpace = para === 'indent' ? '0px' : '0.62em';
+    const codeLine1 = React.createElement('span', { style: { color: '#6B6B6B' } },
+      '# two-stage estimate of direct + spillover effects\n');
+    return { accent, numDisplay, headingTransform, paraIndent, paraSpace, codeLine1 };
+  }
+}
+</script>
+</body>
+</html>

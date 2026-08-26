@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nature-title</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #0B4F8A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  sup.cite { font-size: 0.66em; vertical-align: super; line-height: 0; color: var(--accent, #0B4F8A); font-weight: 600; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="794px" content-height="1123px" hint-size="100%,100%">
+<article class="srf" data-screen-label="nature — title page" style="--accent: {{ accent }}; position: relative; width: 794px; min-height: 1123px; background: #ffffff; color: #0A0A0A; padding: 92px 84px 66px;  font-size: 12.6px; line-height: 1.4; display: flex; flex-direction: column;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 9px; border-bottom: 2.5px solid #0A0A0A;">
+      <span class="srf" style="font-size: 15px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--accent, #0B4F8A);">Article</span>
+      <span class="mono" style="font-size: 9.5px; color: #6A6F76;">https://doi.org/10.1000/jpsci.2026.0142</span>
+    </div>
+    <div style="margin-top: 96px;">
+      <h1 class="srf" style="font-size: 33px; line-height: 1.14; font-weight: 700; color: #0A0A0A; letter-spacing: -0.012em; margin: 0; max-width: 26ch; text-wrap: balance;">Threshold structure in the accumulation of household wealth</h1>
+      <div class="srf" style="font-size: 15px; color: #0A0A0A; margin-top: 20px; line-height: 1.5;">J. N. Cohen<sup class="cite">1</sup>, A. R. Delgado<sup class="cite">1,2</sup>, P. Menon<sup class="cite">2</sup> &amp; D. Okafor<sup class="cite">3</sup></div>
+      <div class="srf" style="font-size: 10.5px; color: #6A6F76; margin-top: 6px; font-style: italic; line-height: 1.45; max-width: 62ch;"><sup>1</sup>Department of Sociology, Meridian University. <sup>2</sup>Center for Population Research. <sup>3</sup>Institute for Economic Analysis.</div>
+    </div>
+    <div style="margin-top: 44px; max-width: 64ch;">
+      <p class="srf" style="font-size: 13.4px; line-height: 1.5; font-weight: 600; color: #16181C; margin: 0; text-align: justify; hyphens: auto;">The relationship between education and household wealth is widely documented, yet its functional form is not. Using the 2022 Survey of Consumer Finances, we test whether wealth returns to schooling are continuous or concentrated at discrete credential thresholds. Net of age, race and marital status, most detectable structure is captured by two benchmarks — high-school and bachelor's-degree completion — while finer distinctions contribute little.</p>
+    </div>
+    <div style="margin-top: auto; display: flex; align-items: baseline; justify-content: space-between; border-top: 0.5px solid #C7CBD1; padding-top: 8px;">
+      <span class="mono" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #6A6F76;">Received 2 May 2026 · Accepted 18 June 2026</span>
+      <span class="mono" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #6A6F76;">J. Popul. Sci. · Vol. 12</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 890, &quot;height&quot;: 1240 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0B4F8A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0B4F8A&quot;, &quot;#0A0A0A&quot;, &quot;#1F7A54&quot;, &quot;#8A2846&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — category tag, citations, links (headings stay black)&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections — Nature uses named heads by default&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#0B4F8A';
+    const num = (this.props.numberSections ?? false) ? 'inline' : 'none';
+    return { accent, num };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>atlantic-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d7d2c8; }
+  a { color: var(--accent, #B2332A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .disp { font-family: 'Playfair Display', Georgia, serif; }
+  .cas { font-family: 'Libre Caslon Text', Georgia, 'Times New Roman', serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="cas" data-screen-label="atlantic — page 1" style="--accent: {{ accent }}; --dc-float: {{ dcFloat }}; --dc-size: {{ dcSize }}; --dc-lh: {{ dcLh }}; --pi: {{ pi }}; position: relative; width: 816px; min-height: 1056px; background: #fbfaf6; color: #1c1913; padding: 62px 132px 78px;  font-size: 16px; line-height: 1.62;">
+
+    <!-- running head -->
+    <div style="position: absolute; top: 40px; left: 132px; right: 132px; display: flex; align-items: baseline; justify-content: space-between; border-bottom: 0.6px solid #cfc9bd; padding-bottom: 6px;">
+      <span class="cas" style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #8a857a;">The Meridian Monthly</span>
+      <span class="cas" style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #8a857a;">May 2026</span>
+    </div>
+
+    <!-- title block -->
+    <div style="text-align: center; margin-top: 26px;">
+      <div class="cas" style="font-size: 12px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent, #B2332A);">The American Idea</div>
+      <h1 class="disp" style="font-size: 54px; line-height: 1.02; font-weight: 800; color: #1c1913; margin: 14px 0 0; letter-spacing: -0.01em;">The Two Ladders</h1>
+      <div class="cas" style="font-size: 18px; line-height: 1.42; font-style: italic; color: #3a352c; margin: 16px auto 0; max-width: 42ch;">American opportunity was supposed to be a ramp. The numbers describe a staircase.</div>
+      <div class="cas" style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #1c1913; margin-top: 18px;">By Joseph N. Cohen</div>
+    </div>
+
+    <div style="width: 64px; border-top: 2px solid var(--accent, #B2332A); margin: 26px auto 24px;"></div>
+
+    <!-- body: drop cap + small-caps lead -->
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto;"><span class="disp" style="float: var(--dc-float, left); font-size: var(--dc-size, 5.2em); line-height: var(--dc-lh, 0.82); font-weight: 800; color: #1c1913; padding: 0.04em 0.12em 0 0;">F</span><span style="font-variant: small-caps; letter-spacing: 0.02em;">or most of</span> a century, Americans have told a story about schooling in which effort accumulates like interest: each additional year of instruction adds a little to what a family can eventually hope to own. It is a comforting story, and a democratic one. It is also, the data suggest, wrong in an instructive way.</p>
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.4em);">Sort American households by the education of the person who heads them, and net worth climbs as you would expect. But the climb is not smooth. It lurches. Between &ldquo;some college&rdquo; and a finished bachelor&rsquo;s degree, median wealth roughly triples&mdash;a single riser far taller than any step around it. The gradient is not a ramp. It is a staircase, with two tall steps and long flat landings in between.</p>
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.4em);">This matters because we fund the ramp. Public investment in higher education is overwhelmingly organized around enrollment&mdash;getting students in the door&mdash;on the theory that each year spent inside pays its own way. If the returns are gated at completion, then a year of college without a degree buys a family a place on a landing, not a step up.</p>
+
+    <!-- pull quote -->
+    <blockquote class="disp" style="margin: 30px 40px; text-align: center; border: 0;">
+      <p style="margin: 0; font-size: 30px; line-height: 1.24; font-style: italic; font-weight: 600; color: var(--accent, #B2332A);">&ldquo;We built a ladder, and called it a ramp.&rdquo;</p>
+    </blockquote>
+
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.4em);">The economists who first noticed the pattern were reluctant to make too much of it. Thresholds are the kind of thing that can appear by accident when a continuous variable is chopped into categories. But the two steps survive every reasonable way of drawing the lines&mdash;and they survive the survey&rsquo;s elaborate machinery for weighting the very rich, whose fortunes might otherwise drown out everyone else.</p>
+
+    <!-- running foot -->
+    <div style="position: absolute; left: 132px; right: 132px; bottom: 40px; display: flex; align-items: baseline; justify-content: space-between; border-top: 0.6px solid #cfc9bd; padding-top: 7px;">
+      <span class="cas" style="font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a857a;">The Meridian Monthly</span>
+      <span class="cas" style="font-size: 12px; color: #8a857a;">47</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#B2332A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#B2332A&quot;, &quot;#8A2A22&quot;, &quot;#1F5A4C&quot;, &quot;#3A352C&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — kicker, title rule, pull quotes, document rule, links&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap — large initial on the opening paragraph&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent after the opening paragraph&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#B2332A';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '5.2em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.4em' : '0px';
+    return { accent, dcFloat, dcSize, dcLh, pi };
+  }
+}
+</script>
+</body>
+</html>

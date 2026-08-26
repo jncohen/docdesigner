@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>government-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #1A3A5C); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="srf" data-screen-label="government — page 1" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1C2126; padding: 0 0 76px;  font-size: 13.5px; line-height: 1.5;">
+
+    <!-- agency masthead band -->
+    <div style="background: var(--accent, #1A3A5C); color: #fff; padding: 22px 76px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85;">Bureau of Household Statistics</div>
+      <div class="srf" style="font-size: 15px; font-weight: 400; margin-top: 3px; opacity: 0.92;">Economic &amp; Demographic Research Division</div>
+    </div>
+    <!-- thin accent stripe -->
+    <div style="height: 4px; background: #C4A64B;"></div>
+
+    <div style="padding: 40px 76px 0;">
+      <!-- report series line -->
+      <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 2px solid var(--accent, #1A3A5C); padding-bottom: 7px;">
+        <span class="mono" style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent, #1A3A5C);">Statistical Bulletin</span>
+        <span class="mono" style="font-size: 11px; letter-spacing: 0.06em; color: #5A636B;">Report 2026-14 · Issued July 2026</span>
+      </div>
+
+      <!-- title -->
+      <h1 class="srf" style="font-size: 30px; line-height: 1.15; font-weight: 700; color: #14181C; letter-spacing: -0.01em; margin: 22px 0 0; max-width: 26ch;">Household Wealth by Educational Attainment, 2022</h1>
+      <div class="srf" style="font-size: 16px; color: #5A636B; margin-top: 8px;">Estimates from the Survey of Consumer Finances</div>
+      <div class="mono" style="font-size: 12px; color: #5A636B; margin-top: 14px;">Prepared by J. N. Cohen, Economic &amp; Demographic Research Division</div>
+
+      <!-- highlights box -->
+      <div style="margin-top: 26px; border: 1px solid #C7CDD3; background: #F4F6F8;">
+        <div class="mono" style="background: var(--accent, #1A3A5C); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 16px;">Highlights</div>
+        <ul class="srf" style="margin: 0; padding: 14px 20px 14px 34px; font-size: 13px; line-height: 1.55; color: #2A3138;">
+          <li style="margin-bottom: 5px;">Median net worth rises sharply at two credential thresholds — high-school and bachelor's-degree completion.</li>
+          <li style="margin-bottom: 5px;">Attainment above a bachelor's degree adds comparatively little to median household wealth.</li>
+          <li style="margin: 0;">Estimates are net of age, race, and marital status and use the survey's replicate-weight design.</li>
+        </ul>
+      </div>
+
+      <!-- section head -->
+      <h2 class="srf" style="font-size: 17px; font-weight: 700; color: var(--accent, #1A3A5C); margin: 28px 0 7px;">1. &nbsp;Introduction</h2>
+      <p class="srf" style="margin: 0 0 0.6em; text-align: justify; hyphens: auto;">This bulletin presents estimates of household net worth by the educational attainment of the household head, drawn from the 2022 Survey of Consumer Finances. It documents a well-known association — that the better educated hold more wealth — and characterizes its functional form.</p>
+      <p class="srf" style="margin: 0 0 0.6em; text-align: justify; hyphens: auto;">Estimates are presented both unadjusted and net of demographic controls. All figures reflect the survey's complex sample design; standard errors are computed from replicate weights and account for multiple imputation.</p>
+
+      <!-- data table: gridded, zebra (agency style) -->
+      <div class="mono" style="font-size: 12px; font-weight: 500; color: #14181C; margin: 22px 0 7px;">Table 1. Median household net worth by attainment, 2022 (2022 dollars)</div>
+      <table class="srf" style="width: 100%; border-collapse: collapse; font-size: 12.5px;">
+        <thead>
+          <tr style="background: var(--accent, #1A3A5C); color: #fff;">
+            <th style="text-align: left; padding: 6px 10px; font-weight: 600; border: 1px solid var(--accent, #1A3A5C);">Educational attainment</th>
+            <th style="text-align: right; padding: 6px 10px; font-weight: 600; border: 1px solid var(--accent, #1A3A5C);">Median net worth</th>
+            <th style="text-align: right; padding: 6px 10px; font-weight: 600; border: 1px solid var(--accent, #1A3A5C);">Std. error</th>
+            <th style="text-align: right; padding: 6px 10px; font-weight: 600; border: 1px solid var(--accent, #1A3A5C);">N</th>
+          </tr>
+        </thead>
+        <tbody style="font-variant-numeric: tabular-nums;">
+          <tr style="background: #fff;"><td style="padding: 5px 10px; border: 1px solid #D3D8DD;">No high-school diploma</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">$38,200</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">4,100</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">612</td></tr>
+          <tr style="background: #F2F5F7;"><td style="padding: 5px 10px; border: 1px solid #D3D8DD;">High-school diploma</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">$106,800</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">6,900</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">1,544</td></tr>
+          <tr style="background: #fff;"><td style="padding: 5px 10px; border: 1px solid #D3D8DD;">Some college</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">$138,500</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">8,200</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">988</td></tr>
+          <tr style="background: #F2F5F7;"><td style="padding: 5px 10px; border: 1px solid #D3D8DD;">Bachelor's degree</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">$312,400</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">14,600</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">901</td></tr>
+          <tr style="background: #fff;"><td style="padding: 5px 10px; border: 1px solid #D3D8DD;">Graduate degree</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">$421,900</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">19,300</td><td style="text-align: right; padding: 5px 10px; border: 1px solid #D3D8DD;">550</td></tr>
+        </tbody>
+      </table>
+      <div class="srf" style="font-size: 10.5px; color: #5A636B; margin-top: 6px; line-height: 1.4;">Source: Board of Household Statistics, Survey of Consumer Finances, 2022. Estimates use replicate weights; standard errors account for multiple imputation across five implicates.</div>
+    </div>
+
+    <!-- footer -->
+    <div style="position: absolute; left: 76px; right: 76px; bottom: 34px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #C7CDD3; padding-top: 6px;">
+      <span class="mono" style="font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #5A636B;">Bureau of Household Statistics</span>
+      <span class="mono" style="font-size: 9.5px; color: #5A636B;">Report 2026-14 · Page 1</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#1A3A5C&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#1A3A5C&quot;, &quot;#123A2E&quot;, &quot;#3A2A5C&quot;, &quot;#5C3A1A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — masthead band, table header, section heads, rules&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#1A3A5C' };
+  }
+}
+</script>
+</body>
+</html>

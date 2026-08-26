@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>methods-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #0F766E); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, 'SFMono-Regular', monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="srf" data-screen-label="methods — page 2" style="--accent: {{ accent }}; --cbg: {{ cbg }}; --cfg: {{ cfg }}; --cbd: {{ cbd }}; --ckw: {{ ckw }}; --cstr: {{ cstr }}; --cfn: {{ cfn }}; --cnum: {{ cnum }}; --ccom: {{ ccom }}; --cgut: {{ cgut }}; --cgutbd: {{ cgutbd }}; --ln: {{ ln }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1D21; padding: 60px 96px 78px;  font-size: 14.5px; line-height: 1.5;">
+
+    <!-- running head -->
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 0.6px solid #D4D9DE; padding-bottom: 7px;">
+      <span class="mono" style="font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: #667085;">Cohen · Wealth by Education</span>
+      <span class="mono" style="font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: #667085;">Data &amp; Methods</span>
+    </div>
+
+    <!-- section 2 -->
+    <h2 class="srf" style="font-size: 22px; font-weight: 700; color: var(--accent, #0F766E); line-height: 1.15; margin: 24px 0 9px; letter-spacing: -0.01em;"><span class="mono" style="display: var(--num, inline); font-size: 17px; font-weight: 600; color: var(--accent, #0F766E); margin-right: 11px;">2</span>Data and methods</h2>
+    <p style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">The SCF is a nationally representative survey of U.S. household balance sheets that pairs a geographic sample with an oversample of high-wealth households. Because dollar wealth is heavily skewed, we model <span class="mono" style="font-size: 0.88em; background: #EEF2F4; padding: 1px 5px; border-radius: 3px; color: #1A4A6E;">log(networth)</span> and estimate every quantity on the survey's replicate-weight design so that standard errors reflect the complex sample.</p>
+
+    <!-- HERO: code listing -->
+    <figure style="margin: 18px 0; break-inside: avoid;">
+      <figcaption style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px;">
+        <span class="mono" style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent, #0F766E);">Listing 1</span>
+        <span class="mono" style="font-size: 11px; color: #667085;">threshold specification · R</span>
+      </figcaption>
+      <div style="display: flex; background: var(--cbg, #F4F6F8); border: 1px solid var(--cbd, #E2E7EB); border-radius: 6px; overflow: hidden;">
+        <div class="mono" style="display: var(--ln, block); flex: 0 0 auto; padding: 13px 12px; text-align: right; color: var(--cgut, #AAB2BD); border-right: 1px solid var(--cgutbd, #E2E7EB); font-size: 12.5px; line-height: 1.62; user-select: none;">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div>
+        <pre class="mono" style="margin: 0; padding: 13px 16px; font-size: 12.5px; line-height: 1.62; color: var(--cfg, #1A1D21); white-space: pre; overflow-x: auto; flex: 1;"><code><span style="color: var(--cfn,#A03028);">library</span>(survey)                <span style="color: var(--ccom,#8A93A0);"># replicate-weight design</span>
+<span style="color: var(--ccom,#8A93A0);"># build the SCF 2022 survey object</span>
+scf <span style="color: var(--ckw,#1F4E9C);">&lt;-</span> <span style="color: var(--cfn,#A03028);">svrepdesign</span>(
+  data       <span style="color: var(--ckw,#1F4E9C);">=</span> scf22,
+  weights    <span style="color: var(--ckw,#1F4E9C);">=</span> <span style="color: var(--ckw,#1F4E9C);">~</span>wt0,
+  repweights <span style="color: var(--ckw,#1F4E9C);">=</span> <span style="color: var(--cstr,#3F8F2E);">"wt1b[0-9]+"</span>,
+  type <span style="color: var(--ckw,#1F4E9C);">=</span> <span style="color: var(--cstr,#3F8F2E);">"other"</span>, mse <span style="color: var(--ckw,#1F4E9C);">=</span> <span style="color: var(--cnum,#B35900);">TRUE</span>
+)
+<span style="color: var(--ccom,#8A93A0);"># threshold vs. continuous returns to schooling</span>
+m <span style="color: var(--ckw,#1F4E9C);">&lt;-</span> <span style="color: var(--cfn,#A03028);">svyglm</span>(<span style="color: var(--cfn,#A03028);">log</span>(networth) <span style="color: var(--ckw,#1F4E9C);">~</span> hs <span style="color: var(--ckw,#1F4E9C);">+</span> ba <span style="color: var(--ckw,#1F4E9C);">+</span> grad <span style="color: var(--ckw,#1F4E9C);">+</span>
+           age <span style="color: var(--ckw,#1F4E9C);">+</span> race <span style="color: var(--ckw,#1F4E9C);">+</span> married, design <span style="color: var(--ckw,#1F4E9C);">=</span> scf)
+<span style="color: var(--cfn,#A03028);">summary</span>(m)</code></pre>
+      </div>
+    </figure>
+
+    <p style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">Dummies for high-school (<span class="mono" style="font-size: 0.88em; background: #EEF2F4; padding: 1px 5px; border-radius: 3px; color: #1A4A6E;">hs</span>), bachelor's (<span class="mono" style="font-size: 0.88em; background: #EEF2F4; padding: 1px 5px; border-radius: 3px; color: #1A4A6E;">ba</span>), and graduate (<span class="mono" style="font-size: 0.88em; background: #EEF2F4; padding: 1px 5px; border-radius: 3px; color: #1A4A6E;">grad</span>) completion enter alongside a continuous years-of-schooling term, letting the data adjudicate between the two functional forms directly.</p>
+
+    <!-- run-in h3 -->
+    <h3 class="srf" style="font-size: 15px; font-weight: 700; font-style: italic; color: #16181C; margin: 18px 0 6px;">Estimated thresholds</h3>
+    <p style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">Table 1 reports the fitted coefficients. The two credential thresholds carry most of the explanatory weight; the incremental years-of-schooling term is small and imprecisely estimated once the thresholds are in the model.</p>
+
+    <!-- booktabs table -->
+    <figure style="margin: 16px 0; break-inside: avoid;">
+      <table class="srf" style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+        <caption style="text-align: left; caption-side: top; padding-bottom: 6px;"><span class="mono" style="font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: var(--accent, #0F766E);">TABLE 1.</span> <span style="color: #2A2E34;">Threshold vs. continuous specifications; DV = log net worth.</span></caption>
+        <thead>
+          <tr style="border-top: 1.6px solid #16181C; border-bottom: 1px solid #16181C;">
+            <th style="text-align: left; padding: 7px 4px; font-weight: 700;">Term</th>
+            <th style="text-align: right; padding: 7px 4px; font-weight: 700;">Estimate</th>
+            <th style="text-align: right; padding: 7px 4px; font-weight: 700;">Std. error</th>
+            <th style="text-align: right; padding: 7px 4px; font-weight: 700;"><em>t</em></th>
+          </tr>
+        </thead>
+        <tbody class="mono" style="font-variant-numeric: tabular-nums; font-size: 12.8px;">
+          <tr><td class="srf" style="padding: 6px 4px;">High-school completion</td><td style="text-align: right; padding: 6px 4px;">0.42</td><td style="text-align: right; padding: 6px 4px;">0.06</td><td style="text-align: right; padding: 6px 4px;">7.1</td></tr>
+          <tr><td class="srf" style="padding: 6px 4px;">Bachelor's completion</td><td style="text-align: right; padding: 6px 4px;">0.68</td><td style="text-align: right; padding: 6px 4px;">0.07</td><td style="text-align: right; padding: 6px 4px;">9.7</td></tr>
+          <tr><td class="srf" style="padding: 6px 4px;">Graduate degree</td><td style="text-align: right; padding: 6px 4px;">0.19</td><td style="text-align: right; padding: 6px 4px;">0.08</td><td style="text-align: right; padding: 6px 4px;">2.4</td></tr>
+          <tr style="border-bottom: 1.6px solid #16181C;"><td class="srf" style="padding: 6px 4px;">Years of schooling <span style="color: #667085; font-style: italic;">(cont.)</span></td><td style="text-align: right; padding: 6px 4px;">0.03</td><td style="text-align: right; padding: 6px 4px;">0.02</td><td style="text-align: right; padding: 6px 4px;">1.5</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size: 12px; color: #667085; margin-top: 6px; line-height: 1.4;">SCF 2022; replicate-weight standard errors, five implicates combined by Rubin's rules (<span class="mono" style="font-size: 0.9em;">n</span> = 4,595 households).</div>
+    </figure>
+
+    <!-- figure -->
+    <figure style="margin: 16px 0; break-inside: avoid;">
+      <div style="position: relative; width: 100%; height: 176px; border: 1px solid #D4D9DE; border-radius: 4px; background-image: repeating-linear-gradient(135deg, #f3f5f7 0 10px, #eceef1 10px 20px);">
+        <div class="mono" style="position: absolute; left: 10px; bottom: 8px; font-size: 10.5px; color: #8a8f96; background: rgba(255,255,255,0.75); padding: 2px 7px;">[ predicted log net worth by attainment ]</div>
+      </div>
+      <figcaption style="font-size: 12px; color: #667085; margin-top: 6px;"><span class="mono" style="font-weight: 700; color: var(--accent, #0F766E); font-size: 11px;">FIGURE 1.</span> Fitted net worth rises in steps at the two credential thresholds, not linearly in years.</figcaption>
+    </figure>
+
+    <!-- methodological note (blockquote) -->
+    <blockquote style="margin: 16px 0 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--accent, #0F766E); break-inside: avoid;">
+      <p style="margin: 0; font-style: italic; font-size: 13.3px; line-height: 1.5; color: #2A2E34;"><span class="srf" style="font-style: normal; font-weight: 700;">Note.</span> All standard errors use the SCF's replicate weights; the five multiply-imputed implicates are combined by Rubin's rules before inference.</p>
+    </blockquote>
+
+    <!-- running foot -->
+    <div class="mono" style="position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; font-size: 11px; color: #667085;">2</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0F766E&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0F766E&quot;, &quot;#1F5FA8&quot;, &quot;#7A3E9C&quot;, &quot;#B4432E&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — headings, rules, code labels, links&quot; },
+  &quot;codeTheme&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;light&quot;, &quot;options&quot;: [&quot;light&quot;, &quot;dark&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;code.highlight — light (tango-family) vs dark (breezedark-family)&quot; },
+  &quot;lineNumbers&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;code.line_numbers&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#0F766E';
+    const dark = (this.props.codeTheme ?? 'light') === 'dark';
+    const c = dark
+      ? { bg: '#1E2430', fg: '#D6DEE8', bd: '#2C3646', kw: '#3DAEE9', str: '#2ECC71', fn: '#E6B450', num: '#F0883E', com: '#7A8494', gut: '#5A6472', gutbd: '#2C3646' }
+      : { bg: '#F4F6F8', fg: '#1A1D21', bd: '#E2E7EB', kw: '#1F4E9C', str: '#3F8F2E', fn: '#A03028', num: '#B35900', com: '#8A93A0', gut: '#AAB2BD', gutbd: '#E2E7EB' };
+    const ln = (this.props.lineNumbers ?? true) ? 'block' : 'none';
+    const num = (this.props.numberSections ?? true) ? 'inline' : 'none';
+    return {
+      accent, ln, num,
+      cbg: c.bg, cfg: c.fg, cbd: c.bd, ckw: c.kw, cstr: c.str,
+      cfn: c.fn, cnum: c.num, ccom: c.com, cgut: c.gut, cgutbd: c.gutbd
+    };
+  }
+}
+</script>
+</body>
+</html>

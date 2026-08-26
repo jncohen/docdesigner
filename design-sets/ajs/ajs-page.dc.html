@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ajs-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #333333); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .stx { font-family: 'STIX Two Text', 'Times New Roman', Times, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="stx" data-screen-label="ajs — page 2" style="--accent: {{ accent }}; --pi: {{ pi }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 76px 118px 84px;  font-size: 15px; line-height: 1.6; ">
+
+    <div class="stx sc" style="position: absolute; top: 46px; left: 118px; right: 118px; display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; letter-spacing: 0.04em; color: #555;">
+      <span>1611</span>
+      <span>Credentials and the Architecture of Advantage</span>
+    </div>
+
+    <h2 class="stx" style="text-align: center; font-size: 14px; font-weight: 400; color: #111; margin: 2px 0 8px; text-transform: uppercase; letter-spacing: 0.12em;">Results</h2>
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">Table 1 reports coefficients from the survey-weighted model of log net worth. Consistent with the threshold hypothesis, the two credential indicators carry most of the explanatory weight, while the continuous years term is small and imprecise once the thresholds are entered.</p>
+
+    <!-- AJS table: TABLE 1 caps centered, title below, notes below rule -->
+    <figure style="margin: 22px 0; break-inside: avoid;">
+      <div class="stx" style="text-align: center; font-size: 12.5px; margin-bottom: 2px;"><span class="sc" style="letter-spacing: 0.08em;">Table 1</span></div>
+      <div class="stx" style="text-align: center; font-size: 13px; font-style: italic; margin-bottom: 8px;">Threshold versus Continuous Specifications of the Wealth Return to Education</div>
+      <table class="stx" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+          <tr style="border-top: 1.4px solid #111; border-bottom: 0.7px solid #111;">
+            <th style="text-align: left; padding: 5px 3px; font-weight: 400;">Term</th>
+            <th style="text-align: right; padding: 5px 3px; font-weight: 400;">Model 1</th>
+            <th style="text-align: right; padding: 5px 3px; font-weight: 400;">Model 2</th>
+          </tr>
+        </thead>
+        <tbody style="font-variant-numeric: tabular-nums;">
+          <tr><td style="padding: 4px 3px;">High-school completion</td><td style="text-align: right; padding: 4px 3px;">.44***</td><td style="text-align: right; padding: 4px 3px;">.42***</td></tr>
+          <tr><td style="padding: 4px 3px;">Bachelor&rsquo;s completion</td><td style="text-align: right; padding: 4px 3px;">.71***</td><td style="text-align: right; padding: 4px 3px;">.68***</td></tr>
+          <tr><td style="padding: 4px 3px;">Graduate degree</td><td style="text-align: right; padding: 4px 3px;">&mdash;</td><td style="text-align: right; padding: 4px 3px;">.19*</td></tr>
+          <tr style="border-bottom: 1.4px solid #111;"><td style="padding: 4px 3px;">Years of schooling</td><td style="text-align: right; padding: 4px 3px;">.09**</td><td style="text-align: right; padding: 4px 3px;">.03</td></tr>
+        </tbody>
+      </table>
+      <div class="stx" style="font-size: 11.5px; color: #444; margin-top: 6px; line-height: 1.45;"><span style="font-style: italic;">Note.</span>&mdash;N = 4,595. Entries are coefficients from survey-weighted regressions of log net worth. Replicate-weight standard errors.<br>* <span style="font-style: italic;">p</span> &lt; .05. ** <span style="font-style: italic;">p</span> &lt; .01. *** <span style="font-style: italic;">p</span> &lt; .001 (two-tailed tests).</div>
+    </figure>
+
+    <h3 class="stx" style="text-align: center; font-size: 15px; font-weight: 400; font-style: italic; color: #1A1A1A; margin: 20px 0 6px;">Interpretation</h3>
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">The estimates describe a step function rather than a ramp. That two credentials absorb most of the structure implies that the wealth returns to education are not smoothly cumulative but are gated at institutional boundaries.<sup style="font-size: 0.66em;">3</sup></p>
+
+    <blockquote class="stx" style="margin: 16px 44px; font-size: 13px; line-height: 1.55; color: #222;">
+      <p style="margin: 0; text-indent: 0;">Where sorting is institutional rather than skill-based, the marginal year of schooling should carry little weight relative to the credential itself&mdash;precisely the pattern observed here.</p>
+    </blockquote>
+
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.6em);">Future work should establish whether these discontinuities extend to flow measures such as saving behavior, and whether they have widened across successive waves of the survey.</p>
+
+    <!-- references, hanging indent (author-date) -->
+    <h2 class="stx" style="text-align: center; font-size: 14px; font-weight: 400; color: #111; margin: 24px 0 8px; text-transform: uppercase; letter-spacing: 0.12em;">References</h2>
+    <div class="stx" style="font-size: 12.5px; line-height: 1.42; color: #222;">
+      <p style="margin: 0 0 5px; padding-left: 1.6em; text-indent: -1.6em;">Becker, Gary S. 1964. <span style="font-style: italic;">Human Capital.</span> Chicago: University of Chicago Press.</p>
+      <p style="margin: 0 0 5px; padding-left: 1.6em; text-indent: -1.6em;">Delgado, Ana R. 2019. &ldquo;Credentials and the Structure of Opportunity.&rdquo; <span style="font-style: italic;">American Journal of Sociology</span> 124 (5): 1188&ndash;1219.</p>
+      <p style="margin: 0; padding-left: 1.6em; text-indent: -1.6em;">Spence, Michael. 1973. &ldquo;Job Market Signaling.&rdquo; <span style="font-style: italic;">Quarterly Journal of Economics</span> 87 (3): 355&ndash;74.</p>
+    </div>
+
+    <!-- footnote apparatus -->
+    <div style="display: {{ fnDisplay }}; position: absolute; left: 118px; right: 118px; bottom: 74px;">
+      <div style="width: 168px; border-top: 0.6px solid #1A1A1A; margin-bottom: 7px;"></div>
+      <p class="stx" style="margin: 0; font-size: 11px; line-height: 1.48; color: #444; text-indent: 1.2em;"><sup>3</sup> The gating interpretation is developed at length in the discussion; alternative codings of attainment leave the ordering of threshold magnitudes unchanged.</p>
+    </div>
+
+    <div class="stx" style="position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; font-size: 13px; color: #555;">1611</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#333333&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#333333&quot;, &quot;#7A1F1F&quot;, &quot;#1A3A5C&quot;, &quot;#000000&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links/rules only; AJS house style is near-monochrome&quot; },
+  &quot;footnotes&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;show the bottom-of-page footnote apparatus (AJS/Chicago signature)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent on continuation paragraphs&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#333333';
+    const fnDisplay = (this.props.footnotes ?? true) ? 'block' : 'none';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.6em' : '0px';
+    return { accent, fnDisplay, pi };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+# docdesigner style — policy
+# The polished, persuasive look of a think-tank policy brief (OECD / Brookings
+# tradition): a branded wordmark line, a coloured kicker, a large confident
+# headline with a summary deck, a strong accent rule under the byline, a tinted
+# "By the numbers" stat rail with oversized figures, an executive Summary, and a
+# recommendation callout. Airy, single column, colour used assertively.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (policy-{stylesheet,title,firstpage,page}.dc.html). Bundled Source Serif 4 +
+# Fira Code. FLAT dotted-key format (schema v2). Validates clean against
+# schema.yml (0 errors; the prior 13 are resolved). Fidelity notes: fidelity.md.
+
+id: policy
+label: Policy
+description: >
+  The polished think-tank policy-brief look (OECD / Brookings tradition).
+  Coloured kicker, big headline with a summary deck, a tinted stat rail with
+  oversized figures, executive summary, and recommendation callouts. Confident
+  and persuasive. Source Serif 4 body, Fira Code for labels and folios.
+
+# ---- page ------------------------------------------------------------------
+# Stylesheet declares margin: normal (1in). The cover masthead runs full-bleed
+# (padding 0) — a bleed the token vocabulary cannot express; ordinary normal
+# margins are taken from the body-page model instead (see fidelity.md).
+page.papersize: letter
+page.margin: normal          # 1in text measure (stylesheet spec)
+page.columns: 1              # the two-column opener (stat rail) is mockup-only
+
+# ---- typography ------------------------------------------------------------
+typography.body: Source Serif 4
+typography.heading: Source Serif 4
+typography.mono: Fira Code    # wordmark, kickers, labels, folios
+typography.mono_scale: 0.9
+typography.base_size: 10.5pt
+typography.line_height: 1.4
+typography.justification: justified
+typography.microtype: true
+
+# ---- colour (assertive single accent) --------------------------------------
+color.text: "#21262B"
+color.accent: "#C1442A"      # brand red-orange — kicker, stats, rules, callout, links
+color.muted: "#7A828A"
+color.rule: "#DBDFE3"        # hairline rules and header/footer separators
+links.color: accent
+
+# ---- headings (near-black, not accent; bold; unnumbered) -------------------
+headings.number_sections: false
+headings.h1.scale: 1.35      # stylesheet specimen 19px / 14px body
+headings.h1.weight: bold
+headings.h1.color: text      # section heads are near-black; accent lives elsewhere
+headings.h2.scale: 1.1       # stylesheet specimen 15px / 14px body
+headings.h2.weight: bold
+headings.h2.color: text
+headings.h3.scale: 1.0       # stylesheet specimen 13px / 14px body
+headings.h3.weight: bold
+headings.h3.color: text
+headings.h4.color: text      # else h4 falls through to the accent default
+
+# ---- title (REPORT layout: flush-left brand + kicker + deck + accent rule) --
+title.layout: report         # flush left, heavy rule, institution line (status: port)
+title.align: left            # the opener (firstpage) is flush-left
+title.scale: 2.5             # opener 35px / 14px body (large, confident headline)
+title.subtitle.style: normal # the deck is a large roman muted line, not italic
+title.subtitle.scale: 1.35   # opener deck 18px / 14px body
+title.rule.position: below   # strong accent rule under the byline
+title.rule.weight: thick     # model 3px accent rule (nearest step)
+title.rule.color: accent
+title.byline.color: text     # author name in text ink
+title.date.show: true        # "July 2026" in the byline row
+
+# ---- paragraphs (modern block: spaced, no indent, justified) ---------------
+paragraph.indent: none
+paragraph.spacing: sm        # model margin-bottom 0.7em (nearest step)
+
+# ---- quotes ----------------------------------------------------------------
+quote.style: normal          # stylesheet block quote is roman, not italicised
+quote.rule: true             # vertical accent rule at the left (status: new)
+quote.color: muted           # quote text set muted
+
+# ---- figures / tables ------------------------------------------------------
+figure.style: plain
+figure.caption.position: below
+figure.caption.color: muted
+table.style: booktabs
+table.header.weight: bold
+table.row_stretch: 1.15
+
+# ---- code / running foot ---------------------------------------------------
+code.highlight: none         # stylesheet sets code plain
+# Folio in the footer-right slot with a hairline rule above (both defaults);
+# the brand+series footer-left line has no token (see fidelity.md).
+header_footer.footer.right: page
+header_footer.footer.rule: true

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ajs-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #333333); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .stx { font-family: 'STIX Two Text', 'Times New Roman', Times, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="stx" data-screen-label="ajs — page 1" style="--accent: {{ accent }}; --pi: {{ pi }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 76px 118px 84px;  font-size: 15px; line-height: 1.6;">
+
+    <!-- running head -->
+    <div class="stx sc" style="position: absolute; top: 46px; left: 118px; right: 118px; display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; letter-spacing: 0.04em; color: #555;">
+      <span>American Journal of Sociology</span>
+      <span>1610</span>
+    </div>
+
+    <!-- title block -->
+    <h1 class="stx" style="text-align: center; font-size: 22px; line-height: 1.28; font-weight: 700; color: #111; margin: 0 auto; max-width: 28ch;">Credentials and the Architecture of Advantage<sup style="font-weight: 400; font-size: 0.6em;">1</sup></h1>
+    <div class="stx sc" style="text-align: center; font-size: 15px; letter-spacing: 0.05em; color: #1A1A1A; margin-top: 22px;">Joseph N. Cohen</div>
+    <div class="stx" style="text-align: center; font-size: 13.5px; font-style: italic; color: #555; margin-top: 1px;">Meridian University</div>
+
+    <!-- indented abstract, no heading (AJS form) -->
+    <div style="margin: 24px 40px 0;">
+      <p class="stx" style="margin: 0; font-size: 13px; line-height: 1.55; text-align: justify; hyphens: auto; color: #222; text-indent: 1.6em;">The association between education and household wealth is among the most durable regularities in social stratification, yet its functional form remains contested. Net of age, race, and marital status, most detectable structure is captured by two credential benchmarks, while finer gradations contribute little&mdash;a pattern consistent with credentialist and institutional-sorting accounts of the wealth distribution.</p>
+    </div>
+
+    <!-- A-level head: centered caps -->
+    <h2 class="stx" style="text-align: center; font-size: 14px; font-weight: 400; color: #111; margin: 30px 0 8px; text-transform: uppercase; letter-spacing: 0.12em;">Introduction</h2>
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">Few regularities in the study of stratification are as well established as the association between education and wealth. The better educated accumulate more; the wealthy invest more heavily in the schooling of their children. What remains contested is the shape of that association&mdash;whether the wealth return to education rises smoothly with each additional year of instruction, or climbs in discrete steps as major credentials are completed.<sup style="font-size: 0.66em;">2</sup></p>
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.6em);">This distinction is not merely technical. It maps onto competing theoretical traditions with divergent implications for how opportunity is structured and where intervention might do the most good.</p>
+
+    <!-- B-level head: centered italic -->
+    <h3 class="stx" style="text-align: center; font-size: 15px; font-weight: 400; font-style: italic; color: #1A1A1A; margin: 22px 0 6px;">The Threshold Hypothesis</h3>
+    <p class="stx" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">Human-capital theory anticipates a continuous return, as each year of schooling adds market-valued skill. Credentialist and signaling theories anticipate thresholds, as degrees sort individuals into discretely different opportunity structures.</p>
+
+    <!-- C-level run-in head -->
+    <p class="stx" style="margin: 12px 0 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.6em);"><span style="font-style: italic;">Data and sample.</span>&emsp;The Survey of Consumer Finances is a triennial, nationally representative study of household balance sheets, with an oversample of high-wealth households and a replicate-weight design well suited to inference about the upper tail of the distribution.</p>
+
+    <!-- footnote apparatus -->
+    <div style="display: {{ fnDisplay }}; position: absolute; left: 118px; right: 118px; bottom: 74px;">
+      <div style="width: 168px; border-top: 0.6px solid #1A1A1A; margin-bottom: 7px;"></div>
+      <p class="stx" style="margin: 0 0 4px; font-size: 11px; line-height: 1.48; color: #444; text-indent: 1.2em;"><sup>1</sup> An earlier version was presented at the Meridian Workshop on Stratification. The analysis uses the public-use SCF file.</p>
+      <p class="stx" style="margin: 0; font-size: 11px; line-height: 1.48; color: #444; text-indent: 1.2em;"><sup>2</sup> On the distinction between skill-based and credential-based accounts, see the review in Delgado (2019).</p>
+    </div>
+
+    <div class="stx" style="position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; font-size: 13px; color: #555;">1610</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#333333&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#333333&quot;, &quot;#7A1F1F&quot;, &quot;#1A3A5C&quot;, &quot;#000000&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links/rules only; AJS house style is near-monochrome&quot; },
+  &quot;footnotes&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;show the bottom-of-page footnote apparatus (AJS/Chicago signature)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent on continuation paragraphs&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#333333';
+    const fnDisplay = (this.props.footnotes ?? true) ? 'block' : 'none';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.6em' : '0px';
+    return { accent, fnDisplay, pi };
+  }
+}
+</script>
+</body>
+</html>

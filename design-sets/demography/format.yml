@@ -1,0 +1,108 @@
+# docdesigner style — demography
+# The quietly authoritative look of long-established social-demography
+# journals: a single wide-measure column of oldstyle EB Garamond, centred
+# small-caps section heads, an italic run-in sub-head, a run-in-labelled
+# indented abstract, page·surname running heads, and a near-monochrome palette
+# with a muted ink-blue used only for links and hairline rules.
+#
+# Rebuilt 2026-07-17 from the new token-faithful model set
+# (demography-{title,firstpage,page,stylesheet}.dc.html). Original typeface
+# substituted with EB Garamond (bundled). FLAT dotted-key format (schema v2).
+# Validates clean against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
+id: demography
+label: Demography
+description: >
+  The classic oldstyle look of long-running social-demography journals.
+  A single wide-measure column of EB Garamond, small-caps section heads, and
+  a sober near-monochrome palette. Formal and unhurried.
+
+# ---- page (asymmetric margins measured from the models) --------------------
+# firstpage padding 96/132/84 px; body 84/132/84; title 132/132/84 (÷96 = in).
+page.papersize: letter
+page.margins.top: 1.0
+page.margins.bottom: 0.875
+page.margins.inner: 1.375
+page.margins.outer: 1.375
+page.columns: 1
+
+# ---- typography -----------------------------------------------------------
+typography.body: EB Garamond
+typography.heading: EB Garamond
+typography.mono: Fira Code
+typography.base_size: 11pt
+typography.line_height: 1.5
+typography.justification: justified
+typography.numbers: oldstyle        # oldstyle numerals in running prose
+typography.microtype: true
+
+# ---- colour (near-monochrome + muted ink-blue) ----------------------------
+color.text: "#1B1B18"               # warm near-black on a faintly warm page
+color.accent: "#2A4B6E"             # muted ink-blue — links + rules only
+color.muted: "#6A6862"
+color.rule: "#C9C6BC"
+links.color: accent
+
+# ---- headings (centred small-caps sections; italic run-in sub-head) --------
+headings.number_sections: false
+headings.run_in: [h3]               # h3 typeset run-in with the paragraph
+# h1 = # sections (Introduction, Results): centred small-caps, near-black.
+headings.h1.scale: 1.0
+headings.h1.weight: bold            # bundled EB Garamond ships Regular/Bold only
+headings.h1.case: smallcaps
+headings.h1.align: center
+headings.h1.color: text
+# h2 = ## subsections: same centred small-caps treatment.
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.case: smallcaps
+headings.h2.align: center
+headings.h2.color: text
+# h3 = ### run-in italic lead-in ("Measurement. text follows…").
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text             # else falls through to the accent default
+
+# ---- title (journal opener: flush-left title, indented run-in abstract) ----
+title.layout: journal
+title.align: left                   # the article opener is flush-left
+title.scale: 1.9                    # 28px opener title ÷ 15px body
+title.subtitle.style: italic
+title.byline.color: text            # author name in text ink, not muted
+title.abstract.label: Abstract
+title.abstract.label_style: runin   # small-caps ABSTRACT run in with line 1
+title.abstract.indent: md           # inset from both margins
+title.abstract.size: 0.9
+title.abstract.rule: true           # hairline separator closing the front matter
+title.keywords.show: true
+title.keywords.label: Keywords
+
+# ---- paragraphs (traditional: first-line indent, no extra spacing) ---------
+paragraph.indent: lg                # ~1.4em first-line indent
+paragraph.spacing: none
+paragraph.indent_after_heading: false
+
+# ---- figures / tables ------------------------------------------------------
+figure.caption.position: above
+figure.caption.label_style: italic
+table.style: booktabs
+table.row_stretch: 1.15
+table.header.weight: bold           # mockup header is 600; nearest bundled weight
+table.caption.position: above       # table titles sit above, notes below
+
+# ---- quotes / code ---------------------------------------------------------
+quote.style: normal                 # block quotations indented, not italicised
+quote.indent: md
+code.highlight: none
+
+# ---- running head + folio --------------------------------------------------
+# Continuation-page drop-folio: page (outer-left) · surname (outer-right).
+header_footer.header.left: page
+header_footer.header.right: surname
+header_footer.header.rule: false
+header_footer.first_page: header    # carry the running head onto the opener too
+header_footer.footer.center: none   # folio lives in the header; no duplicate
+header_footer.footer.right: none
+header_footer.footer.rule: false

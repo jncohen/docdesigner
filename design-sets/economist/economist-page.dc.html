@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>economist-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d8d8d6; }
+  a { color: var(--accent, #E3120B); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .ecw { width: 760px; background: #fff; color: #111;  text-align: left; }
+  .lbl { font-family: 'Archivo', sans-serif; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="760px" content-height="1074px" hint-size="100%,100%">
+<article class="ecw" data-screen-label="economist — content page 2" style="--accent: {{ accent }}; --pi: {{ pi }}; position: relative; height: 1074px; padding: 80px 92px 64px; overflow: hidden; ">
+
+      <!-- Running header: simplified continuation head — running title + author -->
+      <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 0.6px solid #C9C9C9; padding-bottom: 6px;">
+        <div class="lbl" style="font-size: 10px; letter-spacing: 0.09em; color: #6E6E6E; text-transform: uppercase;">Too close for comfort</div>
+        <div class="lbl" style="font-size: 10px; letter-spacing: 0.09em; color: #6E6E6E; text-transform: uppercase;">Maya R. Lindqvist</div>
+      </div>
+
+      <!-- Two-column body continuation -->
+      <div class="srf" style="column-count: 2; column-gap: 22px; margin-top: 18px; font-size: 11.7px; line-height: 1.36; text-align: justify; hyphens: auto; color: #1a1a1a;">
+        <h2 class="srf" style="font-weight: 700; font-size: 13.5px; line-height: 1.1; color: #111; margin: 0 0 5px; break-after: avoid;">The view from Taipei</h2>
+        <p style="margin: 0;">On the island itself the mood is harder to read than the headlines suggest. Officials speak of vigilance rather than alarm, and the daily tallies have become a fixture of the morning briefings — counted, mapped, and filed away with a practised calm.</p>
+        <p style="margin: 0; text-indent: var(--pi, 1em);">Analysts caution against reading each incursion as a discrete signal. The value of the exercise, they argue, lies precisely in its repetition: a rhythm that dulls the response it once provoked.</p>
+
+        <blockquote style="margin: 13px 0; break-inside: avoid; border-top: 2px solid var(--accent, #E3120B); border-bottom: 1px solid #d0d2d6; padding: 8px 0;">
+          <p class="srf" style="margin: 0; font-style: italic; font-weight: 700; font-size: 15px; line-height: 1.24; color: #111;">"It is miscalculation, more than design, that the island's planners have come to fear most."</p>
+          <div class="lbl" style="font-size: 9px; letter-spacing: 0.09em; color: #6E6E6E; margin-top: 6px;">A RETIRED AIR-FORCE OFFICER</div>
+        </blockquote>
+
+        <p style="margin: 0; text-indent: var(--pi, 1em);">The ministry's own records make the escalation legible. Incursions clustered around politically charged dates, then settled into a steadier, higher baseline over the autumn.</p>
+
+        <!-- booktabs table, one column wide -->
+        <figure style="margin: 13px 0; break-inside: avoid;">
+          <table class="srf" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+            <caption class="lbl" style="text-align: left; font-weight: 700; font-size: 10px; color: #111; padding-bottom: 4px; caption-side: top;">Recorded incursions by month, 2021</caption>
+            <thead>
+              <tr style="border-top: 1.5px solid #111; border-bottom: 1px solid #111;">
+                <th style="text-align: left; padding: 3px 2px; font-weight: 700;">Month</th>
+                <th style="text-align: right; padding: 3px 2px; font-weight: 700;">Sorties</th>
+                <th style="text-align: right; padding: 3px 2px; font-weight: 700;">Peak day</th>
+              </tr>
+            </thead>
+            <tbody style="font-variant-numeric: tabular-nums;">
+              <tr><td style="padding: 3px 2px;">June</td><td style="text-align: right; padding: 3px 2px;">28</td><td style="text-align: right; padding: 3px 2px;">9</td></tr>
+              <tr><td style="padding: 3px 2px;">September</td><td style="text-align: right; padding: 3px 2px;">117</td><td style="text-align: right; padding: 3px 2px;">24</td></tr>
+              <tr style="border-bottom: 1.5px solid #111;"><td style="padding: 3px 2px;">October</td><td style="text-align: right; padding: 3px 2px;">196</td><td style="text-align: right; padding: 3px 2px;">56</td></tr>
+            </tbody>
+          </table>
+          <figcaption class="lbl" style="font-size: 8.5px; color: #6E6E6E; margin-top: 4px;">Source: Taiwan Ministry of National Defence.</figcaption>
+        </figure>
+
+        <h2 class="srf" style="font-weight: 700; font-size: 13.5px; line-height: 1.1; color: #111; margin: 14px 0 5px; break-after: avoid;">Reading the pattern</h2>
+        <p style="margin: 0;">Stripped of narrative, the tallies are just a table — but the shape of the table is the argument. A simple grouping of the daily records surfaces the clustering that the prose only gestures at.</p>
+
+        <!-- monochrome code block (code.highlight: none) -->
+        <pre style="font-family: 'Fira Code', ui-monospace, monospace; font-size: 9px; line-height: 1.5; background: #f5f5f4; border: 1px solid #e2e2e0; padding: 8px 9px; margin: 12px 0; break-inside: avoid; white-space: pre; overflow: hidden; color: #1a1a1a;"><code>sorties |&gt;
+  group_by(month) |&gt;
+  summarise(n = n(), peak = max(daily)) |&gt;
+  arrange(desc(n))</code></pre>
+
+        <p style="margin: 0; text-indent: var(--pi, 1em);">What the code makes plain, the diplomacy has yet to resolve. For now the flights remain flights — and the margin for error, a little narrower with each one.</p>
+      </div>
+
+      <!-- Running foot -->
+      <div class="lbl" style="position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-size: 11px; color: #6E6E6E;">59</div>
+    </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 820, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#E3120B&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#E3120B&quot;, &quot;#A3120B&quot;, &quot;#0B3D91&quot;, &quot;#1A1A1A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — flag, kicker, nameplate, rules, links&quot; },
+  &quot;featuredImage&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;optional featured image on the title page&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap.lines (PROPOSED — engine change needed)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#E3120B';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '3.6em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1em' : '0px';
+    const featDisplay = (this.props.featuredImage ?? true) ? 'block' : 'none';
+    return { accent, dcFloat, dcSize, dcLh, pi, featDisplay };
+  }
+}
+</script>
+</body>
+</html>

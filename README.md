@@ -4,7 +4,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 1.0.2, pre-release.** The engine and the style-set format are working and tested. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality.
+> **Status: 1.0.3, pre-release.** The engine and the style-set format are working and tested. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality.
 
 ## Outputs
 
@@ -130,8 +130,10 @@ designer_specimens(styles = "my-style")
 ### Installing a set from GitHub
 
 ```r
-designer_install_set("owner/repo")        # repo root must contain set.yml
-designer_update_sets()                    # re-pull recorded sources
+designer_install_set("academic")                   # from the canonical library, jncohen/docdesigner
+designer_install_set(repo = "owner/repo")           # a dedicated repo with set.yml at its root
+designer_install_set("some-set", repo = "owner/monorepo")  # a set inside someone else's monorepo
+designer_update_sets()                              # re-pull recorded sources
 ```
 
 Sets install under `tools::R_user_dir("docdesigner", "data")` and survive package updates. A user set **shadows** a core style of the same id, with a warning. Sets declare a `format_version`; the engine refuses to load a set from a newer format rather than mis-render it.
@@ -200,5 +202,6 @@ rendered-examples/          created by designer_specimens(); git-ignored
 ## Documentation
 
 - [USER-MANUAL.md](USER-MANUAL.md) — full user manual.
-- [docdesigner.md](../docdesigner.md) — project status, roadmap, open decisions.
+- [docdesigner.md](docdesigner.md) — project status, roadmap, open decisions.
 - [CLAUDE.md](CLAUDE.md) — orientation for AI coding sessions.
+- [dev/NOTEBOOK.md](dev/NOTEBOOK.md) — the canonical developer reference (architecture, template port, engine traps, workflow, distribution).

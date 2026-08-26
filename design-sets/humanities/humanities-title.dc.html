@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>humanities-title</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #5A3A2E); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .grm { font-family: 'EB Garamond', 'Garamond', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; letter-spacing: 0.08em; }
+  .fn { font-feature-settings: "sups"; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="grm" data-screen-label="humanities — title page" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #fbfaf6; color: #211E18; padding: 150px 150px 96px;  font-size: 15.5px; line-height: 1.62; display: flex; flex-direction: column;">
+    <div style="text-align: center; margin-top: 96px;">
+      <div class="grm sc" style="font-size: 13px; color: #8A7F6B; letter-spacing: 0.18em;">An Essay</div>
+      <div style="width: 40px; height: 1px; background: #B7AE97; margin: 30px auto;"></div>
+      <h1 class="grm sc" style="font-size: 32px; font-weight: 500; color: #16130D; margin: 0 auto; max-width: 20ch; line-height: 1.24; letter-spacing: 0.05em;">Credentials and the Shape of Fortune</h1>
+      <div class="grm" style="font-size: 18px; font-style: italic; color: #55503F; margin-top: 16px; max-width: 30ch; margin-left: auto; margin-right: auto;">On education, wealth, and the thresholds between them</div>
+      <div style="width: 40px; height: 1px; background: #B7AE97; margin: 30px auto;"></div>
+      <div class="grm" style="font-size: 16px; color: #211E18; margin-top: 4px;">Joseph N. Cohen</div>
+    </div>
+    <div class="grm sc" style="margin-top: auto; text-align: center; font-size: 12px; color: #8A7F6B; letter-spacing: 0.12em;">Meridian University · MMXXVI</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#5A3A2E&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#5A3A2E&quot;, &quot;#211E18&quot;, &quot;#3A4A5A&quot;, &quot;#6B2A2A&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — footnote markers and links; essay stays near-monochrome&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#5A3A2E' };
+  }
+}
+</script>
+</body>
+</html>

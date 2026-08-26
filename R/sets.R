@@ -35,12 +35,30 @@ designer_sets <- function() {
 
 #' Install a style set from GitHub
 #'
-#' @param repo A GitHub `owner/name` slug or a full clone URL.
+#' The canonical library is one repo (default `"jncohen/docdesigner"`)
+#' holding every set under `inst/sets/<set>/`, the same layout the package
+#' ships internally -- installing `"academic"` or `"public"` pulls the
+#' current GitHub state of a set that may already be bundled with your
+#' installed package version, which is exactly the point: it lets a set get
+#' updates between package releases. A single-set repo (`set.yml` at the
+#' repo root) still works unchanged, for anyone publishing their own set
+#' outside the canonical library.
+#'
+#' Resolution order for `set.yml`, first match wins: `<set>/set.yml` (a
+#' subdirectory named for the set), `inst/sets/<set>/set.yml` (docdesigner's
+#' own repo layout), then `set.yml` at the repo root (a dedicated single-set
+#' repo).
+#'
+#' @param set The set to install: a subdirectory name inside `repo` (e.g.
+#'   `"academic"`), or `NULL` if `repo` is a dedicated single-set repo with
+#'   `set.yml` at its root.
+#' @param repo A GitHub `owner/name` slug or a full clone URL. Defaults to
+#'   the canonical docdesigner style-set library.
 #' @param ref Branch or tag to install.
 #' @param overwrite Replace an existing set of the same id.
 #' @return The install path, invisibly.
 #' @export
-designer_install_set <- function(repo, ref = "main", overwrite = FALSE) {
+designer_install_set <- function(set = NULL, repo = "jncohen/docdesigner", ref = "main", overwrite = FALSE) {
   if (!requireNamespace("yaml", quietly = TRUE)) stop("The 'yaml' package is required.", call. = FALSE)
   url <- if (grepl("^https?://|\\.git$", repo)) repo else paste0("https://github.com/", repo, ".git")
   dest_root <- dd_user_sets()
@@ -49,10 +67,22 @@ designer_install_set <- function(repo, ref = "main", overwrite = FALSE) {
   if (Sys.which("git") == "") stop("git is required to install sets.", call. = FALSE)
   status <- system2("git", c("clone", "--depth", "1", "--branch", ref, shQuote(url), shQuote(tmp)),
                     stdout = FALSE, stderr = FALSE)
-  if (status != 0 || !file.exists(file.path(tmp, "set.yml")))
-    stop("Could not install a valid style set from: ", url, call. = FALSE)
-  manifest <- yaml::read_yaml(file.path(tmp, "set.yml"))
-  id <- manifest$id %||% basename(tmp)
+  if (status != 0) stop("Could not clone: ", url, " (branch/tag '", ref, "')", call. = FALSE)
+
+  candidates <- c(
+    if (!is.null(set)) file.path(tmp, set, "set.yml"),
+    if (!is.null(set)) file.path(tmp, "inst", "sets", set, "set.yml"),
+    file.path(tmp, "set.yml")
+  )
+  hit <- candidates[file.exists(candidates)]
+  if (!length(hit)) {
+    stop("No set.yml found in ", url, " for set = ", if (is.null(set)) "NULL" else paste0("'", set, "'"),
+         ".\nLooked for: ", paste(sub(paste0("^", tmp), "<repo>", candidates), collapse = ", "),
+         call. = FALSE)
+  }
+  src <- dirname(hit[1])
+  manifest <- yaml::read_yaml(hit[1])
+  id <- manifest$id %||% set %||% basename(src)
 
   fv <- as.integer(manifest$format_version %||% 1L)
   if (is.na(fv) || fv > DD_FORMAT_VERSION) {
@@ -66,12 +96,13 @@ designer_install_set <- function(repo, ref = "main", overwrite = FALSE) {
     stop("Set already installed: ", id, " (use overwrite = TRUE).", call. = FALSE)
   unlink(dest, recursive = TRUE)
   dir.create(dest, recursive = TRUE, showWarnings = FALSE)
-  file.copy(list.files(tmp, full.names = TRUE, all.files = TRUE, no.. = TRUE), dest, recursive = TRUE)
+  file.copy(list.files(src, full.names = TRUE, all.files = TRUE, no.. = TRUE), dest, recursive = TRUE)
   unlink(file.path(dest, ".git"), recursive = TRUE)
 
   # Record where the set came from. Without this, designer_update_sets() has
   # nothing to pull from and silently skips every set it is asked to update.
   manifest$source <- repo
+  manifest$set <- set %||% id
   manifest$ref <- ref
   manifest$installed <- format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   yaml::write_yaml(manifest, file.path(dest, "set.yml"))
@@ -100,7 +131,7 @@ designer_update_sets <- function(set = NULL) {
               "reinstall it with designer_install_set().")
       next
     }
-    designer_install_set(src, ref = man$ref %||% "main", overwrite = TRUE)
+    designer_install_set(man$set %||% id, repo = src, ref = man$ref %||% "main", overwrite = TRUE)
   }
   invisible()
 }

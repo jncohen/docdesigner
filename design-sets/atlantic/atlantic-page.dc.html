@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>atlantic-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d7d2c8; }
+  a { color: var(--accent, #B2332A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .disp { font-family: 'Playfair Display', Georgia, serif; }
+  .cas { font-family: 'Libre Caslon Text', Georgia, 'Times New Roman', serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="cas" data-screen-label="atlantic — page 2" style="--accent: {{ accent }}; --pi: {{ pi }}; position: relative; width: 816px; min-height: 1056px; background: #fbfaf6; color: #1c1913; padding: 62px 132px 78px;  font-size: 16px; line-height: 1.62; ">
+
+    <!-- running head (verso: folio + title) -->
+    <div style="position: absolute; top: 40px; left: 132px; right: 132px; display: flex; align-items: baseline; justify-content: space-between; border-bottom: 0.6px solid #cfc9bd; padding-bottom: 6px;">
+      <span class="cas" style="font-size: 12px; color: #8a857a;">48</span>
+      <span class="cas" style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #8a857a;">The Two Ladders</span>
+    </div>
+
+    <p class="cas" style="margin: 22px 0 0; text-align: justify; hyphens: auto; text-indent: 0;">To see the staircase plainly, it helps to stop describing it and simply lay the numbers side by side. The jump at a completed bachelor&rsquo;s degree is not subtle; it is the largest single move in the table, and it dwarfs the reward for the year of schooling that precedes it.</p>
+
+    <!-- editorial crosshead: spaced small caps -->
+    <div class="cas" style="text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #1c1913; margin: 26px 0 16px;">The Shape of the Climb</div>
+
+    <!-- editorial ruled table -->
+    <figure style="margin: 0 0 6px; break-inside: avoid;">
+      <table class="cas" style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <caption class="cas" style="caption-side: top; text-align: left; font-size: 11px; font-style: italic; color: #6b675f; padding-bottom: 8px;">Median household net worth by the education of its head, 2022.</caption>
+        <thead>
+          <tr style="border-top: 1.4px solid #1c1913; border-bottom: 0.7px solid #1c1913;">
+            <th style="text-align: left; padding: 6px 3px; font-weight: 700;">Attainment</th>
+            <th style="text-align: right; padding: 6px 3px; font-weight: 700; font-variant-numeric: tabular-nums;">Median net worth</th>
+            <th style="text-align: right; padding: 6px 3px; font-weight: 700; font-variant-numeric: tabular-nums;">Step up</th>
+          </tr>
+        </thead>
+        <tbody style="font-variant-numeric: tabular-nums;">
+          <tr><td style="padding: 5px 3px;">No high-school diploma</td><td style="text-align: right; padding: 5px 3px;">$38,200</td><td style="text-align: right; padding: 5px 3px; color: #8a857a;">&mdash;</td></tr>
+          <tr><td style="padding: 5px 3px;">High-school diploma</td><td style="text-align: right; padding: 5px 3px;">$106,800</td><td style="text-align: right; padding: 5px 3px; color: var(--accent, #B2332A);">2.8&times;</td></tr>
+          <tr><td style="padding: 5px 3px;">Some college</td><td style="text-align: right; padding: 5px 3px;">$138,500</td><td style="text-align: right; padding: 5px 3px; color: #8a857a;">1.3&times;</td></tr>
+          <tr style="border-bottom: 0.7px solid #cfc9bd;"><td style="padding: 5px 3px;">Bachelor&rsquo;s degree</td><td style="text-align: right; padding: 5px 3px;">$312,400</td><td style="text-align: right; padding: 5px 3px; color: var(--accent, #B2332A); font-weight: 700;">2.3&times;</td></tr>
+          <tr style="border-bottom: 1.4px solid #1c1913;"><td style="padding: 5px 3px;">Graduate degree</td><td style="text-align: right; padding: 5px 3px;">$421,900</td><td style="text-align: right; padding: 5px 3px; color: #8a857a;">1.4&times;</td></tr>
+        </tbody>
+      </table>
+      <figcaption class="cas" style="font-size: 11px; color: #8a857a; margin-top: 7px;">Source: Survey of Consumer Finances, 2022. Figures rounded to the nearest hundred dollars.</figcaption>
+    </figure>
+
+    <p class="cas" style="margin: 18px 0 0; text-align: justify; hyphens: auto; text-indent: 0;">The government&rsquo;s own codebook, stripped of interpretation, tells the same story in a colder voice&mdash;a set of category labels and dollar cutoffs that quietly encode where the ladder&rsquo;s rungs have been placed.</p>
+
+    <!-- verbatim / document extract (monospace) -->
+    <pre class="mono" style="font-size: 12px; line-height: 1.6; background: #f2efe7; border-left: 3px solid var(--accent, #B2332A); padding: 12px 16px; margin: 16px 0; white-space: pre; overflow-x: auto; color: #3a352c;"><code>EDUC   label                    net_worth_median
+  3    no diploma                 38200
+  4    high-school diploma       106800
+  5    some college              138500
+  6    bachelor's degree         312400   *threshold
+  7    graduate degree           421900</code></pre>
+
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.4em);">What the codebook cannot say is what the pattern means for a family deciding whether a second year of community college is worth the cost. If the reward waits at the degree, then the honest answer depends entirely on whether that degree will ever arrive&mdash;and for millions of students, it never does.</p>
+
+    <blockquote class="cas" style="margin: 22px 44px; padding-left: 18px; border-left: 2px solid var(--accent, #B2332A); font-style: italic; font-size: 15px; line-height: 1.55; color: #3a352c;">
+      <p style="margin: 0; text-indent: 0;">A policy that funds enrollment and hopes for completion is paying full price for the landing and trusting families to find the stairs on their own.</p>
+    </blockquote>
+
+    <p class="cas" style="margin: 0; text-align: justify; hyphens: auto; text-indent: var(--pi, 1.4em);">The staircase is not a law of nature. It was built&mdash;by accreditation, by hiring conventions, by the thousand small ways an institution decides that a credential, and not the learning behind it, is the thing that counts. What was built can be rebuilt. But first we have to stop mistaking it for a ramp.</p>
+
+    <!-- running foot -->
+    <div style="position: absolute; left: 132px; right: 132px; bottom: 40px; display: flex; align-items: baseline; justify-content: space-between; border-top: 0.6px solid #cfc9bd; padding-top: 7px;">
+      <span class="cas" style="font-size: 12px; color: #8a857a;">48</span>
+      <span class="cas" style="font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a857a;">The Meridian Monthly</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#B2332A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#B2332A&quot;, &quot;#8A2A22&quot;, &quot;#1F5A4C&quot;, &quot;#3A352C&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — kicker, title rule, pull quotes, document rule, links&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap — large initial on the opening paragraph&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent after the opening paragraph&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#B2332A';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '5.2em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.4em' : '0px';
+    return { accent, dcFloat, dcSize, dcLh, pi };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ssrn-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #333333); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .xit { font-family: 'XITS', 'STIX Two Text', 'Times New Roman', Times, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="xit" data-screen-label="ssrn — page 2" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 96px 128px 84px;  font-size: 14.5px; line-height: 1.68; ">
+
+    <h2 class="xit" style="font-size: 15px; font-weight: 700; color: #111; margin: 0 0 8px;">1. &nbsp;Introduction</h2>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">The positive association between education and wealth is among the most robust findings in empirical economics. Its functional form, however, remains contested. This paper asks whether the wealth return to schooling is best modeled as continuous in years or as a step function in credentials, and argues that the choice has consequences for both measurement and interpretation.</p>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.6em;">Human-capital theory (Becker, 1964; Mincer, 1974) predicts a continuous return: each year of schooling augments productivity and, in turn, lifetime accumulation. Signalling and credentialist accounts (Spence, 1973; Collins, 1979) predict discontinuities at degree completion, where credentials sort workers into distinct opportunity structures.</p>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.6em;">We adjudicate between these views using the 2022 Survey of Consumer Finances (SCF), which combines a nationally representative sample with an oversample of wealthy households and a replicate-weight design well suited to inference about the wealth distribution.</p>
+
+    <h2 class="xit" style="font-size: 15px; font-weight: 700; color: #111; margin: 22px 0 8px;">2. &nbsp;Empirical strategy</h2>
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">We estimate survey-weighted regressions of log net worth on indicators for high-school, bachelor's, and graduate completion, together with a continuous years-of-schooling term and demographic controls. Equation (1) states the baseline specification:</p>
+
+    <!-- display equation -->
+    <div class="xit" style="text-align: center; margin: 16px 0; font-size: 15px; font-style: italic;">
+      log&nbsp;<i>w<sub>i</sub></i> = <i>β</i><sub>0</sub> + <i>β</i><sub>1</sub>HS<sub><i>i</i></sub> + <i>β</i><sub>2</sub>BA<sub><i>i</i></sub> + <i>β</i><sub>3</sub>GR<sub><i>i</i></sub> + <i>γ</i>&thinsp;yrs<sub><i>i</i></sub> + <b>x</b><sub><i>i</i></sub><b>δ</b> + <i>ε<sub>i</sub></i>. <span style="font-style: normal; float: right;">(1)</span>
+    </div>
+
+    <p class="xit" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.6em;">A test of <i>γ</i> = 0 conditional on the credential dummies distinguishes the threshold model from the continuous one. Standard errors are computed from the SCF replicate weights, and estimates are combined across the five implicates by Rubin's rules.</p>
+
+    <div class="xit" style="position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; font-size: 12.5px; color: #555;">2</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#333333&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#333333&quot;, &quot;#000000&quot;, &quot;#1A3A5C&quot;, &quot;#7A1F1F&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links only; working-paper style is deliberately colourless&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#333333' };
+  }
+}
+</script>
+</body>
+</html>

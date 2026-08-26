@@ -1,0 +1,97 @@
+# docdesigner style — government
+# The official statistical-bulletin look of a federal statistics agency
+# (Census Bureau / Federal Reserve research reports): a solid navy agency
+# masthead band with a thin gold rule, a report-series line, a boxed
+# "Highlights" panel, numbered navy sections, and — the core of the identity —
+# gridded, zebra-striped data tables with navy header rows, tabular figures,
+# and a source note. Data-forward and institutional.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (government-{stylesheet,title,firstpage,page}.dc.html). The full-bleed navy
+# masthead band has no expression in the token vocabulary (no bleed concept);
+# margins are set from the BODY page instead and the band is flagged in
+# fidelity.md. FLAT dotted-key format (schema v2). Validates clean against
+# schema.yml (0 errors; the prior 18 are resolved — see fidelity.md).
+
+id: government
+label: Government
+description: >
+  The official statistical-bulletin look of a federal statistics agency
+  (Census / Federal Reserve tradition). Navy agency masthead, boxed
+  Highlights, and gridded zebra data tables with navy header rows.
+  Institutional and data-forward. Bundled Source Serif 4 + Fira Code.
+
+# ---- page -----------------------------------------------------------------
+# Body-page model padding 46 / 76 / 76 px (top/side/bottom) -> sides 0.79in,
+# top 0.48in. The masthead band bleeds to the trim edge; there is no bleed
+# token, so margins are ordinary `normal` (1in), taken from the body page.
+page.papersize: letter
+page.margin: normal
+page.columns: 1
+
+# ---- typography -----------------------------------------------------------
+typography.body: Source Serif 4
+typography.heading: Source Serif 4
+typography.mono: Fira Code           # table titles, running head, furniture
+typography.mono_scale: 0.9
+typography.base_size: 10pt
+typography.line_height: 1.32
+typography.justification: justified
+typography.microtype: true
+
+# ---- colour (institutional navy + gold accent) ----------------------------
+color.text: "#1C2126"
+color.accent: "#1A3A5C"              # federal navy — section heads, rules, (masthead)
+color.accent2: "#C4A64B"             # gold masthead/running-head stripe (see fidelity)
+color.muted: "#5A636B"
+color.rule: "#C7CDD3"
+color.code_bg: "#F2F5F7"             # re-homes the zebra-stripe tint (fed to table.zebra_color)
+links.color: accent
+
+# ---- headings (navy, numbered) --------------------------------------------
+# Stylesheet specimen grades h1/h2/h3 at 18/15/13px on a 14px body; body
+# section heads render at 17px on 13.5px. Values chosen between the two.
+headings.number_sections: true
+headings.h1.scale: 1.3
+headings.h1.weight: bold
+headings.h1.color: accent
+headings.h2.scale: 1.1
+headings.h2.weight: bold
+headings.h2.color: accent
+# h3 = ### lead-in ("Coverage."): bold near-black, not the navy accent.
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.color: text
+
+# ---- title (report archetype: flush-left, heavy navy rule) ----------------
+# Follows the opener (firstpage): flush-left near-black title, roman deck line,
+# muted byline below, a boxed "Highlights" block. The navy rule is supplied by
+# title.rule.* (impl); the report LAYOUT proper is still port (see fidelity).
+title.layout: report
+title.align: left
+title.scale: 2.2                     # stylesheet spec (30px title / 13.5px body ~= 2.2)
+title.rule.position: below
+title.rule.color: accent             # navy divider, not the light rule default
+title.rule.weight: thick             # model 2px navy line -> nearest step
+title.subtitle.style: normal         # deck line is roman, not the italic default
+title.date.show: true                # "Issued July 2026"
+title.abstract.label: Highlights     # the Highlights panel occupies the abstract slot
+title.abstract.label_style: heading  # label over the block (nearest to the navy label-bar)
+
+# ---- paragraphs -----------------------------------------------------------
+paragraph.indent: none
+paragraph.spacing: sm                # model paragraphs: 0.6em, no first-line indent
+
+# ---- figures / tables (the identity: gridded, zebra, navy header) ---------
+figure.caption.position: above
+table.style: grid                    # full cell borders (agency convention)
+table.header.weight: bold            # model header is 600 -> nearest bundled weight
+table.zebra_color: code_bg           # zebra body rows via the re-homed stripe tint
+
+# ---- code / running head + foot -------------------------------------------
+code.highlight: none
+# Continuation pages carry a thin ruled running head; the folio + footer rule
+# inherit the footer defaults (footer.right: page, footer.rule: true), matching
+# the page-1 and page-2 footers.
+header_footer.header.left: runningtitle
+header_footer.header.rule: true

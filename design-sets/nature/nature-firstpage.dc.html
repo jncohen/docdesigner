@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nature-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #0B4F8A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  sup.cite { font-size: 0.66em; vertical-align: super; line-height: 0; color: var(--accent, #0B4F8A); font-weight: 600; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="794px" content-height="1123px" hint-size="100%,100%">
+<article class="srf" data-screen-label="nature — page 1" style="--accent: {{ accent }}; --num: {{ num }}; position: relative; width: 794px; min-height: 1123px; background: #ffffff; color: #0A0A0A; padding: 56px 62px 62px;  font-size: 12.6px; line-height: 1.4;">
+
+    <!-- top furniture: category + doi -->
+    <div style="display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 9px; border-bottom: 2.5px solid #0A0A0A;">
+      <span class="srf" style="font-size: 15px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--accent, #0B4F8A);">Article</span>
+      <span class="mono" style="font-size: 9.5px; color: #6A6F76;">https://doi.org/10.1000/jpsci.2026.0142</span>
+    </div>
+
+    <!-- title spanning full width -->
+    <h1 class="srf" style="font-size: 27px; line-height: 1.16; font-weight: 700; color: #0A0A0A; letter-spacing: -0.012em; margin: 16px 0 0; max-width: 32ch; text-wrap: balance;">Threshold structure in the accumulation of household wealth</h1>
+
+    <!-- authors -->
+    <div class="srf" style="font-size: 13.5px; color: #0A0A0A; margin-top: 14px; line-height: 1.5;">J. N. Cohen<sup class="cite">1</sup>, A. R. Delgado<sup class="cite">1,2</sup>, P. Menon<sup class="cite">2</sup> &amp; D. Okafor<sup class="cite">3</sup></div>
+    <div class="srf" style="font-size: 10.5px; color: #6A6F76; margin-top: 5px; line-height: 1.45; font-style: italic;"><sup>1</sup>Department of Sociology, Meridian University. <sup>2</sup>Center for Population Research. <sup>3</sup>Institute for Economic Analysis.</div>
+
+    <!-- bold lead-paragraph abstract (Nature has no "Abstract" heading) -->
+    <p class="srf" style="font-size: 13.4px; line-height: 1.5; font-weight: 600; color: #16181C; margin: 15px 0 0; text-align: justify; hyphens: auto;">The relationship between education and household wealth is widely documented, yet its functional form is not. Using the 2022 Survey of Consumer Finances, we test whether wealth returns to schooling are continuous or concentrated at discrete credential thresholds. Net of age, race and marital status, most detectable structure is captured by two benchmarks — high-school and bachelor's-degree completion — while finer distinctions contribute little. The pattern is robust across the survey's replicate-weight design and is consistent with credentialist and institutional-sorting accounts of stratification.</p>
+
+    <div style="border-bottom: 0.5px solid #C7CBD1; margin: 16px 0 0;"></div>
+
+    <!-- two-column body -->
+    <div class="srf" style="column-count: 2; column-gap: 26px; margin-top: 15px; font-size: 12.6px; line-height: 1.42; text-align: justify; hyphens: auto; color: #16181C;">
+      <p style="margin: 0 0 0.6em;">Education is associated with a broad range of economic outcomes, from earnings to employment stability to intergenerational mobility<sup class="cite">1,2</sup>. That the well-educated accumulate more wealth is not in dispute; what remains unsettled is whether each additional year of schooling contributes proportionally, or whether the completion of major credentials produces discontinuities in accumulation<sup class="cite">3</sup>.</p>
+      <p style="margin: 0 0 0.6em;">Human-capital accounts predict a continuous return: schooling supplies market-valued skills that compound over a career<sup class="cite">4</sup>. Credentialist and signalling accounts predict thresholds, in which degrees mark bearers for discretely different opportunity structures<sup class="cite">5,6</sup>.</p>
+
+      <h2 class="srf" style="font-size: 13.6px; font-weight: 700; color: #0A0A0A; margin: 6px 0 5px; break-after: avoid;"><span class="mono" style="display: var(--num, none); font-size: 11px; color: var(--accent,#0B4F8A); margin-right: 7px;">1</span>Results</h2>
+      <p style="margin: 0 0 0.6em;">We estimate a survey-weighted model of log net worth on credential dummies and a continuous years term. The two thresholds carry the explanatory weight; the incremental-years coefficient is small and imprecise once thresholds enter (Table 1).</p>
+
+      <!-- one-column figure -->
+      <figure style="margin: 8px 0 10px; break-inside: avoid;">
+        <div style="position: relative; width: 100%; height: 150px; border: 0.5px solid #C7CBD1; background-image: repeating-linear-gradient(135deg, #f3f5f7 0 9px, #eceef1 9px 18px);">
+          <div class="mono" style="position: absolute; left: 7px; bottom: 6px; font-size: 8.5px; color: #8a8f96; background: rgba(255,255,255,0.78); padding: 1px 5px;">[ predicted net worth by attainment ]</div>
+        </div>
+        <figcaption style="font-size: 9.8px; line-height: 1.42; color: #4A4F56; margin-top: 5px;"><span style="font-weight: 700; color: #0A0A0A;">Fig. 1 | Step returns at credential thresholds.</span> Fitted log net worth rises sharply at high-school and bachelor's completion, not linearly in years of schooling.</figcaption>
+      </figure>
+
+      <p style="margin: 0 0 0.6em;">The step pattern survives alternative codings of attainment and is not driven by the high-wealth oversample. Bootstrapped over the replicate weights, the ordering of threshold magnitudes is stable across resamples<sup class="cite">7</sup>.</p>
+
+      <h2 class="srf" style="font-size: 13.6px; font-weight: 700; color: #0A0A0A; margin: 6px 0 5px; break-after: avoid;"><span class="mono" style="display: var(--num, none); font-size: 11px; color: var(--accent,#0B4F8A); margin-right: 7px;">2</span>Discussion</h2>
+      <p style="margin: 0 0 0.6em;">That two credentials absorb most of the structure implies the wealth returns to education are not smoothly cumulative. This is consistent with sorting mechanisms in which institutional gatekeeping, rather than the marginal lesson, governs access to wealth-building positions<sup class="cite">8</sup>.</p>
+
+      <!-- small table -->
+      <figure style="margin: 8px 0 10px; break-inside: avoid;">
+        <div style="font-size: 9.8px; font-weight: 700; color: #0A0A0A; margin-bottom: 4px;">Table 1 | Threshold vs. continuous specifications</div>
+        <table class="srf" style="width: 100%; border-collapse: collapse; font-size: 10px;">
+          <thead>
+            <tr style="border-top: 1.3px solid #0A0A0A; border-bottom: 0.8px solid #0A0A0A;">
+              <th style="text-align: left; padding: 3px 2px; font-weight: 700;">Term</th>
+              <th style="text-align: right; padding: 3px 2px; font-weight: 700;">β</th>
+              <th style="text-align: right; padding: 3px 2px; font-weight: 700;">SE</th>
+            </tr>
+          </thead>
+          <tbody style="font-variant-numeric: tabular-nums;">
+            <tr><td style="padding: 3px 2px;">High school</td><td style="text-align: right; padding: 3px 2px;">0.42</td><td style="text-align: right; padding: 3px 2px;">0.06</td></tr>
+            <tr><td style="padding: 3px 2px;">Bachelor's</td><td style="text-align: right; padding: 3px 2px;">0.68</td><td style="text-align: right; padding: 3px 2px;">0.07</td></tr>
+            <tr><td style="padding: 3px 2px;">Graduate</td><td style="text-align: right; padding: 3px 2px;">0.19</td><td style="text-align: right; padding: 3px 2px;">0.08</td></tr>
+            <tr style="border-bottom: 1.3px solid #0A0A0A;"><td style="padding: 3px 2px;">Years (cont.)</td><td style="text-align: right; padding: 3px 2px;">0.03</td><td style="text-align: right; padding: 3px 2px;">0.02</td></tr>
+          </tbody>
+        </table>
+      </figure>
+
+      <p style="margin: 0 0 0.6em;">Whether the same discontinuities appear in flow measures such as saving rates, rather than the wealth stock, is a natural next test and one the SCF panel component may support<sup class="cite">9</sup>.</p>
+
+      <!-- references -->
+      <h2 class="srf" style="font-size: 12px; font-weight: 700; color: #0A0A0A; margin: 8px 0 4px; break-after: avoid;">References</h2>
+      <ol class="srf" style="margin: 0; padding-left: 1.3em; font-size: 9.5px; line-height: 1.4; color: #4A4F56;">
+        <li style="margin-bottom: 2px;">Mincer, J. <em>Schooling, Experience, and Earnings</em> (NBER, 1974).</li>
+        <li style="margin-bottom: 2px;">Card, D. <em>Handbook of Labor Economics</em> <strong>3</strong>, 1801–1863 (1999).</li>
+        <li style="margin-bottom: 2px;">Hudgens, M. &amp; Halloran, M. <em>J. Am. Stat. Assoc.</em> <strong>103</strong>, 832–842 (2008).</li>
+        <li style="margin-bottom: 2px;">Becker, G. <em>Human Capital</em> (Univ. Chicago Press, 1964).</li>
+        <li style="margin-bottom: 2px;">Spence, M. <em>Q. J. Econ.</em> <strong>87</strong>, 355–374 (1973).</li>
+      </ol>
+    </div>
+
+    <!-- running foot -->
+    <div style="position: absolute; left: 62px; right: 62px; bottom: 30px; display: flex; align-items: baseline; justify-content: space-between; border-top: 0.5px solid #C7CBD1; padding-top: 6px;">
+      <span class="mono" style="font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">Journal of Population Science</span>
+      <span class="mono" style="font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">Vol. 12 · 2026 · 1</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 890, &quot;height&quot;: 1240 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0B4F8A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0B4F8A&quot;, &quot;#0A0A0A&quot;, &quot;#1F7A54&quot;, &quot;#8A2846&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — category tag, citations, links (headings stay black)&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections — Nature uses named heads by default&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#0B4F8A';
+    const num = (this.props.numberSections ?? false) ? 'inline' : 'none';
+    return { accent, num };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ajs-title</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #333333); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .stx { font-family: 'STIX Two Text', 'Times New Roman', Times, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="stx" data-screen-label="ajs — title page" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #1A1A1A; padding: 120px 118px 84px;  font-size: 15px; line-height: 1.6; display: flex; flex-direction: column;">
+
+    <div class="stx" style="text-align: center; font-size: 13px; color: #555;">The Chicago Review of Sociology &nbsp;·&nbsp; Volume 129 &nbsp;·&nbsp; Number 6 &nbsp;·&nbsp; May 2026</div>
+
+    <div style="text-align: center; margin-top: 118px;">
+      <h1 class="stx" style="font-size: 25px; line-height: 1.28; font-weight: 700; color: #111; margin: 0 auto; max-width: 26ch;">Credentials and the Architecture of Advantage</h1>
+      <div class="stx sc" style="font-size: 16px; letter-spacing: 0.05em; color: #1A1A1A; margin-top: 34px;">Joseph N. Cohen</div>
+      <div class="stx" style="font-size: 14px; font-style: italic; color: #555; margin-top: 2px;">Meridian University</div>
+    </div>
+
+    <div style="margin: 60px 46px 0;">
+      <p class="stx" style="margin: 0; font-size: 13.5px; line-height: 1.62; text-align: justify; hyphens: auto; color: #222; text-indent: 1.6em;">The association between education and household wealth is among the most durable regularities in social stratification, yet its functional form remains contested. Drawing on the 2022 Survey of Consumer Finances, this article asks whether the wealth return to schooling is continuous in years of instruction or concentrated at the completion of major credentials. Net of age, race, and marital status, most detectable structure is captured by two benchmarks&mdash;high-school and bachelor&rsquo;s-degree completion&mdash;while finer gradations contribute little to model fit. The pattern is robust across the survey&rsquo;s replicate-weight design and is consistent with credentialist and institutional-sorting accounts of the wealth distribution.</p>
+    </div>
+
+    <!-- AJS first-page acknowledgement footnote + billing code -->
+    <div style="margin-top: auto;">
+      <div style="width: 168px; border-top: 0.6px solid #1A1A1A; margin-bottom: 7px;"></div>
+      <p class="stx" style="margin: 0; font-size: 11px; line-height: 1.5; color: #444; text-indent: 1.4em;">Direct correspondence to Joseph N. Cohen, Department of Sociology, Meridian University, 400 University Plaza, New York, NY 10012. The author thanks the editors and three anonymous reviewers for their comments, and the Meridian Center for Population Research for support. E-mail: <a href="#">jcohen@meridian.edu</a></p>
+      <p class="mono" style="margin: 8px 0 0; font-size: 10px; color: #777;">&copy; 2026 by the Meridian Society for Sociological Research. All rights reserved.<br>0002&ndash;9602/2026/12906&ndash;0003$10.00</p>
+    </div>
+
+    <div class="stx" style="position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; font-size: 13px; color: #555;">1610</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#333333&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#333333&quot;, &quot;#7A1F1F&quot;, &quot;#1A3A5C&quot;, &quot;#000000&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links/rules only; AJS house style is near-monochrome&quot; },
+  &quot;footnotes&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;show the bottom-of-page footnote apparatus (AJS/Chicago signature)&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent on continuation paragraphs&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#333333';
+    const fnDisplay = (this.props.footnotes ?? true) ? 'block' : 'none';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.6em' : '0px';
+    return { accent, fnDisplay, pi };
+  }
+}
+</script>
+</body>
+</html>

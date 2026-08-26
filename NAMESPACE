@@ -1,5 +1,7 @@
+export(designer_ai_brief)
 export(designer_check)
 export(designer_gallery)
+export(designer_import_claude_design)
 export(designer_install_set)
 export(designer_new_style)
 export(designer_sets)

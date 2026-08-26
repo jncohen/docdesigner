@@ -1,6 +1,6 @@
 Package: docdesigner
 Title: Publication-Inspired Templates for Research PDFs and Slides
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: person("Joseph N.", "Cohen", role = c("aut", "cre"),
     email = "joseph.cohen@qc.cuny.edu")
 Author: Joseph N. Cohen
@@ -15,7 +15,8 @@ Imports:
     yaml
 Suggests:
     knitr,
-    pkgdown
+    pkgdown,
+    xml2
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

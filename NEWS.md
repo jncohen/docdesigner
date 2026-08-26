@@ -1,5 +1,126 @@
 # docdesigner News
 
+## docdesigner (unreleased, `feature/phase-a`)
+
+- Added `designer_import_claude_design()`: drafts a `format.yml` from a
+  Claude Design "standalone HTML" export by extracting colour, font, and
+  type-scale tokens mechanically. Structural tokens (`title.layout`,
+  `page.columns`, etc.) are deliberately never guessed — see
+  `dev/CLAUDE-DESIGN-IMPORT.md`. Adds `xml2` to `Suggests`.
+- Added `designer_ai_brief()`: generates a Markdown design-constraint brief
+  from `inst/engine/schema.yml`, meant to be handed to Claude Design (or any
+  design tool/collaborator) before designing a new style.
+- **Breaking (this branch only, not yet released):** `designer_install_set()`
+  signature changed from `(repo, ref, overwrite)` to
+  `(set = NULL, repo = "jncohen/docdesigner", ref = "main", overwrite = FALSE)`.
+  The canonical style-set library is now one GitHub repo
+  (`jncohen/docdesigner`, the package's own repo, `inst/sets/<set>/`)
+  instead of one repo per set. `designer_install_set("academic")` now pulls
+  the current GitHub state of a bundled set; a dedicated single-set repo
+  still works via `designer_install_set(repo = "owner/repo")`. Old-style
+  calls passing a repo slug as the first argument now install the wrong
+  thing (a `set` id, not a `repo`) — update any saved calls.
+
+## docdesigner 1.0.3
+
+Fidelity fixes found by comparing rendered specimens against style-set
+mockups (see `design-sets/FIDELITY-ASSESSMENT.md` and, for the structural
+diagnosis, `design-sets/FIDELITY-DIAGNOSIS.md`):
+
+- **Page margins were never applied at all.** `rmarkdown::pdf_document()`
+  appends its own `geometry:margin=1in` after the engine's pandoc `-V` args;
+  geometry lets later options win, and `margin` sets all four sides at once.
+  So every style has silently rendered at 1in margins regardless of what
+  `page.margin` declared, for as long as the engine has existed. The geometry
+  options are now also emitted as `\geometry{...}` from `dd_preamble()`, which
+  is injected after `\usepackage{geometry}` and so has the last word.
+- **`page.margins.top/bottom/inner/outer` and `page.twoside`** are now wired
+  (`status: new` -> `impl`). `page.margin` remains a shorthand for all four
+  sides and is still the fallback for any side left unset. Previously the
+  only margin control was a 3-step scale (0.75/1/1.35in) applied uniformly,
+  which no real page design uses: every mockup in `design-sets/` specifies a
+  different top, side, and bottom. Under `twoside`, `inner`/`outer` become
+  binding edges and the class option is set so running heads alternate.
+
+- **`title.color`**: new token (role). Previously the title was *always*
+  rendered in `\color{accent}` regardless of what a style set declared; now a
+  style can override it. **The default is `text`, not `accent`**: measuring
+  every mockup in `design-sets/` found that ten of eleven specify a near-black
+  title (`#1c1913`, `#14140F`, `#111`, ...) and not one asks for an
+  accent-coloured one. Defaulting to `accent` would have preserved the old
+  hardcoded bug's behaviour as the vocabulary's recommended value.
+- **`title.scale`** corrected in eight style sets against the measured `<h1>`
+  size in each mockup (e.g. atlantic 2.6 -> 3.68, ssrn 1.7 -> 1.31).
+- **`title.subtitle.scale/style/color`** are now wired (`port` -> `impl`).
+  These could not be implemented before for a structural reason: pandoc's
+  LaTeX template appends the subtitle to `\@title` at a fixed `\large`,
+  inheriting the title's face and colour, so no preamble could reach it. But
+  pandoc defines `\subtitle` with `\providecommand` — only if undefined — and
+  rmarkdown injects our preamble *before* that line. `dd_preamble()` now
+  defines `\subtitle` itself, pre-empting pandoc's, which is what makes the
+  subtitle independently styleable. The same lever is available for any other
+  `\providecommand` the template declares.
+- **`title.rule.length`**: new token. The title rule was always `\linewidth`;
+  a short centred rule is a distinct design move (atlantic's masthead uses
+  64px). Omit for the full measure.
+- **The abstract is now designable.** `abstract` is an environment the document
+  class defines and pandoc emits verbatim, so `dd_preamble()` renews it and
+  takes it over — the same lever as `\subtitle`, and the reason the whole
+  `title.abstract.*` family could sit at `status: port`. Every style previously
+  got the same centred bold "Abstract" heading regardless of what it declared.
+  `title.abstract.size` and `.label` are now `impl`; new: `.show` (false
+  suppresses it entirely), `.label_style` (`heading` | `runin` | `none`),
+  `.indent` (inset from both margins), `.weight` (`bold` gives a standfirst),
+  and `.color`. Applied: demography gets its run-in small-caps label and
+  double inset, nature a bold unlabelled standfirst, atlantic none at all.
+- **Style files corrected against the schema.** `designer_validate_style()`
+  existed but nothing called it, so six styles named tokens that do not exist
+  and rendered "OK" regardless — 78 errors in total. Notably
+  `headings.case: smallcaps` (demography, humanities): case is per-level, so
+  the global key silently did nothing and both styles' stated signature had
+  never once rendered. Also `typography.oldstyle_figures` ->
+  `typography.numbers`, `notes.*` -> `footnotes.*`, `headings.h3.run_in` ->
+  `headings.run_in`, `title.rule.width` -> `title.rule.length`.
+  `run.R` now validates every style after install and reports the error count,
+  so this cannot rot silently again.
+- **Heading weight was inverted.** `dd_preamble()` maps anything that isn't
+  exactly `bold` to `\mdseries`, so a style asking for `semibold` (demography,
+  government) or `medium` (humanities) rendered *lighter* than the `bold`
+  default it would have got by saying nothing. Those values were never in the
+  enum; the bundled faces ship Regular and Bold only.
+- **`title.align`**: now wired (`status: port` -> `impl`). `center` centres
+  the whole title block (title, rule, byline, date), not just the title
+  line.
+- **h4 headings** (`\paragraph`) are now styled via the same `headings.h4.*`
+  tokens the schema already declared but never wired: scale, weight, style
+  (italic), case, color, spacing, rule. Rendered as a run-in heading and
+  **never** carries a numeric label, fixing a bug where `headings.number_sections:
+  true` styles leaked a raw cascading counter (e.g. "1.1.1.1") in front of
+  every h4.
+- **`headings.<h>.case`**: added `lower` and `smallcaps` (previously only
+  `upper` was implemented; the other two silently no-opped).
+- **`headings.<h>.style`** (italic) and **`headings.<h>.align`** (left/
+  center/right) are now wired for all heading levels (previously
+  `status: new`, i.e. declared but inert).
+- **`header_footer.header.*`**: running headers are now wired the same way
+  the footer already was (`status: port` -> `impl`). Also fixed the
+  content switch, which previously only implemented `page`/`title` and
+  silently fell back to the page number for `author`, `surname`, `section`,
+  and `runningtitle`. `\headheight` is widened to 14pt when a header is
+  declared, since LaTeX's 12pt default is too small for a populated running
+  head and fancyhdr warns and overprints; header-less styles are untouched.
+- **`headings.number_sections`**: h2 and h3 now actually carry their numbers.
+  Only `\section` was ever given a titlesec label, so `\subsection` and
+  `\subsubsection` were formatted with an empty label and silently dropped
+  their `1.1`/`1.1.1` counters. Each level now takes its own counter. h4
+  remains unnumbered by design.
+
+Not yet addressed (tracked in `design-sets/FIDELITY-ASSESSMENT.md`):
+`title.layout` archetypes (`journal`/`essay`/`report`/`masthead` still all
+render as `plain`), the remaining `title.subtitle.*`/`byline.*`/
+`abstract.*`/`keywords.*` port tokens, and `table.style` (`grid`/`zebra`/
+`minimal` still inert; only `booktabs` renders).
+
 ## docdesigner 1.0.2
 
 - Added a **token-driven style engine**. A style is a flat dotted-key

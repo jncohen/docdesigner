@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>policy-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #C1442A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="srf" data-screen-label="policy — page 1" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #21262B; padding: 0 0 74px;  font-size: 14px; line-height: 1.55;">
+
+    <!-- brand line + brief type -->
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 30px 72px 0;">
+      <div class="mono" style="font-size: 13px; font-weight: 600; letter-spacing: 0.03em; color: #21262B;">Meridian&nbsp;<span style="color: var(--accent, #C1442A);">Institute</span></div>
+      <div class="mono" style="font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent, #C1442A); font-weight: 600;">Policy Brief</div>
+    </div>
+
+    <div style="padding: 30px 72px 0;">
+      <!-- kicker -->
+      <div class="mono" style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #C1442A);">Economic Mobility · No. 47</div>
+      <!-- title -->
+      <h1 class="srf" style="font-size: 35px; line-height: 1.1; font-weight: 700; color: #16191C; letter-spacing: -0.018em; margin: 12px 0 0; max-width: 24ch; text-wrap: balance;">The Wealth Gap Is a Staircase, Not a Ramp</h1>
+      <div class="srf" style="font-size: 18px; line-height: 1.35; color: #5A636B; margin-top: 12px; max-width: 46ch;">Why two credentials — not years of schooling — explain most of the wealth divide, and what that means for policy</div>
+
+      <!-- byline row -->
+      <div style="display: flex; align-items: baseline; gap: 16px; margin-top: 18px; padding-bottom: 18px; border-bottom: 3px solid var(--accent, #C1442A);">
+        <span class="srf" style="font-size: 14px; font-weight: 600; color: #21262B;">Joseph N. Cohen</span>
+        <span class="mono" style="font-size: 11px; color: #7A828A;">Senior Fellow · July 2026</span>
+      </div>
+    </div>
+
+    <!-- two-column region: big stat rail + summary -->
+    <div style="display: grid; grid-template-columns: 1fr 1.7fr; gap: 0; margin-top: 30px;">
+      <!-- stat rail (tinted) -->
+      <div style="background: #FBF3F1; padding: 26px 26px 26px 72px;">
+        <div class="mono" style="font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent, #C1442A); margin-bottom: 18px;">By the numbers</div>
+        <div style="margin-bottom: 20px;">
+          <div class="srf" style="font-size: 40px; font-weight: 700; color: var(--accent, #C1442A); line-height: 1; font-variant-numeric: tabular-nums;">3×</div>
+          <div class="srf" style="font-size: 12px; color: #4A525A; margin-top: 5px; line-height: 1.4;">median wealth jump at a bachelor's degree vs. some college</div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div class="srf" style="font-size: 40px; font-weight: 700; color: var(--accent, #C1442A); line-height: 1; font-variant-numeric: tabular-nums;">68%</div>
+          <div class="srf" style="font-size: 12px; color: #4A525A; margin-top: 5px; line-height: 1.4;">of the education–wealth gap explained by two thresholds</div>
+        </div>
+        <div>
+          <div class="srf" style="font-size: 40px; font-weight: 700; color: var(--accent, #C1442A); line-height: 1; font-variant-numeric: tabular-nums;">0.03</div>
+          <div class="srf" style="font-size: 12px; color: #4A525A; margin-top: 5px; line-height: 1.4;">coefficient on each additional year of schooling (n.s.)</div>
+        </div>
+      </div>
+
+      <!-- executive summary -->
+      <div style="padding: 4px 72px 0 30px;">
+        <h2 class="srf" style="font-size: 16px; font-weight: 700; color: #16191C; margin: 0 0 8px;">Summary</h2>
+        <p class="srf" style="margin: 0 0 0.7em; text-align: left;">Policy debates about education and economic mobility usually assume that more schooling means more wealth, in even measure. New analysis of the 2022 Survey of Consumer Finances suggests otherwise: the wealth returns to education are concentrated at two moments — finishing high school and finishing college — and are nearly flat everywhere else.</p>
+        <p class="srf" style="margin: 0 0 0.7em; text-align: left;">This has direct implications for where public investment does the most good. Programs that move students <em>across</em> a credential threshold should yield far larger wealth effects than those that add years without a degree.</p>
+
+        <!-- recommendation callout -->
+        <div style="border-left: 4px solid var(--accent, #C1442A); background: #FBF3F1; padding: 12px 16px; margin-top: 14px;">
+          <div class="mono" style="font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #C1442A); margin-bottom: 5px;">Recommendation</div>
+          <p class="srf" style="margin: 0; font-size: 13.5px; line-height: 1.45; color: #2A3138;">Target completion, not enrollment. Tie funding to credential attainment at the two thresholds where wealth effects actually appear.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- full-width continuation -->
+    <div style="padding: 26px 72px 0;">
+      <h2 class="srf" style="font-size: 16px; font-weight: 700; color: #16191C; margin: 0 0 8px;">What the data show</h2>
+      <p class="srf" style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">Sorting households by the education of their head produces a familiar upward gradient in net worth. But the gradient is not smooth. The jump from "some college" to a completed bachelor's degree is roughly three times the size of any single-step gradient elsewhere in the distribution — a staircase, with two tall steps, rather than a gentle ramp.</p>
+      <p class="srf" style="margin: 0; text-align: justify; hyphens: auto;">The pattern holds after adjusting for age, race, and marital status, and survives the survey's replicate-weight design. It is consistent with a large body of research on credentials and institutional sorting.</p>
+    </div>
+
+    <!-- footer -->
+    <div style="position: absolute; left: 72px; right: 72px; bottom: 30px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #DBDFE3; padding-top: 6px;">
+      <span class="mono" style="font-size: 9.5px; letter-spacing: 0.05em; color: #7A828A;">Meridian Institute · Policy Brief No. 47</span>
+      <span class="mono" style="font-size: 9.5px; color: #7A828A;">1</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#C1442A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#C1442A&quot;, &quot;#1F6FB2&quot;, &quot;#127C63&quot;, &quot;#8A2A6B&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — kicker, big-stat rail, rules, recommendation callout, links&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#C1442A' };
+  }
+}
+</script>
+</body>
+</html>

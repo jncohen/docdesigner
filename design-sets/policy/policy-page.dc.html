@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>policy-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #C1442A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="srf" data-screen-label="policy — page 2" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #ffffff; color: #21262B; padding: 40px 72px 74px;  font-size: 14px; line-height: 1.55; ">
+
+    <!-- running head -->
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #DBDFE3; padding-bottom: 8px;">
+      <div class="mono" style="font-size: 12px; font-weight: 600; letter-spacing: 0.03em; color: #21262B;">Meridian&nbsp;<span style="color: var(--accent, #C1442A);">Institute</span></div>
+      <div class="mono" style="font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #7A828A;">Policy Brief No. 47</div>
+    </div>
+
+    <h2 class="srf" style="font-size: 18px; font-weight: 700; color: #16191C; margin: 26px 0 8px;">Policy implications</h2>
+    <p class="srf" style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">If the wealth returns to education are gated at two credentials, then the marginal public dollar buys the most where it moves a student across one of those gates. Support that stops short of completion — a year of college without a degree — sits on the flat part of the staircase and yields little in measured wealth.</p>
+    <p class="srf" style="margin: 0 0 0.7em; text-align: justify; hyphens: auto;">This reframes a long-running debate about access versus completion. Expanding enrollment matters only insofar as it converts into finished credentials; otherwise it moves families along a segment of the curve where the slope is near zero.</p>
+
+    <!-- pull quote -->
+    <blockquote class="srf" style="margin: 22px 0; padding: 0 40px; text-align: center; border: 0;">
+      <p style="margin: 0; font-size: 25px; line-height: 1.28; font-weight: 700; color: var(--accent, #C1442A); letter-spacing: -0.01em;">&ldquo;Funding enrollment without completion pays for the flat part of the staircase.&rdquo;</p>
+    </blockquote>
+
+    <h2 class="srf" style="font-size: 18px; font-weight: 700; color: #16191C; margin: 22px 0 12px;">Recommendations</h2>
+    <ol class="srf" style="margin: 0; padding: 0; list-style: none;">
+      <li style="position: relative; padding-left: 42px; margin-bottom: 14px;">
+        <span class="mono" style="position: absolute; left: 0; top: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--accent, #C1442A); color: #fff; font-size: 13px; font-weight: 600; border-radius: 50%;">1</span>
+        <span style="font-weight: 700; color: #16191C;">Tie aid to completion.</span> Structure grants and subsidies so that the largest transfers land on crossing the high-school and bachelor's thresholds.
+      </li>
+      <li style="position: relative; padding-left: 42px; margin-bottom: 14px;">
+        <span class="mono" style="position: absolute; left: 0; top: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--accent, #C1442A); color: #fff; font-size: 13px; font-weight: 600; border-radius: 50%;">2</span>
+        <span style="font-weight: 700; color: #16191C;">Fund the last mile.</span> Direct retention and completion resources to students within reach of a credential, where marginal wealth effects are largest.
+      </li>
+      <li style="position: relative; padding-left: 42px; margin: 0;">
+        <span class="mono" style="position: absolute; left: 0; top: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--accent, #C1442A); color: #fff; font-size: 13px; font-weight: 600; border-radius: 50%;">3</span>
+        <span style="font-weight: 700; color: #16191C;">Measure wealth, not just enrollment.</span> Evaluate programs against credential attainment and downstream net worth rather than seats filled.
+      </li>
+    </ol>
+
+    <!-- endnotes -->
+    <h3 class="srf" style="font-size: 13px; font-weight: 700; color: #16191C; margin: 26px 0 8px; text-transform: uppercase; letter-spacing: 0.04em;">Notes</h3>
+    <div class="srf" style="font-size: 11.5px; line-height: 1.45; color: #4A525A;">
+      <p style="margin: 0 0 5px; padding-left: 1.6em; text-indent: -1.6em;">1. Analysis of the 2022 Survey of Consumer Finances; estimates net of age, race, and marital status.</p>
+      <p style="margin: 0; padding-left: 1.6em; text-indent: -1.6em;">2. Threshold shares computed from the survey's replicate-weight design. Full methods available on request.</p>
+    </div>
+
+    <!-- footer -->
+    <div style="position: absolute; left: 72px; right: 72px; bottom: 30px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #DBDFE3; padding-top: 6px;">
+      <span class="mono" style="font-size: 9.5px; letter-spacing: 0.05em; color: #7A828A;">Meridian Institute · Policy Brief No. 47</span>
+      <span class="mono" style="font-size: 9.5px; color: #7A828A;">2</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#C1442A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#C1442A&quot;, &quot;#1F6FB2&quot;, &quot;#127C63&quot;, &quot;#8A2A6B&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — kicker, big-stat rail, rules, recommendation callout, links&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#C1442A' };
+  }
+}
+</script>
+</body>
+</html>

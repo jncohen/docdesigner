@@ -4,10 +4,15 @@
 \alias{designer_install_set}
 \title{Install a style set from GitHub}
 \usage{
-designer_install_set(repo, ref = "main", overwrite = FALSE)
+designer_install_set(set = NULL, repo = "jncohen/docdesigner", ref = "main", overwrite = FALSE)
 }
 \arguments{
-\item{repo}{A GitHub \code{owner/name} slug or a full clone URL.}
+\item{set}{The set to install: a subdirectory name inside \code{repo} (e.g.
+\code{"academic"}), or \code{NULL} if \code{repo} is a dedicated single-set repo with
+\code{set.yml} at its root.}
+
+\item{repo}{A GitHub \code{owner/name} slug or a full clone URL. Defaults to
+the canonical docdesigner style-set library.}
 
 \item{ref}{Branch or tag to install.}
 
@@ -17,5 +22,23 @@ designer_install_set(repo, ref = "main", overwrite = FALSE)
 The install path, invisibly.
 }
 \description{
-Install a style set from GitHub
+The canonical library is one repo (default \code{"jncohen/docdesigner"})
+holding every set under \code{inst/sets/<set>/}, the same layout the package
+ships internally -- installing \code{"academic"} or \code{"public"} pulls the
+current GitHub state of a set that may already be bundled with your
+installed package version, which is exactly the point: it lets a set get
+updates between package releases. A single-set repo (\code{set.yml} at the
+repo root) still works unchanged, for anyone publishing their own set
+outside the canonical library.
+}
+\details{
+Resolution order for \code{set.yml}, first match wins: \code{<set>/set.yml} (a
+subdirectory named for the set), \code{inst/sets/<set>/set.yml} (docdesigner's
+own repo layout), then \code{set.yml} at the repo root (a dedicated single-set
+repo).
+
+NOTE: this .Rd was hand-edited to match a signature change made without a
+working R installation on hand. Regenerate for real with
+\code{devtools::document()} the next time R is available, and diff against
+this file.
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nature-page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #0B4F8A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .srf { font-family: 'Source Serif 4', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  sup.cite { font-size: 0.66em; vertical-align: super; line-height: 0; color: var(--accent, #0B4F8A); font-weight: 600; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="794px" content-height="1123px" hint-size="100%,100%">
+<article class="srf" data-screen-label="nature — page 2" style="--accent: {{ accent }}; --num: {{ num }}; position: relative; width: 794px; min-height: 1123px; background: #ffffff; color: #0A0A0A; padding: 56px 62px 62px;  font-size: 12.6px; line-height: 1.4; ">
+
+    <!-- running head: category + folio -->
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 0.5px solid #C7CBD1; padding-bottom: 7px;">
+      <span class="mono" style="font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">Article</span>
+      <span class="mono" style="font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">J. Popul. Sci. · Vol. 12 · 2026 · 2</span>
+    </div>
+
+    <!-- Methods: Nature sets these in smaller type after the main text -->
+    <h2 class="srf" style="font-size: 16px; font-weight: 700; color: #0A0A0A; margin: 16px 0 8px;">Methods</h2>
+
+    <div class="srf" style="column-count: 2; column-gap: 26px; font-size: 11.4px; line-height: 1.42; text-align: justify; hyphens: auto; color: #16181C;">
+      <p style="margin: 0 0 0.6em;"><span style="font-weight: 700;">Data.</span> Estimates use the 2022 Survey of Consumer Finances, a triennial cross-section of household balance sheets with a dual-frame sample and an oversample of high-wealth households drawn from statistics of income. All estimates apply the survey weights and are repeated across the five implicates of the multiply-imputed public file.</p>
+      <p style="margin: 0 0 0.6em;"><span style="font-weight: 700;">Model.</span> The dependent variable is the inverse-hyperbolic-sine transform of net worth. Credential thresholds enter as indicators alongside a continuous years-of-schooling term; controls comprise a cubic in age, race and marital status. Standard errors are computed from the 999 replicate weights.</p>
+
+      <pre class="mono" style="font-size: 9.6px; line-height: 1.5; background: #f6f7f9; border: 0.5px solid #e6e8ec; border-radius: 2px; padding: 9px 10px; margin: 0 0 0.6em; white-space: pre; overflow-x: auto; break-inside: avoid;"><code>fit &lt;- svyglm(
+  ihs_networth ~ hs + ba + grad + years
+    + poly(age, 3) + race + married,
+  design = scf_rep )</code></pre>
+
+      <p style="margin: 0 0 0.6em;"><span style="font-weight: 700;">Inference.</span> Threshold magnitudes are compared using the bootstrap distribution over replicate weights; the reported ordering is stable in more than 98% of resamples. Reporting follows the journal's checklist for survey-weighted estimation.</p>
+
+      <div style="border-left: 2px solid var(--accent, #0B4F8A); padding-left: 10px; margin: 0 0 0.6em; font-style: italic; color: #2A2E33;">Code and replicate-weight scripts are archived at the repository DOI; the SCF microdata are public and unrestricted.</div>
+
+      <!-- extended data table -->
+      <div style="font-size: 9.8px; font-weight: 700; color: #0A0A0A; margin: 2px 0 4px; break-inside: avoid;">Extended Data Table 1 | Full specification</div>
+      <table class="srf" style="width: 100%; border-collapse: collapse; font-size: 9.6px; break-inside: avoid;">
+        <thead>
+          <tr style="border-top: 1.3px solid #0A0A0A; border-bottom: 0.8px solid #0A0A0A;">
+            <th style="text-align: left; padding: 3px 2px; font-weight: 700;">Term</th>
+            <th style="text-align: right; padding: 3px 2px; font-weight: 700;">&beta;</th>
+            <th style="text-align: right; padding: 3px 2px; font-weight: 700;">SE</th>
+            <th style="text-align: right; padding: 3px 2px; font-weight: 700;">t</th>
+          </tr>
+        </thead>
+        <tbody style="font-variant-numeric: tabular-nums;">
+          <tr><td style="padding: 3px 2px;">High school</td><td style="text-align: right; padding: 3px 2px;">0.42</td><td style="text-align: right; padding: 3px 2px;">0.06</td><td style="text-align: right; padding: 3px 2px;">7.0</td></tr>
+          <tr><td style="padding: 3px 2px;">Bachelor's</td><td style="text-align: right; padding: 3px 2px;">0.68</td><td style="text-align: right; padding: 3px 2px;">0.07</td><td style="text-align: right; padding: 3px 2px;">9.7</td></tr>
+          <tr><td style="padding: 3px 2px;">Graduate</td><td style="text-align: right; padding: 3px 2px;">0.19</td><td style="text-align: right; padding: 3px 2px;">0.08</td><td style="text-align: right; padding: 3px 2px;">2.4</td></tr>
+          <tr><td style="padding: 3px 2px;">Years (cont.)</td><td style="text-align: right; padding: 3px 2px;">0.03</td><td style="text-align: right; padding: 3px 2px;">0.02</td><td style="text-align: right; padding: 3px 2px;">1.5</td></tr>
+          <tr style="border-bottom: 1.3px solid #0A0A0A;"><td style="padding: 3px 2px;">Age (linear)</td><td style="text-align: right; padding: 3px 2px;">0.05</td><td style="text-align: right; padding: 3px 2px;">0.01</td><td style="text-align: right; padding: 3px 2px;">5.0</td></tr>
+        </tbody>
+      </table>
+      <p style="margin: 6px 0 0; font-size: 9.5px; color: #4A4F56;">Full coefficient table for the survey-weighted specification; N = 4,595 households across five implicates.</p>
+    </div>
+
+    <!-- running foot -->
+    <div style="position: absolute; left: 62px; right: 62px; bottom: 30px; display: flex; align-items: baseline; justify-content: space-between; border-top: 0.5px solid #C7CBD1; padding-top: 6px;">
+      <span class="mono" style="font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">Journal of Population Science</span>
+      <span class="mono" style="font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; color: #6A6F76;">Vol. 12 · 2026 · 2</span>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 890, &quot;height&quot;: 1240 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0B4F8A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0B4F8A&quot;, &quot;#0A0A0A&quot;, &quot;#1F7A54&quot;, &quot;#8A2846&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — category tag, citations, links (headings stay black)&quot; },
+  &quot;numberSections&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;headings.number_sections — Nature uses named heads by default&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#0B4F8A';
+    const num = (this.props.numberSections ?? false) ? 'inline' : 'none';
+    return { accent, num };
+  }
+}
+</script>
+</body>
+</html>

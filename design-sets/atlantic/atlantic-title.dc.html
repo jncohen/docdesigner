@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>atlantic-title</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #d7d2c8; }
+  a { color: var(--accent, #B2332A); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .disp { font-family: 'Playfair Display', Georgia, serif; }
+  .cas { font-family: 'Libre Caslon Text', Georgia, 'Times New Roman', serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="cas" data-screen-label="atlantic — cover page" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #fbfaf6; color: #1c1913; padding: 66px 96px 72px;  font-size: 16px; line-height: 1.5; display: flex; flex-direction: column;">
+
+    <!-- nameplate -->
+    <div style="text-align: center; border-bottom: 1px solid #1c1913; padding-bottom: 12px;">
+      <div class="disp" style="font-size: 40px; font-weight: 800; letter-spacing: 0.01em; color: #1c1913;">The Meridian Monthly</div>
+      <div class="cas" style="font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: #6b675f; margin-top: 8px;">Essays &amp; Reporting &nbsp;·&nbsp; May 2026</div>
+    </div>
+
+    <!-- feature title block -->
+    <div style="text-align: center; margin-top: 128px;">
+      <div class="cas" style="font-size: 13px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent, #B2332A);">The American Idea</div>
+      <h1 class="disp" style="font-size: 82px; line-height: 0.98; font-weight: 800; color: #1c1913; margin: 22px 0 0; letter-spacing: -0.01em;">The Two Ladders</h1>
+      <div class="cas" style="font-size: 22px; line-height: 1.4; font-style: italic; color: #3a352c; margin: 26px auto 0; max-width: 34ch;">American opportunity was supposed to be a ramp. The numbers describe a staircase&mdash;and a landing where millions are stranded between the steps.</div>
+      <div class="cas" style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #1c1913; margin-top: 34px;">By Joseph N. Cohen</div>
+    </div>
+
+    <!-- optional full-bleed feature image -->
+    <div style="margin-top: auto;">
+      <div style="position: relative; width: 100%; height: 250px; background-image: repeating-linear-gradient(135deg, #ece8df 0 12px, #e4dfd4 12px 24px); border: 1px solid #d6d0c4;">
+        <div class="mono" style="position: absolute; left: 12px; bottom: 10px; font-size: 11px; color: #8a857a; background: rgba(251,250,246,0.78); padding: 2px 7px;">[ opening illustration &mdash; full width ]</div>
+      </div>
+      <div class="cas" style="font-size: 11px; color: #8a857a; margin-top: 7px; font-style: italic;">Illustration by &mdash;&mdash;</div>
+    </div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#B2332A&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#B2332A&quot;, &quot;#8A2A22&quot;, &quot;#1F5A4C&quot;, &quot;#3A352C&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — kicker, title rule, pull quotes, document rule, links&quot; },
+  &quot;dropCap&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.drop_cap — large initial on the opening paragraph&quot; },
+  &quot;paragraphIndent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;paragraph.indent — first-line indent after the opening paragraph&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accentColor ?? '#B2332A';
+    const dc = this.props.dropCap ?? true;
+    const dcFloat = dc ? 'left' : 'none';
+    const dcSize = dc ? '5.2em' : '1em';
+    const dcLh = dc ? '0.82' : '1';
+    const pi = (this.props.paragraphIndent ?? true) ? '1.4em' : '0px';
+    return { accent, dcFloat, dcSize, dcLh, pi };
+  }
+}
+</script>
+</body>
+</html>

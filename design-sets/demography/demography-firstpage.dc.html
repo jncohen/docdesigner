@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>demography-firstpage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #2b2e35; }
+  a { color: var(--accent, #2A4B6E); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .grm { font-family: 'EB Garamond', 'Garamond', Georgia, serif; }
+  .mono { font-family: 'Fira Code', ui-monospace, monospace; }
+  .sc { font-variant: small-caps; letter-spacing: 0.06em; }
+</style>
+<style>
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { animation-delay:-99s !important; animation-duration:.001s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; animation-play-state:running !important; transition-duration:0s !important; }
+  doc-page:not(:defined){ visibility:hidden; }</style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0" content-width="816px" content-height="1056px" hint-size="100%,100%">
+<article class="grm" data-screen-label="demography — page 1" style="--accent: {{ accent }}; position: relative; width: 816px; min-height: 1056px; background: #fdfdfb; color: #1B1B18; padding: 96px 132px 84px;  font-size: 15px; line-height: 1.52;">
+
+    <!-- drop-folio running head -->
+    <div class="grm sc" style="position: absolute; top: 44px; left: 132px; right: 132px; display: flex; align-items: baseline; justify-content: space-between; font-size: 12px; color: #6A6862;">
+      <span>Demography &nbsp;·&nbsp; Volume 61, Number 3</span>
+      <span>June 2026</span>
+    </div>
+
+    <!-- article number line -->
+    <div class="grm" style="font-size: 12.5px; font-style: italic; color: #6A6862; margin-bottom: 8px;">Article &nbsp;·&nbsp; pp. 411–438</div>
+
+    <!-- title -->
+    <h1 class="grm" style="font-size: 28px; line-height: 1.2; font-weight: 600; color: #14140F; margin: 0; max-width: 26ch; letter-spacing: 0.005em;">Cross-Sectional Differences in Wealth by Education</h1>
+    <div class="grm" style="font-size: 18px; font-style: italic; color: #4A483F; margin-top: 8px;">Measurement and theory alternatives</div>
+
+    <!-- byline -->
+    <div class="grm" style="font-size: 15.5px; color: #1B1B18; margin-top: 20px;">Joseph N. Cohen</div>
+    <div class="grm" style="font-size: 13px; font-style: italic; color: #6A6862; margin-top: 2px;">Meridian University</div>
+
+    <!-- abstract: indented block, ragged, no heading label -->
+    <div style="margin: 26px 40px 0; ">
+      <p class="grm" style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #33322B;"><span class="sc" style="font-weight: 600;">Abstract</span>&nbsp;&nbsp;This article examines the relationship between educational attainment and household wealth in the United States using the 2022 Survey of Consumer Finances. Net of age, race, and marital status, most detectable structure is captured by two credential benchmarks — high-school and bachelor's-degree completion — while finer gradations above those thresholds contribute comparatively little to model fit. The pattern is consistent with credentialist and institutional-sorting accounts of stratification.</p>
+      <p class="grm" style="margin: 8px 0 0; font-size: 13px; color: #6A6862;"><span style="font-style: italic;">Keywords</span>&nbsp;&nbsp;wealth · education · Survey of Consumer Finances · stratification</p>
+    </div>
+
+    <div style="border-bottom: 0.5px solid #C9C6BC; margin: 26px 0 0; width: 90px;"></div>
+
+    <!-- section 1: small-caps centered head -->
+    <h2 class="grm sc" style="text-align: center; font-size: 15px; font-weight: 600; color: #14140F; margin: 26px 0 10px; letter-spacing: 0.09em;">Introduction</h2>
+    <p class="grm" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">That education and wealth move together is among the most durable findings in social stratification. The better educated are richer; the richer acquire more education. The analytic question this article takes up is not whether the association exists but what <em>shape</em> it takes — whether the wealth return to schooling is continuous in years, or concentrated at the crossing of major credential thresholds.</p>
+    <p class="grm" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.4em;">The distinction is not merely descriptive. A continuous return follows from human-capital theory, in which schooling supplies market-valued skills that accumulate with each additional year. A threshold return follows instead from credentialist and signalling accounts, in which degrees operate as markers that sort individuals into discretely different opportunity structures.</p>
+    <p class="grm" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.4em;">Because the two mechanisms imply observationally distinct functional forms, and because the net-worth distribution in the Survey of Consumer Finances is unusually well measured at the top, the data are well suited to adjudicating between them.</p>
+
+    <!-- section 2 head -->
+    <h2 class="grm sc" style="text-align: center; font-size: 15px; font-weight: 600; color: #14140F; margin: 22px 0 10px; letter-spacing: 0.09em;">Data and Measures</h2>
+    <p class="grm" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 0;">The Survey of Consumer Finances is a triennial, nationally representative study of U.S. household balance sheets. Its oversample of high-wealth households, combined with a replicate-weight design, makes it the standard instrument for wealth research.</p>
+    <p class="grm" style="margin: 0; text-align: justify; hyphens: auto; text-indent: 1.4em;">We model the natural log of net worth on indicators for high-school, bachelor's, and graduate completion, together with a continuous years-of-schooling term and controls for age, race, and marital status.</p>
+
+    <!-- footer folio -->
+    <div class="grm" style="position: absolute; left: 0; right: 0; bottom: 48px; text-align: center; font-size: 13px; color: #6A6862;">411</div>
+  </article>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 912, &quot;height&quot;: 1180 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#2A4B6E&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#2A4B6E&quot;, &quot;#1B1B18&quot;, &quot;#5A3A2E&quot;, &quot;#3A5A45&quot;], &quot;section&quot;: &quot;Style tokens&quot;, &quot;doc&quot;: &quot;color.accent — links and rules; heads stay near-black by house convention&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accentColor ?? '#2A4B6E' };
+  }
+}
+</script>
+</body>
+</html>
