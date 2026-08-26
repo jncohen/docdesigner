@@ -1,7 +1,7 @@
 id: public
 title: "docdesigner Public-Facing Styles"
 author: "Joseph N. Cohen"
-version: 2.0.0
+version: 2.1.0
 format_version: 2
 license: "MIT"
 description: "Report and public-scholarship styles for policy and general audiences."

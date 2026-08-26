@@ -1,21 +1,132 @@
+# docdesigner style — economist
+# The dense, two-column look of The Economist, ADAPTED to academic papers:
+# the magazine visual language (flush-left BLACK headline over a red kicker,
+# a bold serif standfirst, small bold serif cross-heads, tight two-column
+# leading, a first-line indent, a single spot red) carrying academic structure
+# (numbered sections, a real abstract, keywords, references). Serif body in
+# Source Serif 4 (Milo Serif substituted); a grotesque sans (Arial today; a
+# bundled Archivo later) sets the kicker and furniture labels via
+# typography.label.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set; adapted to academic
+# 2026-07-21. FLAT dotted-key format (schema v2). Validates clean against
+# schema.yml (0 errors). Still deferred to the template port: the red FILLED
+# masthead flag band and the drop cap span both columns only under full
+# title-page architecture; the kicker + sans label face are now native. See
+# fidelity.md.
+
 id: economist
 label: Economist
-description: The Economist and public data journalism. Milo Serif substituted with Source Serif 4.
+description: >
+  The dense two-column look of The Economist, adapted to academic papers:
+  a flush-left black headline over a red kicker, a spot-red rule accent, bold
+  serif cross-heads and standfirst, tight leading and a first-line indent,
+  wired to numbered sections, a real abstract and references. Source Serif 4
+  substitutes Milo Serif; a grotesque sans sets the kicker and labels.
 
+# ---- page (two-column; A4 per the spec sheet; 1in margins) ------------------
+# The style-sheet Page block declares papersize A4 and margin normal (1in);
+# the mock canvas is drawn on Letter but the token value is A4. Body pages run
+# two columns with a ~1.8em gutter and no column rule.
+page.papersize: a4
+page.margin: normal          # 1in all sides
+page.columns: 2
+
+# ---- typography (dense Source Serif; Fira Code mono) ------------------------
 typography.body: "Source Serif 4"
 typography.heading: "Source Serif 4"
-typography.base_size: "10pt"
+typography.mono: Fira Code
+typography.base_size: "9pt"          # spec: 9pt, dense
+typography.line_height: 1.12         # spec: 1.12 (the 2-col pages render looser)
+typography.mono_scale: 0.9           # spec: mono 0.9x
+# Grotesque sans furniture face (kicker, labels). Arial is guaranteed present
+# on the render machine; swap to a bundled Archivo when the fonts are slimmed.
+# Loaded by NAME with an \IfFontExistsTF guard — absence degrades to the serif.
+typography.label: Arial
 
-color.accent: "B21F24"
-color.rule: "B21F24"
+# ---- colour (near-black ink + a single spot red) ---------------------------
+color.text: "#111111"
+color.accent: "#E3120B"              # the Economist red: flag, kicker, rules, links
+color.muted: "#6E6E6E"
+color.rule: "#C9C9C9"
+color.code_bg: "#F5F5F4"             # light-grey code block ground
+links.color: accent
 
-headings.number_sections: false
-headings.h1.scale: 1.32
-headings.h2.scale: 1.12
+# ---- headings (small BLACK bold serif cross-heads, not the red accent) -----
+headings.number_sections: true      # academic: numbered sections ("1 Introduction")
+# h1/h2/h3 are cross-heads: bold, near-black, flush left, no rule.
+# Spec-sheet specimen grades 16/14/13px on a 14px body -> ~1.15 / 1.0 / 0.93.
+headings.h1.scale: 1.15
+headings.h1.color: text
+headings.h2.scale: 1.0
+headings.h2.color: text
+headings.h3.scale: 0.95
+headings.h3.color: text
+headings.h4.color: text              # else falls through to the accent default
 
-title.layout: masthead
-title.rule.position: below
-title.rule.weight: heavy
+# ---- title — flush-left compact opener (economist-firstpage) ---------------
+# The headline is BLACK (title.color: text); the red is the kicker + rule. A
+# short red rule sits below the headline. The kicker is now a native token: a
+# red sans eyebrow above the title, the Economist's signature furniture move —
+# here repurposed as the academic venue label.
+title.layout: plain                  # flush left, body follows on the same page
+title.align: left
+title.scale: 3.0                     # spec: 3.0
+title.color: text                    # headline is black, NOT the red accent
+title.kicker.text: "Working Paper"   # red sans eyebrow above the headline
+title.kicker.color: accent
+title.kicker.case: upper
+title.kicker.scale: 0.85
+title.rule.position: below           # short red rule under the headline
+title.rule.weight: heavy             # 3px in the model
 title.rule.color: accent
+title.rule.length: 0.9               # ~90px short rule (inches)
+# Standfirst / deck maps to the subtitle: a prominent bold serif line under the
+# rule. Kept large (the Economist look) but now an academic subtitle, not a deck.
+title.subtitle.scale: 1.5            # bold serif standfirst
+title.subtitle.style: normal         # upright (the model deck is upright, not italic)
+title.subtitle.color: text
+# Academic structure: a real run-in abstract + keywords replace the magazine deck.
+title.abstract.show: true
+title.abstract.label: Abstract
+title.abstract.label_style: runin    # compact small-caps run-in — economist-dense
+title.abstract.size: 0.95
+title.keywords.show: true
+title.keywords.label: Keywords
+# Byline "BY MAYA R. LINDQVIST" — sans caps in the model; caps + muted here.
+title.byline.case: upper
+title.byline.color: muted
+title.date.show: true                # working-paper dateline under the byline
 
-code.highlight: pygments
+# ---- paragraphs (first-line indent, no extra spacing) ----------------------
+paragraph.indent: sm                 # spec: sm (1em) first-line indent
+paragraph.spacing: none
+# A 3-line drop cap opens the feature in the model, but paragraph.drop_cap.*
+# is status new/risk and unreliable under columns:2 — left unset (see fidelity).
+
+# ---- figures / tables ------------------------------------------------------
+# Inline, single-column figures — do NOT span columns.
+figure.caption.color: muted          # captions are muted grey (sans face inexpressible)
+table.style: booktabs                # top/header/bottom rules
+table.row_stretch: 1.1               # spec: row 1.1
+
+# ---- code (unhighlighted, bordered light-grey block) -----------------------
+code.highlight: none                 # spec: code none (monochrome)
+code.border: true
+code.background: code_bg
+
+# ---- quotes (muted, with a red side rule) ----------------------------------
+quote.color: muted                   # style-sheet specimen quote is muted
+quote.rule: true                     # vertical red accent rule at the left
+
+# ---- running head + folio --------------------------------------------------
+# Continuation pages carry a text running head (running title | author) under a
+# hairline; the folio is CENTRED at the foot. The opener's red flag band is a
+# separate object with no token (see fidelity). footer.right: none suppresses
+# the default second folio; footer.rule off (the folio stands alone).
+header_footer.header.left: runningtitle
+header_footer.header.right: author
+header_footer.header.rule: true
+header_footer.footer.center: page
+header_footer.footer.right: none
+header_footer.footer.rule: false

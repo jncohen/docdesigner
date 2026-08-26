@@ -1,0 +1,116 @@
+# docdesigner style — ajs
+# The classic footnoted-journal look of the American Journal of Sociology
+# (Chicago house style): a single wide-measure column of Times-metrics type,
+# centred FULL-CAPS A-heads and centred-italic B-heads, an italic run-in
+# C-head, a first-line-indented abstract with NO label, bottom-of-page footnote
+# apparatus, and a page + running-title head. Near-monochrome, sober, formal.
+#
+# Authored 2026-07-18 FROM the token-faithful model set
+# (ajs-{stylesheet,title,firstpage,page}.dc.html) — new style, no prior
+# format.yml. Original STIX Two Text substituted with XITS (bundled
+# Times-metrics serif). FLAT dotted-key format (schema v2). Validates clean
+# against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
+id: ajs
+label: American Journal of Sociology
+description: >
+  The classic footnoted-journal look of the American Journal of Sociology
+  (Chicago house style). A single wide-measure column of Times-metrics type,
+  centred full-caps section heads, an unlabelled indented abstract, and
+  bottom-of-page footnotes. Near-monochrome and formal. XITS substitutes STIX.
+
+# ---- page (symmetric margins measured from the models) ---------------------
+# firstpage/page padding 76/118/84 px; title 120/118/84 (px / 96 = inches).
+page.papersize: letter
+page.margins.top: 0.8
+page.margins.bottom: 0.875
+page.margins.inner: 1.23
+page.margins.outer: 1.23
+page.columns: 1
+
+# ---- typography (Times-metrics XITS) --------------------------------------
+typography.body: XITS
+typography.heading: XITS
+typography.mono: Fira Code           # first-page billing-code line only
+typography.base_size: 11pt
+typography.line_height: 1.6
+typography.justification: justified
+typography.microtype: true
+# numbers: default lining — correct for a Times-family journal (no override).
+
+# ---- colour (near-monochrome; accent = links/rules only) -------------------
+color.text: "#1A1A1A"
+color.accent: "#333333"              # links + hairline rules only
+color.muted: "#555555"               # affiliation, footnotes, running head
+color.rule: "#111111"                # table + footnote rules, near-black
+links.color: accent
+
+# ---- headings (all REGULAR weight; centred caps / centred italic / run-in) --
+headings.number_sections: false      # unnumbered; footnote apparatus instead
+headings.run_in: [h3]                # h3 typeset run-in with the paragraph
+# h1 = # A-head ("INTRODUCTION"): centred FULL CAPS, regular, near-black.
+headings.h1.scale: 1.0
+headings.h1.weight: regular          # models set 400, not bold
+headings.h1.case: upper
+headings.h1.align: center
+headings.h1.color: text
+# h2 = ## B-head ("The Threshold Hypothesis"): centred italic, regular.
+headings.h2.scale: 1.0
+headings.h2.weight: regular
+headings.h2.style: italic
+headings.h2.align: center
+headings.h2.color: text
+# h3 = ### C-head ("Data and sample. text follows…"): run-in italic, regular.
+headings.h3.scale: 1.0
+headings.h3.weight: regular
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text              # else falls through to the accent default
+
+# ---- title (journal opener: CENTRED title, unlabelled indented abstract) ----
+# FOLLOW the opener (firstpage), not the centred standalone title page.
+title.layout: journal
+title.align: center                  # the article opener title is centred
+title.scale: 1.5                     # 22px opener title / 15px body
+title.byline.case: smallcaps         # "Joseph N. Cohen" in small caps
+title.byline.color: text             # author name in text ink, not muted
+title.date.show: false               # opener carries no author date line
+# AJS abstract: first-line-indented block, NO "Abstract" label at all.
+title.abstract.label_style: none
+title.abstract.indent: md            # ~0.42in inset each side (scale tops below)
+title.abstract.size: 0.9             # 13px abstract / 15px body
+title.keywords.show: false           # AJS front matter has no keyword line
+
+# ---- paragraphs (traditional first-line indent, no extra spacing) ----------
+paragraph.indent: lg                 # model text-indent 1.6em -> nearest step
+paragraph.spacing: none
+paragraph.indent_after_heading: false  # first para after a head is flush
+
+# ---- figures / tables ------------------------------------------------------
+# AJS table: small-caps "Table 1" + italic title ABOVE, booktabs, notes below.
+table.style: booktabs
+table.row_stretch: 1.15
+table.header.weight: regular         # header cells set 400 in the model
+table.caption.position: above
+figure.caption.position: above
+figure.caption.align: center
+figure.caption.label_style: smallcaps  # "Table 1" small-caps label
+
+# ---- footnotes / quotes / code ---------------------------------------------
+footnotes.size: 0.75                 # 11px note / 15px body
+footnotes.numbering: arabic          # bottom-of-page arabic footnotes
+quote.style: normal                  # block extract: roman, indented both sides
+quote.indent: md
+code.highlight: none                 # AJS sets no highlighted code
+
+# ---- running head + folio --------------------------------------------------
+# Running head: page number + article running-title (small caps). The opener
+# carries a running head too. Folio lives in the head; suppress the default
+# footer folio to avoid a duplicate.
+header_footer.header.left: page
+header_footer.header.right: runningtitle
+header_footer.header.rule: false
+header_footer.first_page: header     # carry the running head onto the opener
+header_footer.footer.center: none
+header_footer.footer.right: none
+header_footer.footer.rule: false

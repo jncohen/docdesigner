@@ -1,18 +1,96 @@
+# docdesigner style — ssrn
+# The austere, colourless look of an economics working paper in the NBER /
+# SSRN tradition: a plain centred title page carrying the working-paper series
+# line and number, centred authors and affiliation, a centred "Abstract"
+# heading over a justified block, JEL codes and keywords, and a first-page
+# acknowledgment footnote below a short rule. Times-family type, wide margins,
+# loose leading, numbered sections, and effectively no colour.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (ssrn-{stylesheet,title,firstpage,page}.dc.html). Original Times substituted
+# with XITS (bundled Times-metrics serif). FLAT dotted-key format (schema v2).
+# Validates clean against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
 id: ssrn
 label: SSRN
-description: SSRN / NBER working paper style
+description: >
+  The austere working-paper look of the NBER / SSRN tradition. A plain centred
+  title page with series number, JEL codes, and an acknowledgment footnote;
+  Times-family type, wide margins, numbered sections, no colour. XITS
+  substitutes Times.
 
-typography.body: "XITS"
-typography.heading: "XITS"
-typography.base_size: "11pt"
+# ---- page (asymmetric margins measured from the models) --------------------
+# body page padding 96/128/84 px; title 108/128/84; firstpage 92/128/84
+# (px / 96 = inches). Sides 128px = 1.333in ~= scales.margin.wide (1.35in).
+page.papersize: letter
+page.margins.top: 1.0
+page.margins.bottom: 0.875
+page.margins.inner: 1.333
+page.margins.outer: 1.333
+page.columns: 1
 
-color.accent: "000000"
-color.rule: "888888"
+# ---- typography (Times-metrics XITS, large and loose) ----------------------
+typography.body: XITS
+typography.heading: XITS
+typography.mono: Fira Code          # the abstract URL / handle only
+typography.base_size: 12pt          # working papers run large and loose
+typography.line_height: 1.68        # stylesheet spec
+typography.justification: justified
+typography.microtype: true
 
+# ---- colour (effectively none; accent = links only) -----------------------
+color.text: "#1A1A1A"
+color.accent: "#333333"             # links only
+color.muted: "#555555"
+color.rule: "#B8B8B8"               # short acknowledgment-note hairline
+links.color: accent
+links.underline: false
+
+# ---- headings (plain bold, numbered, near-black not accent) ----------------
 headings.number_sections: true
-headings.h1.scale: 1.25
-headings.h2.scale: 1.10
+headings.run_in: [h3]               # h3 typeset run-in with the paragraph
+# h1 = # sections ("1  Introduction"): bold near-black, modest step above body.
+headings.h1.scale: 1.1
+headings.h1.weight: bold
+headings.h1.color: text
+# h2 = ## subsections ("2  Framework"): bold near-black.
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.color: text
+# h3 = ### run-in italic lead-in ("Identification. text follows…").
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text             # else falls through to the accent default
 
+# ---- title — targets the compact LEFT opener (ssrn-firstpage model) ---------
+# Flush-left title, run-in abstract, body on the same page. The models ALSO
+# ship a centred standalone title page (ssrn-title); that returns once
+# title.layout / title.page_break_after land (both port/new today), at which
+# point this could switch to a centred `title.layout: report`-style page.
 title.layout: plain
+title.align: left                   # opener title is flush-left with a wide right margin
+title.scale: 1.7                    # stylesheet spec; tune vs the opener's 21px title later
+title.byline.color: text            # author name in text ink, not muted
+title.date.show: true               # "This draft: June 23, 2026"
+# Inline italic "Abstract." run in with the first line (opener), not a heading.
+title.abstract.label_style: runin
+title.abstract.indent: lg           # ~28px each-side inset
+title.abstract.size: 0.9            # 13px abstract / 14.5px body
+title.keywords.show: true           # "Keywords:" line under the abstract
 
-code.highlight: tango
+# ---- paragraphs (traditional first-line indent, no extra spacing) ----------
+paragraph.indent: lg                # model text-indent 1.6em -> nearest step
+paragraph.spacing: none
+
+# ---- figures / tables ------------------------------------------------------
+table.style: booktabs
+table.header.weight: bold
+
+# ---- code / running foot ---------------------------------------------------
+code.highlight: none                # working papers set code plain
+# Folio centred in the footer, no rule; suppress the default right-slot folio.
+header_footer.footer.center: page
+header_footer.footer.right: none
+header_footer.footer.rule: false

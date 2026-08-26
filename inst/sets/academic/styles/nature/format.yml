@@ -1,22 +1,111 @@
+# docdesigner style — nature
+# The compact, high-density TWO-COLUMN look of Nature / Science research
+# articles: small transitional-serif type set tight, a category kicker
+# (ARTICLE) over a heavy black rule, an unlabelled bold lead-paragraph
+# abstract spanning both columns, superscript numeric citations, bold black
+# named section heads, "Fig. 1 |" / "Table 1 |" caption labels, and a
+# near-monochrome palette with a single restrained ink-blue accent. The
+# article opens on page 1 — there is no separate title page.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (nature-{title,firstpage,page,stylesheet}.dc.html). A4, two-column.
+# Original body face (a proprietary transitional serif) substituted with
+# Source Serif 4 (bundled). FLAT dotted-key format (schema v2).
+# Validates clean against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
 id: nature
 label: Nature
-description: Nature / Science scientific article style
+description: >
+  The compact two-column look of Nature and Science research articles.
+  Dense small type, a heavy black title rule, a bold lead-paragraph abstract,
+  and superscript numeric citations. Source Serif 4 substitutes the
+  proprietary journal serif.
 
-typography.body: "Source Serif 4"
-typography.heading: "Source Serif 4"
-typography.base_size: "9pt"
-
-color.accent: "2F6F8F"
-color.rule: "2F6F8F"
-
+# ---- page (A4, two-column; margins measured from the page models) ----------
+# firstpage / body padding 56/62/62 px on A4 794x1123 (÷96 = inches). The
+# stylesheet's "margin: narrow" shorthand (0.75in) is looser than the pages
+# actually render, so the measured asymmetric margins are used instead.
+page.papersize: a4
+page.margins.top: 0.583
+page.margins.bottom: 0.646
+page.margins.inner: 0.646
+page.margins.outer: 0.646
 page.columns: 2
-page.margin: narrow
 
-headings.number_sections: true
-headings.h1.scale: 1.20
-headings.h1.case: upper
-headings.h2.scale: 1.05
+# ---- typography (dense, small, tight) -------------------------------------
+typography.body: Source Serif 4
+typography.heading: Source Serif 4
+typography.mono: Fira Code
+typography.mono_scale: 0.85        # code block ~9.6px on 11.4px body
+typography.base_size: 8.5pt        # dense; pdf() maps <10.5pt -> 10pt class option
+typography.line_height: 1.15       # spec-sheet body specimen leading
+typography.justification: justified
+typography.microtype: true
 
-title.layout: journal
+# ---- colour (near-monochrome; one restrained ink-blue accent) -------------
+color.text: "#0A0A0A"
+color.accent: "#0B4F8A"            # category kicker, citations, links only
+color.muted: "#6A6F76"             # affiliations, captions, running foot
+color.rule: "#0A0A0A"             # the heavy black title rule is the signature
+color.code_bg: "#F6F7F9"           # tinted code-block panel in the page model
+links.color: accent
 
-code.highlight: kate
+# ---- headings (bold BLACK named heads; never accent-coloured) -------------
+# Specimen sizes over a 14px body: Results 16px (h1=1.14), Discussion 14px
+# (h2=1.0), Data availability 13px italic (h3=0.93).
+headings.number_sections: false
+headings.h1.scale: 1.14
+headings.h1.weight: bold
+headings.h1.color: text
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.color: text
+headings.h3.scale: 0.93
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text            # else falls through to the accent default
+
+# ---- title (opens on page 1, spans both columns; heavy black rule) --------
+title.layout: plain               # no title page; body begins immediately
+title.align: left
+title.scale: 2.2                  # spec-sheet title scale; firstpage h1 27/12.6
+title.color: text                 # black headline, not accent
+title.rule.position: above        # heavy rule sits above the kicker+title
+title.rule.weight: thick          # 2.5px signature rule (~2pt)
+title.rule.color: rule            # black
+# The opener is a bold standfirst, not a labelled abstract: full-measure,
+# weight 600, no "Abstract" label (13.4px on 12.6px body = ~1.05).
+title.abstract.label_style: none
+title.abstract.weight: bold
+title.abstract.size: 1.05
+title.abstract.indent: none
+
+# ---- paragraphs (first-line indent, no extra spacing — dense) -------------
+paragraph.indent: sm              # 1em first-line indent
+paragraph.spacing: none
+
+# ---- figures / tables (compact, bold "Fig. n |" / "Table n |" labels) -----
+figure.style: plain
+figure.caption.position: below
+figure.caption.color: muted
+figure.caption.label_style: bold   # "Fig. 1 |" set bold black
+table.style: booktabs
+table.header.weight: bold
+table.row_stretch: 1.0             # tight rows
+table.caption.position: above      # "Table 1 |" label above the rules
+
+# ---- code (unhighlighted, tinted panel with a hairline border) ------------
+code.highlight: none
+code.background: code_bg
+code.border: true
+
+# ---- quote (block set with a vertical accent rule at the left) ------------
+quote.rule: true
+quote.color: muted
+quote.indent: md
+
+# ---- running foot (no header anywhere; footer folio on every page) --------
+header_footer.footer.left: runningtitle
+header_footer.footer.right: page
+header_footer.footer.rule: true

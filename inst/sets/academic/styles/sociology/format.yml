@@ -1,0 +1,111 @@
+# docdesigner style — sociology
+# The structured, authoritative ASA-tradition look (American Sociological
+# Review / American Journal of Social Research family): a single wide-measure
+# column of Times-family serif, a strict three-level heading hierarchy
+# (centred bold caps -> flush-left bold italic -> run-in bold italic with a
+# trailing period), a small-caps run-in labelled abstract, ASA table
+# conventions (title above, notes below), hanging-indent references, and a
+# near-monochrome palette.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (sociology-{stylesheet,title,firstpage,page}.dc.html). Original Times
+# substituted with XITS (bundled Times-metrics serif). FLAT dotted-key format
+# (schema v2). Validates clean against schema.yml (0 errors). Fidelity: fidelity.md.
+
+id: sociology
+label: Sociology
+description: >
+  The structured ASA-tradition journal look (ASR / AJS family). A single
+  wide-measure column of Times-family XITS, a strict three-level heading
+  hierarchy, a small-caps run-in labelled abstract, and ASA table conventions.
+  Authoritative and near-monochrome. XITS substitutes Times.
+
+# ---- page (asymmetric margins measured from the models) --------------------
+# firstpage padding 92/108/84 px; body 84/108/84; title 128/108/84 (px/96 = in).
+# Sides symmetric at 108px = 1.125in; opener top 92px = 0.958in.
+page.papersize: letter
+page.margins.top: 0.958
+page.margins.bottom: 0.875
+page.margins.inner: 1.125
+page.margins.outer: 1.125
+page.columns: 1
+
+# ---- typography (Times-metrics XITS, loose ASA leading) -------------------
+typography.body: XITS
+typography.heading: XITS
+typography.mono: Fira Code
+typography.base_size: 11pt
+typography.line_height: 1.6            # ASA runs loose, near double-spaced feel
+typography.justification: justified
+typography.microtype: true
+
+# ---- colour (essentially monochrome; accent = links/rules only) -----------
+color.text: "#1A1A1A"
+color.accent: "#333333"                # links only; house style avoids colour
+color.muted: "#555555"
+color.rule: "#111111"
+links.color: accent
+
+# ---- headings (three ASA levels) ------------------------------------------
+headings.number_sections: false
+headings.run_in: [h3]                  # h3 typeset run-in with the paragraph
+# h1 = # Level-1 heads ("INTRODUCTION", "Results", "References"):
+#      centred, bold, ALL CAPS, near-black.
+headings.h1.scale: 1.0
+headings.h1.weight: bold
+headings.h1.align: center
+headings.h1.case: upper
+headings.h1.color: text
+# h2 = ## Level-2 heads ("The Threshold Hypothesis", "Discussion"):
+#      flush-left, bold italic, near-black.
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.style: italic
+headings.h2.align: left
+headings.h2.color: text
+# h3 = ### Level-3 run-in lead-in ("Data and sample. text follows…"):
+#      bold italic, trailing period, run-in with the paragraph.
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text                # else falls through to the accent default
+
+# ---- title (centred caps head, centred small-caps byline, run-in abstract) -
+title.layout: journal
+title.align: center                    # the opener centres the front matter
+title.case: upper                      # opener title is set ALL CAPS
+title.scale: 1.5                       # 22px opener title / ~15px body
+title.byline.case: smallcaps           # "Joseph N. Cohen" in small caps
+title.byline.color: text               # byline in text ink, not muted
+title.abstract.label_style: runin      # small-caps ABSTRACT run in with line 1
+title.abstract.indent: md              # inset from both margins
+title.abstract.size: 0.9               # 13.5px abstract / 15px body
+
+# ---- paragraphs (traditional first-line indent, no extra spacing) ----------
+paragraph.indent: lg                   # models render text-indent:1.5em -> lg
+paragraph.spacing: none
+
+# ---- figures / tables (ASA conventions) -----------------------------------
+figure.caption.position: above         # ASA figure titles sit above
+figure.caption.color: text             # table/figure titles in text ink
+table.style: booktabs                  # rules-only: top/mid/bottom, no verticals
+table.header.weight: regular           # ASA column heads are not bold
+table.row_stretch: 1.1
+table.caption.position: above          # table titles above (notes below: content)
+
+# ---- quotes / code ---------------------------------------------------------
+quote.style: normal                    # block quotations indented, not italicised
+quote.indent: md
+code.highlight: none
+
+# ---- running head + folio --------------------------------------------------
+# Opener/continuation running head: journal-title (outer-left) · page (outer-
+# right). Folio lives in the head; suppress the default footer folio.
+header_footer.header.left: runningtitle
+header_footer.header.right: page
+header_footer.header.rule: false
+header_footer.first_page: header       # the opener carries a page-1 running head
+header_footer.footer.center: none
+header_footer.footer.right: none
+header_footer.footer.rule: false

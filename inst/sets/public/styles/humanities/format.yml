@@ -1,18 +1,112 @@
+# docdesigner style — humanities
+# The unhurried look of a university-press humanities essay (Critical Inquiry /
+# a scholarly book chapter): a single narrow column of oldstyle EB Garamond set
+# with generous leading, a centred small-caps display title over a short
+# ornamental rule, an italic subtitle, a small-caps incipit on the opening
+# paragraph, real footnotes below a short separator rule, block quotations
+# without quote marks, and no abstract. Colour is nearly absent — a single deep
+# sepia accent for footnote markers and links.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (humanities-{stylesheet,title,firstpage,page}.dc.html). Original typeface
+# substituted with EB Garamond (bundled). FLAT dotted-key format (schema v2).
+# Validates clean against schema.yml (0 errors). Fidelity notes: fidelity.md.
+
 id: humanities
 label: Humanities
-description: Critical Inquiry / university press essay style. Monotype Bembo substituted with EB Garamond.
+description: >
+  The unhurried look of a university-press humanities essay. Oldstyle
+  EB Garamond, generous leading, a centred small-caps title over a short rule,
+  an italic subtitle, footnotes, and block quotations. No abstract;
+  near-monochrome. Reflective and literary.
 
-typography.body: "EB Garamond"
-typography.heading: "EB Garamond"
-typography.base_size: "11pt"
+# ---- page (asymmetric margins measured from the models) --------------------
+# firstpage padding 108/150/84 px; body 84/150/84; title 150/150/96 (÷96 = in).
+# Sides 150px = 1.5625in across all three; opener top 108px = 1.125in.
+page.papersize: letter
+page.margins.top: 1.125
+page.margins.bottom: 0.875
+page.margins.inner: 1.5625
+page.margins.outer: 1.5625
+page.columns: 1
 
-color.accent: "000000"
-color.rule: "000000"
+# ---- typography -----------------------------------------------------------
+typography.body: EB Garamond
+typography.heading: EB Garamond
+typography.mono: Fira Code
+typography.base_size: 11.5pt
+typography.line_height: 1.62          # generous, contemplative leading
+typography.justification: justified
+typography.numbers: oldstyle          # oldstyle figures in running prose
+typography.microtype: true
 
+# ---- colour (near-absent; single deep sepia accent) -----------------------
+color.text: "#211E18"                 # warm near-black on a faintly warm page
+color.accent: "#5A3A2E"               # deep sepia-brown — footnote marks + links
+color.muted: "#8A7F6B"
+color.rule: "#B7AE97"                 # warm grey ornamental / separator rules
+links.color: accent
+
+# ---- headings (centred small-caps section; italic sub-heads) --------------
 headings.number_sections: false
-headings.h1.scale: 1.40
-headings.h2.scale: 1.16
+headings.run_in: [h3]                 # h3 typeset run-in with the paragraph
+# h1 = # sections: centred small-caps, near-black, body-sized.
+headings.h1.scale: 1.0
+headings.h1.weight: bold              # model is 500; bundled EB Garamond ships
+                                      # Regular/Bold only, medium -> bold
+headings.h1.case: smallcaps
+headings.h1.align: center
+headings.h1.color: text
+# h2 = ## subsections: centred italic, near-black.
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.style: italic
+headings.h2.align: center
+headings.h2.color: text
+# h3 = ### run-in italic lead-in ("A digression. text follows…").
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text               # else falls through to the accent default
 
-title.layout: essay
+# ---- title (ESSAY archetype: centred small-caps display, short rule) ------
+title.layout: essay                   # no abstract, no journal furniture
+title.align: center
+title.case: smallcaps
+title.scale: 1.9                      # stylesheet spec (opener renders ~1.74)
+title.color: text
+title.subtitle.style: italic
+title.rule.position: below
+title.rule.weight: hairline
+title.rule.length: 0.5625             # 54px centred rule on the opener
+title.rule.color: rule
+title.byline.color: text              # author name in text ink, not muted
+title.abstract.show: false            # an essay opens on prose, not an abstract
 
-code.highlight: kate
+# ---- paragraphs (traditional first-line indent, no extra spacing) ---------
+paragraph.indent: lg                  # model text-indent 1.6em -> nearest step
+paragraph.spacing: none
+
+# ---- footnotes (real footnotes; the humanities signature) -----------------
+footnotes.size: 0.72                  # 11px note / 15.5px body
+footnotes.numbering: arabic
+
+# ---- figures / quotes / tables --------------------------------------------
+figure.style: plain
+figure.caption.position: below
+figure.caption.label_style: italic    # spec sheet "caption below · italic"
+figure.caption.color: muted
+quote.style: normal                   # block quotations roman, indented, no marks
+quote.indent: md
+table.style: booktabs
+code.highlight: none
+
+# ---- running head / folio -------------------------------------------------
+# Running title top-centred (small-caps) on continuation pages; folio
+# bottom-centred. Suppress the default right-slot folio and the footer rule.
+header_footer.header.center: runningtitle
+header_footer.header.rule: false
+header_footer.footer.center: page
+header_footer.footer.right: none
+header_footer.footer.rule: false

@@ -1,20 +1,78 @@
-# docdesigner style. Flat keys only: `dotted.key: value`, one per line.
-# See STYLE-SPEC.md, or run designer_tokens() for the full vocabulary.
+# docdesigner style — minimal
+# The clean, modern preprint of the arXiv tradition: a single wide-measure
+# column of Source Serif 4, numbered accent section heads in the same face, a
+# flush-left accent title over a heavy accent rule, a run-in abstract, and a
+# near-monochrome palette whose one colour — a muted ink-blue — carries the
+# title rule, section numbers, headings, and links. A good default.
+#
+# Rebuilt 2026-07-18 from the token-faithful model set
+# (minimal-{stylesheet,title,firstpage,page}.dc.html). FLAT dotted-key format
+# (schema v2). Validates clean against schema.yml (0 errors). Fidelity notes:
+# minimal-fidelity.md.
+#
+# Fonts, mono, microtype, links, table, and figure captions all sit at their
+# schema defaults (Source Serif 4 body/heading, Fira Code mono, booktabs tables,
+# tango code, accent links) and are inherited rather than re-declared.
+
 id: minimal
 label: Minimal
-description: Clean arXiv / modern university preprint style
+description: >
+  A clean, modern preprint in the arXiv tradition. A single wide column of
+  Source Serif 4 with numbered accent section heads and a muted ink-blue
+  accent. A good default.
 
-typography.body: "Source Serif 4"
-typography.heading: "Source Serif 4"
-typography.base_size: "10pt"
+# ---- page (stylesheet declares the symmetric shorthand: margin normal) ------
+page.papersize: letter
+page.margin: normal          # 1.25in all sides, per the style-sheet spec
+page.columns: 1
 
-color.accent: "333333"
-color.rule: "CCCCCC"
+# ---- typography (body/heading Source Serif 4, mono Fira Code = defaults) -----
+typography.base_size: 10.5pt         # style sheet; body specimen renders 14px
+typography.line_height: 1.15         # tight arXiv leading
+typography.mono_scale: 0.9           # firstpage code note: Fira Code at 0.9
 
-headings.number_sections: true
-headings.h1.scale: 1.30
-headings.h2.scale: 1.12
+# ---- colour (near-monochrome + one muted ink-blue accent) -------------------
+color.text:    "#1A1A1A"             # near-black body ink
+color.accent:  "#244A7A"            # muted ink-blue — title, heads, numbers, links
+color.muted:   "#6B6B6B"            # bylines, captions, running head
+color.rule:    "#C9C9C9"            # hairline rules / head separator
+color.code_bg: "#F6F7F9"            # light code panel (see declared-inert)
 
-title.layout: plain
+# ---- headings (numbered; accent is the default heading colour) --------------
+headings.number_sections: true       # "1  Introduction", numbers in accent
+headings.h1.scale: 1.5               # section: 21px on 14px base
+headings.h2.scale: 1.15              # subsection: 16px
+headings.h3.scale: 0.95              # sub-subsection: 13px
+# weight bold and colour accent are the schema defaults — inherited.
 
-code.highlight: tango
+# ---- title (flush-left accent title over a heavy accent rule) ---------------
+title.layout: report                 # flush-left, heavy rule, institution line (port)
+title.scale: 2.2                     # style sheet
+title.color: accent                  # every minimal model draws the title in accent
+title.rule.position: below           # accent rule under the title
+title.rule.color: accent             # (weight inherits thick = 2pt ~ model 2px)
+title.abstract.label_style: runin    # bold "Abstract." run in with the first line
+title.abstract.indent: lg            # abstract inset from both margins
+
+# ---- paragraphs (first-line indent, no inter-paragraph space) ---------------
+paragraph.indent: md                 # ~1.25em first-line indent
+paragraph.spacing: none              # indent OR space, not both
+
+# ---- code (light panel with a hairline border) ------------------------------
+code.background: code_bg             # role -> color.code_bg (status new)
+code.border: true                    # 1px panel border (status new)
+
+# ---- quotes (accent rule at the left, muted text) ---------------------------
+quote.rule: true                     # vertical accent rule (status new)
+quote.color: muted                   # style-sheet blockquote is muted (status new)
+
+# ---- running head + folio ---------------------------------------------------
+# Continuation pages carry a running head (short title left, surnames right)
+# with a hairline separator; the folio sits bottom-centre on every page. Page 1
+# stays plain (no head) via the default first_page.
+header_footer.header.left:   runningtitle
+header_footer.header.right:  surname     # renders full author name; model shows surnames
+header_footer.header.rule:   true
+header_footer.footer.center: page        # centred folio
+header_footer.footer.right:  none        # else the default `page` duplicates the folio
+header_footer.footer.rule:   false
