@@ -29,8 +29,20 @@ stopifnot(is.null(minimal_tokens$inherits))
 # Flat files expand: a dotted key never survives as a literal name.
 stopifnot(!any(grepl("\\.", names(minimal_tokens))))
 # Schema defaults reach the resolved spec even when the style is silent.
+# These must name tokens `minimal` does NOT declare. That is a live hazard: the
+# moment a style starts declaring one, the assertion keeps passing but stops
+# testing defaults at all. h3.scale was exactly that case -- the thin v1
+# minimal left it unset, the rebuilt one sets 0.95, and this line failed when
+# the rebuilt styles were promoted on 2026-08-26. h4.scale (still unset,
+# schema default 1) replaces it; h3.scale moves below to test precedence.
 stopifnot(identical(minimal_tokens$typography$mono, "Fira Code"))
-stopifnot(identical(minimal_tokens$headings$h3$scale, 1.00))
+stopifnot(identical(minimal_tokens$headings$h4$scale, 1.00))
+stopifnot(identical(minimal_tokens$table$style, "booktabs"))
+
+# ...and a value the style DOES declare overrides the schema default. h3.scale
+# is declared 0.95 against a default of 1.00, so this fails if declaration
+# ever stops winning.
+stopifnot(identical(minimal_tokens$headings$h3$scale, 0.95))
 stopifnot(identical(minimal_tokens$page$margin, "normal"))
 
 # Every shipped style resolves, and its fonts are all findable.
@@ -63,10 +75,23 @@ lean_dir <- designer_new_style("leanstyle", from = "minimal", path = scratch,
                                complete = FALSE)
 lean <- yaml::read_yaml(file.path(lean_dir, "format.yml"))
 stopifnot(identical(lean$id, "leanstyle"))
-# minimal declares no line_height; the engine default supplies it. If the
-# scaffold froze the resolved spec, line_height would appear here.
-stopifnot(is.null(lean[["typography.line_height"]]))
-stopifnot(all(!grepl("^page\\.", names(lean))))
+
+# The invariant is a set equality: lean holds exactly the tokens the seed
+# style declares, no more. Stating it that way is deliberate. This test used
+# to name individual tokens minimal happened NOT to declare -- first
+# typography.line_height, then "no page.* at all" -- and each such assertion
+# silently stopped testing anything the moment minimal started declaring it.
+# Three of them failed together when the rebuilt styles were promoted on
+# 2026-08-26. Compared against the seed's own file, this cannot rot.
+minimal_raw <- yaml::read_yaml(
+  file.path(docdesigner:::dd_style_dir("minimal"), "format.yml"))
+stopifnot(setequal(names(lean), names(minimal_raw)))
+
+# ...and the scaffold copies RAW declared tokens rather than freezing the
+# resolved spec: minimal declares no typography.mono, so the engine's
+# "Fira Code" default must not have leaked into the file.
+stopifnot(is.null(lean[["typography.mono"]]))
+stopifnot(is.null(minimal_raw[["typography.mono"]]))
 
 # complete = TRUE: every token, flat, one per line, at column zero.
 full_dir <- designer_new_style("fullstyle", from = "minimal", path = scratch)
@@ -78,9 +103,17 @@ stopifnot(any(grepl("NOT YET IMPLEMENTED", full_lines)))
 full <- yaml::read_yaml(file.path(full_dir, "format.yml"))
 stopifnot(identical(full$id, "fullstyle"))
 stopifnot(is.null(full$inherits))                       # never scaffolded
-stopifnot(identical(full[["typography.line_height"]], 1.3))
+# Types survive the round-trip, and a value the seed declares is carried
+# through rather than overwritten by the schema default. Written against
+# minimal's own file for the reason given above: hardcoding 1.3 and "333333"
+# here meant "the schema default", which held only while minimal declared
+# neither token. The rebuilt minimal declares both.
+stopifnot(is.numeric(full[["typography.line_height"]]))
+stopifnot(identical(full[["typography.line_height"]],
+                    minimal_raw[["typography.line_height"]]))
 stopifnot(isTRUE(full[["headings.number_sections"]]))   # bools stay bools
-stopifnot(identical(full[["color.accent"]], "333333"))  # hex stays a string
+stopifnot(is.character(full[["color.accent"]]))         # hex stays a string
+stopifnot(identical(full[["color.accent"]], minimal_raw[["color.accent"]]))
 # The scaffold must itself validate.
 v <- suppressWarnings(designer_validate_style(file.path(full_dir, "format.yml")))
 stopifnot(!any(v$severity == "error"))
