@@ -4,7 +4,12 @@
 \alias{designer_install_set}
 \title{Install a style set from GitHub}
 \usage{
-designer_install_set(set = NULL, repo = "jncohen/docdesigner", ref = "main", overwrite = FALSE)
+designer_install_set(
+  set = NULL,
+  repo = "jncohen/docdesigner",
+  ref = "main",
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{set}{The set to install: a subdirectory name inside \code{repo} (e.g.
@@ -23,7 +28,7 @@ The install path, invisibly.
 }
 \description{
 The canonical library is one repo (default \code{"jncohen/docdesigner"})
-holding every set under \code{inst/sets/<set>/}, the same layout the package
+holding every set under \verb{inst/sets/<set>/}, the same layout the package
 ships internally -- installing \code{"academic"} or \code{"public"} pulls the
 current GitHub state of a set that may already be bundled with your
 installed package version, which is exactly the point: it lets a set get
@@ -32,13 +37,8 @@ repo root) still works unchanged, for anyone publishing their own set
 outside the canonical library.
 }
 \details{
-Resolution order for \code{set.yml}, first match wins: \code{<set>/set.yml} (a
-subdirectory named for the set), \code{inst/sets/<set>/set.yml} (docdesigner's
+Resolution order for \code{set.yml}, first match wins: \verb{<set>/set.yml} (a
+subdirectory named for the set), \verb{inst/sets/<set>/set.yml} (docdesigner's
 own repo layout), then \code{set.yml} at the repo root (a dedicated single-set
 repo).
-
-NOTE: this .Rd was hand-edited to match a signature change made without a
-working R installation on hand. Regenerate for real with
-\code{devtools::document()} the next time R is available, and diff against
-this file.
 }

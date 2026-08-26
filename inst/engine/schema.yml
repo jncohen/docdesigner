@@ -60,6 +60,15 @@ roles: [accent, accent2, text, muted, rule, background, code_bg, knockout]
 # `fonts:` and ship the files in assets/fonts/.
 bundled_fonts: ["Source Serif 4", "EB Garamond", "XITS", "Fira Code"]
 
+# Font families a style may name WITHOUT bundling. `typography.label` (and any
+# other font token) may point at one of these: dd_preamble() loads them by name
+# behind \IfFontExistsTF, so an absent face degrades to the body font rather
+# than failing the build. Listed here so the validator does not report a
+# deliberate system face as an unknown font, while still catching typos.
+system_fonts: ["Arial", "Helvetica", "Helvetica Neue", "Times New Roman",
+               "Georgia", "Verdana", "Tahoma", "Calibri", "Cambria",
+               "Courier New", "Consolas", "Segoe UI"]
+
 # Levels expanded wherever a token key contains <h>.
 heading_levels: [h1, h2, h3, h4]
 

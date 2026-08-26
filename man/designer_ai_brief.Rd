@@ -19,16 +19,11 @@ as hard design constraints: the colour roles, the bundled fonts, the named
 scale steps (space, rule weight, margin, width), the bounded type scale,
 and the five \code{title.layout} archetypes. Give this to Claude Design (upload
 it, or paste it as project instructions) before designing a new style, so
-the result is something \code{\link{designer_import_claude_design}} can actually
+the result is something \code{\link[=designer_import_claude_design]{designer_import_claude_design()}} can actually
 translate rather than a design that merely resembles one.
 }
 \details{
 This is generated from \code{inst/engine/schema.yml}, not hand-maintained, so
 it cannot drift from what the engine actually accepts the way a
 hand-written brief would as the schema evolves.
-
-NOTE: this .Rd was hand-written to match the roxygen comment in
-\code{R/ai_brief.R}, without a working R installation on hand to run
-\code{devtools::document()}. Regenerate for real and diff against this file the
-next time R is available.
 }

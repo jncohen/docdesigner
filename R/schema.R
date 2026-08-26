@@ -171,11 +171,12 @@ designer_validate_style <- function(style) {
   raw <- yaml::read_yaml(path)
   tokens <- dd_token_table()
 
-  # Font families this style may reference: bundled + any it declares.
+  # Font families this style may reference: bundled + system faces loaded by
+  # name behind \IfFontExistsTF (schema$system_fonts) + any it declares.
   declared <- unique(vapply(
     grep("^fonts\\.", names(raw), value = TRUE),
     function(k) strsplit(k, ".", fixed = TRUE)[[1]][[2]], character(1)))
-  known_fonts <- c(schema$bundled_fonts, declared)
+  known_fonts <- c(schema$bundled_fonts, schema$system_fonts, declared)
 
   issues <- list()
   add <- function(...) issues[[length(issues) + 1]] <<- list(...)

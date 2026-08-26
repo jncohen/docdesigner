@@ -4,7 +4,13 @@
 \alias{designer_import_claude_design}
 \title{Draft a style scaffold from a Claude Design HTML export}
 \usage{
-designer_import_claude_design(html, id, from = "minimal", path = ".", label = id)
+designer_import_claude_design(
+  html,
+  id,
+  from = "minimal",
+  path = ".",
+  label = id
+)
 }
 \arguments{
 \item{html}{Path to the exported HTML file.}
@@ -14,7 +20,7 @@ designer_import_claude_design(html, id, from = "minimal", path = ".", label = id
 \item{from}{Existing style to seed unresolved tokens from. Default \code{"minimal"}.}
 
 \item{path}{Destination directory (a style bundle folder is created inside,
-as in \code{\link{designer_new_style}}).}
+as in \code{\link[=designer_new_style]{designer_new_style()}}).}
 
 \item{label}{Human-readable style label. Defaults to \code{id}.}
 }
@@ -29,7 +35,7 @@ from an existing style for every token the export cannot answer.
 \details{
 This produces a starting point, not a finished style. Tokens with no CSS
 analogue -- above all \code{title.layout}, the print-page architecture; also
-\code{page.columns}, \code{page.margin}, \code{page.twoside}, \code{header_footer.*},
+\code{page.columns}, \code{page.margin}, \code{page.twoside}, \verb{header_footer.*},
 \code{title.page_break_after}, and heading/table rule and role choices -- are
 left at the seed style's value and named in the printed report. Set those
 by hand, informed by looking at the design on the Claude Design canvas:
@@ -37,17 +43,8 @@ see \code{dev/CLAUDE-DESIGN-IMPORT.md} for why this split exists and is not
 automatable, and STYLE-SPEC.md / \code{title.layout}'s five archetypes for the
 vocabulary to choose from.
 
-Run \code{\link{designer_validate_style}} on the result before rendering with it --
+Run \code{\link[=designer_validate_style]{designer_validate_style()}} on the result before rendering with it --
 an extracted colour, font, or scale can still be malformed or reference a
 font family that is not bundled and needs to be declared and shipped
-under \code{assets/fonts/}.
-
-Requires the \code{xml2} package (Suggests). Uses \code{designer_ai_brief()}'s
-companion doc, \code{claude-design/docdesigner-design-brief.md}, as the intended
-input to Claude Design that makes this import meaningful.
-
-NOTE: this .Rd was hand-written to match the roxygen comment in
-\code{R/claude_design_import.R}, without a working R installation on hand to
-run \code{devtools::document()}. Regenerate for real and diff against this file
-the next time R is available.
+under \verb{assets/fonts/}.
 }
