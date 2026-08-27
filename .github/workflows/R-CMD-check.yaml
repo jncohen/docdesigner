@@ -1,0 +1,60 @@
+# R CMD check on every push and pull request.
+#
+# This exists because docdesigner reached v1.0.4 having never had R CMD check
+# run against a built tarball. When it finally was, it failed -- a literal
+# em dash in R code, which makes a package non-portable. A check that only
+# runs when someone remembers to run it is a check that does not run.
+#
+# No LaTeX is installed on purpose. tests/test-package.R is deliberately
+# CRAN-safe and never invokes xelatex, and only one vignette chunk is
+# evaluated (the generated style table, which reads tokens). Rendering is
+# verified separately by dev/run.R on a machine that has a TeX installation.
+name: R-CMD-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: windows-latest, r: 'release'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          # --no-manual: building the PDF manual needs a LaTeX install, which
+          # is deliberately absent here.
+          args: 'c("--no-manual")'
+          error-on: '"warning"'
+          upload-snapshots: true
