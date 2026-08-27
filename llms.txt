@@ -1,0 +1,351 @@
+# docdesigner
+
+Knit attractive, publication-quality documents from R Markdown without
+deep LaTeX or design knowledge.
+
+`docdesigner` is a **token-driven rendering engine** plus
+**distributable style sets**. A style is a small YAML file of design
+tokens; the engine turns those tokens into LaTeX. Styles are
+self-contained and independently upgradeable, and sets can be installed
+from GitHub.
+
+> **Status: 1.0.5, pre-release.** The engine and the style-set format
+> are working and tested: `R CMD check` is clean, all twelve styles
+> validate and render, and 84 token-to-page checks pass. The design
+> layer is not finished — see [Known limitations](#known-limitations)
+> before judging output quality. If you are evaluating this for us,
+> start with
+> [TESTING.md](https://jncohen.github.io/docdesigner/TESTING.md).
+
+## Outputs
+
+- [`docdesigner::pdf`](https://jncohen.github.io/docdesigner/reference/pdf.md)
+  — designed PDF, driven by a style.
+- [`docdesigner::html`](https://jncohen.github.io/docdesigner/reference/html.md)
+  — plain body HTML for pasting into WordPress or another CMS.
+- [`docdesigner::snapshot`](https://jncohen.github.io/docdesigner/reference/snapshot.md)
+  — the official Snapshot PDF layout, with an optional HTML companion.
+
+## Minimal YAML
+
+``` yaml
+---
+title: "Document Title"
+author: "Your Name"
+output:
+  docdesigner::pdf:
+    style: policy
+---
+```
+
+``` yaml
+---
+title: "Article Title"
+output:
+  docdesigner::html
+---
+```
+
+``` yaml
+---
+title: "Finding-Forward Headline"
+snapshot_feature: "figures/chart.png"
+snapshot_data_note: "Data: source note."
+output:
+  docdesigner::snapshot:
+    html: true
+---
+```
+
+## Starters
+
+``` r
+
+docdesigner::designer_use(template = "pdf")       # or "html", "snapshot"
+```
+
+RStudio users can also pick the package templates from **File \> New
+File \> R Markdown \> From Template**.
+
+## Styles and style sets
+
+A **style** is a directory containing `format.yml`. A **set** is a
+directory of styles with a `set.yml` manifest. Ten styles ship across
+two sets:
+
+``` text
+inst/sets/
+  academic/
+    set.yml
+    styles/
+      minimal/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
+  public/
+    set.yml
+    styles/
+      policy/ government/ economist/ atlantic/ humanities/
+```
+
+``` r
+
+designer_styles()             # every installed style
+designer_sets()               # every installed set
+designer_style("methods")     # fully resolved tokens for one style
+designer_gallery()            # HTML swatch table
+designer_specimens()          # render a PDF specimen per style + gallery index
+```
+
+### A style file
+
+`format.yml` is a flat list of dotted-key tokens — one `key: value` per
+line. It declares only its identity (`id`, `label`, `description`) and
+the tokens that differ from the engine defaults; anything omitted falls
+back to the schema (`inst/engine/schema.yml`). Run
+[`designer_tokens()`](https://jncohen.github.io/docdesigner/reference/designer_tokens.md)
+or read
+[STYLE-SPEC.md](https://jncohen.github.io/docdesigner/STYLE-SPEC.md) for
+the full vocabulary.
+
+``` yaml
+id: methods
+label: Methods
+description: Computational social science and methods journals
+inherits: minimal            # optional; resolves a full chain
+
+typography.body: "Source Serif 4"
+typography.heading: "Source Serif 4"
+typography.mono: "Fira Code"
+typography.base_size: "10pt"
+
+color.accent: "003DA5"
+color.rule: "003DA5"
+
+headings.number_sections: true
+headings.h1.scale: 1.30
+headings.h1.rule.position: below
+headings.h1.rule.weight: medium
+headings.h2.scale: 1.12
+
+title.layout: journal
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: rule
+
+code.highlight: tango
+```
+
+Point a document at a style directory to try it without installing:
+
+``` yaml
+output:
+  docdesigner::pdf:
+    style: "path/to/my-style"
+```
+
+### Creating a style
+
+``` r
+
+designer_new_style("my-style", from = "minimal", path = "~/styles")
+```
+
+The scaffold contains the source style’s *declared* tokens only, not the
+resolved defaults, so it keeps tracking engine changes. Edit, then
+render a specimen to see it:
+
+``` r
+
+designer_specimens(styles = "my-style")
+```
+
+### Installing a set from GitHub
+
+``` r
+
+designer_install_set("academic")                   # from the canonical library, jncohen/docdesigner
+designer_install_set(repo = "owner/repo")           # a dedicated repo with set.yml at its root
+designer_install_set("some-set", repo = "owner/monorepo")  # a set inside someone else's monorepo
+designer_update_sets()                              # re-pull recorded sources
+```
+
+Sets install under `tools::R_user_dir("docdesigner", "data")` and
+survive package updates. A user set **shadows** a core style of the same
+id, with a warning. Sets declare a `format_version`; the engine refuses
+to load a set from a newer format rather than mis-render it.
+
+### Fonts
+
+Styles and sets may declare their own font families and ship the files
+alongside. Lookup order is style → set → core:
+
+``` text
+my-set/
+  set.yml
+  assets/fonts/Inter-Regular.otf
+  assets/fonts/Inter-Bold.otf
+  styles/my-style/format.yml
+```
+
+``` yaml
+fonts.Inter.regular: Inter-Regular.otf
+fonts.Inter.bold: Inter-Bold.otf
+typography.body: Inter
+typography.heading: Inter
+```
+
+All faces of a family must live in one directory — `fontspec`’s `Path=`
+applies per family.
+
+## Checking your setup
+
+``` r
+
+designer_check()
+```
+
+Reports whether the template, fonts, CSL, styles, Pandoc, and a LaTeX
+engine are all findable. PDF output requires **xelatex** (TinyTeX is
+fine) and **Pandoc**.
+
+## Known limitations
+
+Read this before evaluating output.
+
+1.  **[`pdf()`](https://jncohen.github.io/docdesigner/reference/pdf.md)
+    does not use `inst/templates/docdesignertemplate.tex`.** It
+    generates a preamble from tokens and hands it to
+    [`rmarkdown::pdf_document()`](https://pkgs.rstudio.com/rmarkdown/reference/pdf_document.html)’s
+    stock template. Only
+    [`snapshot()`](https://jncohen.github.io/docdesigner/reference/snapshot.md)
+    uses the bundled template.
+2.  **Consequently,
+    [`pdf()`](https://jncohen.github.io/docdesigner/reference/pdf.md)
+    cannot render** `subtitle` title pages, `institution` / `series` /
+    `number`, `author_dept` / `_inst` / `_addr` / `_email` / `_orcid`,
+    `keywords`, `acknowledgements`, `anonymize`, `doublespace`,
+    `linenumbers`, or running heads (`surname`, `runningtitle`). The
+    `.tex` supports all of these; the token engine does not yet reach
+    them.
+3.  **Page architecture is not tokenized.** The vocabulary now reaches
+    fonts, sizes, colour roles, heading scales, columns, title kickers,
+    boxed abstracts and code panels — so the twelve styles no longer
+    differ only by accent colour. What it does not reach is page
+    *furniture*: title-page layout, the author block, full-bleed
+    masthead bands, boxed callouts. `economist` and `government` depend
+    on exactly that, and are the two styles that still do not resemble
+    their models.
+
+The fix for all three is one piece of work: port
+[`pdf()`](https://jncohen.github.io/docdesigner/reference/pdf.md) *onto*
+the template and tokenize its branching. See `docdesigner.md` for the
+staged plan.
+
+## Repository layout
+
+``` text
+R/                          package functions
+  engine.R                  token resolution, font registry, dd_preamble(), pdf()
+  sets.R                    install / list / update / scaffold
+  specimens.R               designer_specimens(): the only path that runs xelatex
+  snapshot.R  html.R  gallery.R  check.R  use.R  styles.R  utils.R
+inst/engine/schema.yml      token schema + defaults; every style inherits these
+inst/engine/*.lua           pandoc filters (two-column tables)
+inst/sets/                  bundled style sets
+inst/specimen/specimen.md   the document rendered by designer_specimens()
+inst/templates/             docdesignertemplate.tex (snapshot only, for now)
+inst/fonts/                 14 bundled font files (3.4 MB; slated to move)
+inst/rmarkdown/templates/   RStudio starter templates
+examples/                   fuller source examples and fixtures
+tests/test-package.R        R CMD check suite; does not render PDFs
+tools/render_style.py       dev harness; the executable spec for the engine
+rendered-examples/          created by designer_specimens(); git-ignored
+```
+
+## Documentation
+
+- [USER-MANUAL.md](https://jncohen.github.io/docdesigner/USER-MANUAL.md)
+  — full user manual.
+- [docdesigner.md](https://jncohen.github.io/docdesigner/docdesigner.md)
+  — project status, roadmap, open decisions.
+- [CLAUDE.md](https://jncohen.github.io/docdesigner/CLAUDE.md) —
+  orientation for AI coding sessions.
+- [dev/NOTEBOOK.md](https://jncohen.github.io/docdesigner/dev/NOTEBOOK.md)
+  — the canonical developer reference (architecture, template port,
+  engine traps, workflow, distribution).
+
+# Package index
+
+## Outputs
+
+- [`pdf()`](https://jncohen.github.io/docdesigner/reference/pdf.md) :
+  Designed PDF output format
+- [`html()`](https://jncohen.github.io/docdesigner/reference/html.md) :
+  Render plain HTML for web publishing
+- [`snapshot()`](https://jncohen.github.io/docdesigner/reference/snapshot.md)
+  : Render an official Snapshot
+
+## Setup and Diagnostics
+
+- [`designer_use()`](https://jncohen.github.io/docdesigner/reference/designer_use.md)
+  : Start a docdesigner document
+- [`designer_update_templates()`](https://jncohen.github.io/docdesigner/reference/designer_update_templates.md)
+  : Update local docdesigner assets
+- [`designer_check()`](https://jncohen.github.io/docdesigner/reference/designer_check.md)
+  : Check a docdesigner setup
+
+## Styles
+
+- [`designer_styles()`](https://jncohen.github.io/docdesigner/reference/designer_styles.md)
+  : List available docdesigner styles
+- [`designer_style()`](https://jncohen.github.io/docdesigner/reference/designer_style.md)
+  : Inspect one style's resolved tokens
+- [`designer_gallery()`](https://jncohen.github.io/docdesigner/reference/designer_gallery.md)
+  : Write a local style gallery
+- [`designer_specimens()`](https://jncohen.github.io/docdesigner/reference/designer_specimens.md)
+  : Render a PDF specimen for every installed style
+
+## Authoring styles
+
+- [`designer_new_style()`](https://jncohen.github.io/docdesigner/reference/designer_new_style.md)
+  : Scaffold a new style
+- [`designer_validate_style()`](https://jncohen.github.io/docdesigner/reference/designer_validate_style.md)
+  [`print(`*`<docdesigner_validation>`*`)`](https://jncohen.github.io/docdesigner/reference/designer_validate_style.md)
+  : Validate a style file against the schema
+- [`designer_tokens()`](https://jncohen.github.io/docdesigner/reference/designer_tokens.md)
+  : The token vocabulary as a data frame
+
+## Designing from a mockup
+
+- [`designer_ai_brief()`](https://jncohen.github.io/docdesigner/reference/designer_ai_brief.md)
+  : The Claude Design constraint brief
+- [`designer_import_claude_design()`](https://jncohen.github.io/docdesigner/reference/designer_import_claude_design.md)
+  : Draft a style scaffold from a Claude Design HTML export
+
+## Style sets
+
+- [`designer_sets()`](https://jncohen.github.io/docdesigner/reference/designer_sets.md)
+  : List installed style sets
+- [`designer_install_set()`](https://jncohen.github.io/docdesigner/reference/designer_install_set.md)
+  : Install a style set from GitHub
+- [`designer_update_sets()`](https://jncohen.github.io/docdesigner/reference/designer_update_sets.md)
+  : Update installed style sets
+
+# Articles
+
+### Start
+
+- [Getting Started with
+  docdesigner](https://jncohen.github.io/docdesigner/articles/getting-started.md):
+- [User
+  Manual](https://jncohen.github.io/docdesigner/articles/user-manual.md):
+
+### Styles
+
+- [Style
+  Gallery](https://jncohen.github.io/docdesigner/articles/style-gallery.md):
+
+### Publishing
+
+- [Publishing
+  Workflows](https://jncohen.github.io/docdesigner/articles/publishing-workflows.md):
+- [Fonts and
+  Troubleshooting](https://jncohen.github.io/docdesigner/articles/font-installation-troubleshooting.md):

@@ -1,0 +1,95 @@
+# Fonts and Troubleshooting
+
+Most users should not install fonts manually. `docdesigner` ships the
+text and code fonts used by its built-in PDF styles.
+
+## What the Package Bundles
+
+The bundled fonts live in `inst/fonts/` and are used automatically by
+[`docdesigner::pdf`](https://jncohen.github.io/docdesigner/reference/pdf.md)
+and
+[`docdesigner::snapshot`](https://jncohen.github.io/docdesigner/reference/snapshot.md).
+
+Bundled font families:
+
+- Source Serif 4
+- EB Garamond
+- XITS
+- Fira Code
+
+A style may declare additional families under `fonts.<Family>` and ship
+the face files in its own `assets/fonts/` directory. Matching math fonts
+are optional; when one is unavailable, the engine default is used
+instead of treating it as a render failure.
+
+## Check Your Setup
+
+Run:
+
+``` r
+
+docdesigner::designer_check()
+```
+
+The check reports:
+
+- bundled template path
+- bundled fonts path
+- bundled CSL path
+- style bundle availability
+- `rmarkdown`
+- Pandoc
+- common LaTeX engines
+
+## Local Editable Copies
+
+Most projects should use bundled assets. If you deliberately keep local
+editable copies, refresh them with:
+
+``` r
+
+docdesigner::designer_update_templates()
+```
+
+This updates:
+
+- `docdesignertemplate.tex`
+- `default.csl`
+- `fonts/`
+- `sets/`
+
+To pull the latest assets from GitHub:
+
+``` r
+
+docdesigner::designer_update_templates(source = "github", branch = "main")
+```
+
+## Common Problems
+
+If `rmarkdown` is missing, install it before rendering:
+
+``` r
+
+install.packages("rmarkdown")
+```
+
+If Pandoc is missing, install RStudio, Quarto, or Pandoc directly and
+confirm that
+[`rmarkdown::pandoc_available()`](https://pkgs.rstudio.com/rmarkdown/reference/pandoc_available.html)
+returns `TRUE`.
+
+If a LaTeX engine is missing, install a TeX distribution such as
+TinyTeX, MiKTeX, or TeX Live. Then rerun:
+
+``` r
+
+docdesigner::designer_check()
+```
+
+If a project uses local assets and fonts are stale, run:
+
+``` r
+
+docdesigner::designer_update_templates(overwrite = TRUE)
+```
