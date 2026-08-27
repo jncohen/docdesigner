@@ -98,18 +98,21 @@ Snapshot has one official style. Do not add `style` or `accent` to Snapshot YAML
 
 Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`, and Snapshot uses its official house style.
 
-| Style | Visual use | Body font | Accent | Sections | Columns |
-|---|---|---|---|---|---|
-| `minimal` | Clean arXiv / university preprint | Source Serif 4 | `333333` | numbered | 1 |
-| `policy` | Brookings / Urban / OECD policy report | Source Serif 4 | `006A71` | unnumbered | 1 |
-| `methods` | Computational social science / methods | Source Serif 4 | `003DA5` | numbered | 1 |
-| `demography` | Demography / Social Forces article | XITS | `000000` | numbered | 1 |
-| `humanities` | Critical Inquiry / university-press essay | EB Garamond | `000000` | unnumbered | 1 |
-| `economist` | The Economist / public data journalism | Source Serif 4 | `B21F24` | unnumbered | 1 |
-| `nature` | Nature / Science article | Source Serif 4 | `2F6F8F` | numbered | 2 |
-| `ssrn` | SSRN / NBER working paper | XITS | `000000` | numbered | 1 |
-| `atlantic` | The Atlantic / long-form scholarship | EB Garamond | `8F1D14` | unnumbered | 1 |
-| `government` | Census / Federal Reserve bulletin | XITS | `2F4F3E` | numbered | 1 |
+Twelve styles ship in two sets: `academic` (`minimal`, `nature`, `methods`,
+`demography`, `ssrn`, `sociology`, `ajs`) and `public` (`policy`, `government`,
+`economist`, `atlantic`, `humanities`).
+
+Per-style details — body font, accent colour, section numbering, column count —
+are **not** listed here on purpose. A hand-written table of them lived at this
+spot and silently went stale: after the rebuilt styles were promoted on
+2026-08-26, every accent colour in it was wrong. The Style Gallery vignette
+builds the same table from the installed styles, so it cannot drift:
+
+```r
+vignette("style-gallery", package = "docdesigner")
+designer_styles()               # id, label, description, set
+designer_style("policy")        # the fully resolved token spec
+```
 
 Inspect styles from R:
 

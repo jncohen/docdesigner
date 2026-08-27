@@ -19,20 +19,42 @@ docdesigner::designer_gallery()
 
 ## Built-In Styles
 
-The ten built-in styles ship in two sets, `academic` and `public`.
+```{r styles-table, echo = FALSE, results = "asis"}
+# Generated from the INSTALLED styles rather than written by hand. The static
+# table this replaces had drifted badly: by 2026-08-26 all ten of its accent
+# colours were wrong, economist was listed as one column when it sets two, and
+# sociology and ajs were missing entirely -- the table still described the v1
+# styles that the rebuilt ones replaced. Reading the tokens at build time means
+# it cannot disagree with what ships.
+first_phrase <- function(x) {
+  x <- trimws(gsub("[[:space:]]+", " ", x))
+  cuts <- c(regexpr(". ", x, fixed = TRUE), regexpr(": ", x, fixed = TRUE))
+  cuts <- cuts[cuts > 0]
+  if (length(cuts)) x <- substr(x, 1, min(cuts) - 1)
+  x
+}
+styles <- docdesigner::designer_styles()
+tab <- do.call(rbind, lapply(seq_len(nrow(styles)), function(i) {
+  s <- docdesigner::designer_style(styles$style[i])
+  data.frame(
+    Style    = paste0("`", styles$style[i], "`"),
+    Set      = paste0("`", styles$set[i], "`"),
+    Use      = first_phrase(styles$description[i]),
+    Body     = s$typography$body,
+    Accent   = paste0("`", toupper(sub("^#", "", s$color$accent)), "`"),
+    Sections = if (isTRUE(s$headings$number_sections)) "numbered" else "unnumbered",
+    Columns  = s$page$columns,
+    stringsAsFactors = FALSE)
+}))
+tab <- tab[order(tab$Set, tab$Style), ]
+cat(sprintf("The %d built-in styles ship in two sets, `academic` and `public`.
 
-| Style | Visual use | Body font | Accent | Sections | Columns |
-|---|---|---|---|---|---|
-| `minimal` | Clean arXiv / university preprint | Source Serif 4 | `333333` | numbered | 1 |
-| `policy` | Brookings / Urban / OECD policy report | Source Serif 4 | `006A71` | unnumbered | 1 |
-| `methods` | Computational social science / methods | Source Serif 4 | `003DA5` | numbered | 1 |
-| `demography` | Demography / Social Forces article | XITS | `000000` | numbered | 1 |
-| `humanities` | Critical Inquiry / university-press essay | EB Garamond | `000000` | unnumbered | 1 |
-| `economist` | The Economist / public data journalism | Source Serif 4 | `B21F24` | unnumbered | 1 |
-| `nature` | Nature / Science article | Source Serif 4 | `2F6F8F` | numbered | 2 |
-| `ssrn` | SSRN / NBER working paper | XITS | `000000` | numbered | 1 |
-| `atlantic` | The Atlantic / long-form scholarship | EB Garamond | `8F1D14` | unnumbered | 1 |
-| `government` | Census / Federal Reserve bulletin | XITS | `2F4F3E` | numbered | 1 |
+",
+            nrow(tab)))
+cat(paste(knitr::kable(tab, row.names = FALSE), collapse = "
+"), "
+")
+```
 
 Use a style:
 

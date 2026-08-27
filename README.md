@@ -4,7 +4,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 1.0.3, pre-release.** The engine and the style-set format are working and tested. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality.
+> **Status: 1.0.4, pre-release.** The engine and the style-set format are working and tested: `R CMD check` is clean, all twelve styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [TESTING.md](TESTING.md).
 
 ## Outputs
 
@@ -60,7 +60,7 @@ inst/sets/
   academic/
     set.yml
     styles/
-      minimal/ nature/ methods/ demography/ ssrn/
+      minimal/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
   public/
     set.yml
     styles/
@@ -173,10 +173,9 @@ Read this before evaluating output.
 
 1. **`pdf()` does not use `inst/templates/docdesignertemplate.tex`.** It generates a preamble from tokens and hands it to `rmarkdown::pdf_document()`'s stock template. Only `snapshot()` uses the bundled template.
 2. **Consequently, `pdf()` cannot render** `subtitle` title pages, `institution` / `series` / `number`, `author_dept` / `_inst` / `_addr` / `_email` / `_orcid`, `keywords`, `acknowledgements`, `anonymize`, `doublespace`, `linenumbers`, or running heads (`surname`, `runningtitle`). The `.tex` supports all of these; the token engine does not yet reach them.
-3. **The styles therefore look alike.** The token vocabulary distinguishes fonts, sizes, four colours, heading scales, and a rule under the title. Page architecture — title-page layout, author block, spacing system, figure and table treatment — is not yet tokenized. Ten styles currently render one layout in ten accent colours.
-4. `examples/fontset-*.Rmd` bypass the package API and drive the `.tex` directly. They are the previous style system's regression suite and will be removed once the template port lands.
+3. **Page architecture is not tokenized.** The vocabulary now reaches fonts, sizes, colour roles, heading scales, columns, title kickers, boxed abstracts and code panels — so the twelve styles no longer differ only by accent colour. What it does not reach is page *furniture*: title-page layout, the author block, full-bleed masthead bands, boxed callouts. `economist` and `government` depend on exactly that, and are the two styles that still do not resemble their models.
 
-The fix for 1–3 is one piece of work: port `pdf()` *onto* the template and tokenize its branching. See `docdesigner.md` for the staged plan.
+The fix for all three is one piece of work: port `pdf()` *onto* the template and tokenize its branching. See `docdesigner.md` for the staged plan.
 
 ## Repository layout
 
