@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">docdesigner</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,13 @@
       <small>Source: <a href="https://github.com/jncohen/docdesigner/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.8" id="docdesigner-108">docdesigner 1.0.8<a class="anchor" aria-label="anchor" href="#docdesigner-108"></a></h2>
+<ul><li>
+<p>Completes the pandoc flag fix 1.0.7 started. <strong><code>--highlight-style</code> is deprecated too</strong>, and that is the branch 11 of the 12 styles take, so 1.0.7 removed the warning only from <code>economist</code> and left it on almost every other render. Both spellings now become <code>--syntax-highlighting=&lt;none|style&gt;</code> on pandoc 3.2 and later. Verified as zero deprecation warnings across a full 12-style run, and that highlighting still applies (<code>tango</code> emits <code>\Highlighting</code> macros, <code>none</code> emits plain verbatim).</p>
+<p>1.0.7 shipped incomplete because its check grepped for the exact string just fixed rather than for deprecation warnings in general. Match the class, not the instance.</p>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.7" id="docdesigner-107">docdesigner 1.0.7<a class="anchor" aria-label="anchor" href="#docdesigner-107"></a></h2>
 <ul><li>Styles with <code>code.highlight: none</code> made pandoc print <code>Deprecated: --no-highlight. Use --syntax-highlighting=none instead.</code> on <strong>every render</strong>. <code>dd_preamble()</code> now emits the new flag on pandoc 3.2 and later and keeps the old one below that, so no supported pandoc either warns or breaks. The version gate is deliberately conservative: guessing the boundary too early would be a hard error on an older pandoc, guessing late costs only a cosmetic notice.</li>
