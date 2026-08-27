@@ -80,8 +80,38 @@ write_body_only_html <- function(path) {
   }
 
   body <- text[(start[1] + 1):(end[1] - 1)]
-  body <- body[!grepl("^<script\\b|^</script>|^<style\\b|^</style>",
-                      trimws(body), ignore.case = TRUE)]
+  body <- dd_drop_script_style(body)
   writeLines(body, path, useBytes = TRUE)
   invisible(path)
+}
+
+# Drop <script> and <style> blocks ENTIRELY -- opening tag through closing tag.
+#
+# The previous implementation matched the tag lines themselves and deleted only
+# those, which left the JavaScript and CSS between them behind as bare text.
+# Pasted into a CMS that is visible body copy: a WordPress post would show
+# "function bootstrapStylePandocTables() {...}" as a paragraph. Producing body
+# HTML safe to paste is the one thing this format exists to do.
+dd_drop_script_style <- function(body) {
+  keep <- rep(TRUE, length(body))
+  open <- NA_character_
+  for (i in seq_along(body)) {
+    line <- trimws(body[[i]])
+    if (is.na(open)) {
+      m <- regmatches(line, regexpr("^<(script|style)\\b", line, ignore.case = TRUE))
+      if (length(m)) {
+        tag <- tolower(sub("^<", "", m))
+        keep[[i]] <- FALSE
+        # A one-liner such as <script src="x"></script> closes on its own line.
+        if (!grepl(paste0("</", tag, ">"), line, ignore.case = TRUE)) open <- tag
+      }
+    } else {
+      keep[[i]] <- FALSE
+      if (grepl(paste0("</", open, ">"), line, ignore.case = TRUE)) open <- NA_character_
+    }
+  }
+  body <- body[keep]
+  # Collapse the runs of blank lines the removals leave behind.
+  blank <- !nzchar(trimws(body))
+  body[!(blank & c(FALSE, blank[-length(blank)]))]
 }

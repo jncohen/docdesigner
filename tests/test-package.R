@@ -60,6 +60,25 @@ for (s in designer_styles()$style) {
 idx <- docdesigner:::dd_style_index()
 stopifnot(all(idx$style %in% designer_styles()$style))
 
+# --- html(): body-only stripping ---------------------------------------------
+# dd_drop_script_style() must remove <script>/<style> blocks whole. The original
+# implementation deleted only the tag lines, leaving the JavaScript between them
+# as bare text -- which a CMS renders as visible body copy. Regression pinned
+# 2026-08-26.
+stripped <- docdesigner:::dd_drop_script_style(c(
+  "<p>keep me</p>",
+  "<script>",
+  "function leaked() { return 1; }",
+  "</script>",
+  "<style>",
+  ".leaked { color: red; }",
+  "</style>",
+  '<script src="x.js"></script>',
+  "<p>keep me too</p>"))
+stopifnot(!any(grepl("leaked", stripped)))
+stopifnot(!any(grepl("<script|<style", stripped)))
+stopifnot(sum(grepl("keep me", stripped)) == 2L)
+
 # --- Colour coercion ---------------------------------------------------------
 stopifnot(identical(docdesigner:::dd_hex("#b21f24"), "B21F24"))
 stopifnot(identical(docdesigner:::dd_hex("006A71"), "006A71"))
