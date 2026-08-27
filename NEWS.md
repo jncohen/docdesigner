@@ -1,3 +1,11 @@
+# docdesigner 1.0.9
+
+- Alpha distribution is by tarball rather than `install_github()`, because the
+  GitHub repository is private and a tester cannot reach it. `TESTING.md` now
+  gives the local install and an email address for reports; `README.md` no
+  longer points at `TESTING.md` with a relative link, which is dead for anyone
+  who received only the tarball.
+
 # docdesigner 1.0.8
 
 - Completes the pandoc flag fix 1.0.7 started. **`--highlight-style` is
