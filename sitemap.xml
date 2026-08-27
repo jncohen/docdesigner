@@ -1,5 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://jncohen.github.io/docdesigner/404.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/CLAUDE.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/LICENSE-text.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/LICENSE.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/STYLE-SPEC.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/TESTING.html</loc></url>
+<url><loc>https://jncohen.github.io/docdesigner/USER-MANUAL.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/articles/font-installation-troubleshooting.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/articles/getting-started.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/articles/index.html</loc></url>
@@ -7,10 +13,7 @@
 <url><loc>https://jncohen.github.io/docdesigner/articles/style-gallery.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/articles/user-manual.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/authors.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/CLAUDE.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/index.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/LICENSE-text.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/LICENSE.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/news/index.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/publishing-workflows.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/reference/dd_expand_dotted.html</loc></url>
@@ -35,9 +38,6 @@
 <url><loc>https://jncohen.github.io/docdesigner/reference/pdf.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/reference/snapshot.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/style-guide.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/STYLE-SPEC.html</loc></url>
 <url><loc>https://jncohen.github.io/docdesigner/test.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/TESTING.html</loc></url>
-<url><loc>https://jncohen.github.io/docdesigner/USER-MANUAL.html</loc></url>
 </urlset>
 

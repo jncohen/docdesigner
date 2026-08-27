@@ -28,7 +28,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>docdesigner style specification</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jncohen/docdesigner/blob/HEAD/STYLE-SPEC.md" class="external-link"><code>STYLE-SPEC.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jncohen/docdesigner/blob/main/STYLE-SPEC.md" class="external-link"><code>STYLE-SPEC.md</code></a></small>
     </div>
 
 <div id="docdesigner-style-specification" class="section level1">
@@ -49,7 +49,7 @@
 <strong>Do not invent units.</strong> Lengths are LaTeX dimensions (<code>pt</code>, <code>mm</code>, <code>in</code>, <code>em</code>, <code>ex</code>, <code>\baselineskip</code>). Ratios are unitless numbers. Colours are 6-digit hex, with or without <code>#</code>.</li>
 </ol><p>Then:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">designer_style_from_yaml</span><span class="op">(</span><span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html" class="external-link">read_file</a></span><span class="op">(</span><span class="st">"claude-output.yml"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"my-style"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">designer_style_from_yaml</span><span class="op">(</span><span class="fu">readr</span><span class="fu">::</span><span class="fu">read_file</span><span class="op">(</span><span class="st">"claude-output.yml"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"my-style"</span><span class="op">)</span></span>
 <span><span class="fu">designer_preview</span><span class="op">(</span><span class="st">"my-style"</span><span class="op">)</span>     <span class="co"># renders and rasterizes page 1</span></span></code></pre></div>
 <p>Hand the preview back to the model beside the original page and ask what is off.</p>
 <hr></div>
@@ -437,7 +437,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

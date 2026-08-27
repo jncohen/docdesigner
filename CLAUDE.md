@@ -14,18 +14,23 @@ A token-driven rendering engine for R Markdown → PDF, plus distributable
 style sets. A style is a YAML file of design tokens; `dd_preamble()`
 turns tokens into a LaTeX preamble.
 
-## State as of 2026-07-17
+## State as of 2026-08-26
 
-Version **1.0.3**, branch `feature/phase-a`, **not merged to `main`**
-(the design layer is unfinished — see below). Latest `run-report.txt`:
-all 11 authored styles render **OK**, `ajs` skipped (no `format.yml`
-yet). A new token-faithful model set (four `.dc.html` pages per style)
-is installed under `repo/design-sets/<style>/`. `sociology` is active.
+Version **1.0.5**, tagged `v1.0.5`. `main`, `feature/phase-a` and
+`origin` all sit at the same commit — the June-era `main` is no longer
+stranded.
 
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-passes clean;
-[`designer_specimens()`](https://jncohen.github.io/docdesigner/reference/designer_specimens.md)
-renders every style.
+All **12** styles validate at 0 errors and render OK, from the workshop
+drafts *and* from the installed sets; 84/84 token-to-page checks pass.
+`R CMD check` on the built tarball is **Status: OK**. The rebuilt
+`format.yml` files were promoted into `inst/sets/` on 2026-08-26 —
+before that the package shipped last-generation styles while the reports
+looked green, because `run.R` renders the workshop drafts, not the
+installed sets.
+
+The pkgdown site at <https://jncohen.github.io/docdesigner/> is live and
+built from `gh-pages`. There is no CI: it updates only when someone runs
+[`pkgdown::deploy_to_branch()`](https://pkgdown.r-lib.org/reference/deploy_to_branch.html).
 
 ## The one thing you must understand
 
@@ -54,9 +59,9 @@ the template — see `planning/NOTEBOOK.md` §3.
 
 ## Verification, honestly
 
-- [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-  and `tests/test-package.R` verify **token resolution**, not rendering.
-  Nothing in the test suite invokes xelatex.
+- `devtools::check()` and `tests/test-package.R` verify **token
+  resolution**, not rendering. Nothing in the test suite invokes
+  xelatex.
 - [`designer_specimens()`](https://jncohen.github.io/docdesigner/reference/designer_specimens.md)
   is the only code path that compiles a PDF — the real smoke test.
   `run.R` (project root) does install + validate + render + verify in a
@@ -72,7 +77,9 @@ the template — see `planning/NOTEBOOK.md` §3.
 | `R/specimens.R` | [`designer_specimens()`](https://jncohen.github.io/docdesigner/reference/designer_specimens.md) — renders one PDF per style |
 | `R/utils.R` | `%||%`, `dd_hex()`. **Define `%||%` nowhere else.** |
 | `inst/templates/docdesignertemplate.tex` | ~1,430 lines. [`snapshot()`](https://jncohen.github.io/docdesigner/reference/snapshot.md) only. The design [`pdf()`](https://jncohen.github.io/docdesigner/reference/pdf.md) is missing lives here. |
-| `planning/NOTEBOOK.md` | **The canonical developer reference.** Start here for anything non-trivial. |
+| `planning/NOTEBOOK.md` | **The canonical developer reference.** Start here for anything non-trivial. *(Stale as of 2026-08-26 — still describes 2026-07-17.)* |
+| `repo/dev/run.R` | install + validate + render + verify. The root `run.R` is a shim onto it. |
+| `repo/TESTING.md` | What pilot reviewers are told to try, and not to report. |
 
 ## Invariants
 
@@ -86,13 +93,17 @@ the template — see `planning/NOTEBOOK.md` §3.
 - `dd_font_family_dir()` returns a path **with a trailing slash**; do
   not [`normalizePath()`](https://rdrr.io/r/base/normalizePath.html) it.
 - Font faces of one family live in one directory: style → set → core.
-- `NAMESPACE` is hand-maintained — roxygen skips it. Add exports by
-  hand.
+- `NAMESPACE` is **roxygen-generated** (since 2026-08-26). Add an
+  `@export` tag and run `devtools::document()`; never hand-edit it. It
+  used to be hand-maintained, and because it had lost its roxygen header
+  `document()` skipped it silently on every run.
 
 ## Environment (Windows)
 
-R is not on `PATH`. R 4.5.1; `xelatex` from TinyTeX; pandoc from
-RStudio’s quarto tools. PowerShell 5.1 has no `&&`; use `;`.
+R is not on `PATH` (it is at `C:\Program Files\R\R-4.5.1\bin`). R 4.5.1;
+`xelatex` from **MiKTeX**; pandoc at `~\AppData\Local\Pandoc`.
+PowerShell 5.1 has no `&&`; use `;`. Multi-line `Rscript -e` strings do
+not survive Git Bash — write the R to a file and `Rscript` the file.
 
 ``` powershell
 $env:Path = 'C:\Program Files\R\R-4.5.1\bin;' + $env:Path

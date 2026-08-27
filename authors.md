@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/jncohen/docdesigner/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/jncohen/docdesigner/blob/main/DESCRIPTION)
 
 Cohen J (2026). *docdesigner: Publication-Inspired Templates for
 Research PDFs and Slides*. R package version 1.0.5,

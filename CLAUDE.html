@@ -28,7 +28,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>CLAUDE.md — orientation for AI coding sessions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jncohen/docdesigner/blob/HEAD/CLAUDE.md" class="external-link"><code>CLAUDE.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jncohen/docdesigner/blob/main/CLAUDE.md" class="external-link"><code>CLAUDE.md</code></a></small>
     </div>
 
 <div id="claudemd--orientation-for-ai-coding-sessions" class="section level1">
@@ -40,9 +40,10 @@
 <p>A token-driven rendering engine for R Markdown → PDF, plus distributable style sets. A style is a YAML file of design tokens; <code>dd_preamble()</code> turns tokens into a LaTeX preamble.</p>
 </div>
 <div class="section level2">
-<h2 id="state-as-of-2026-07-17">State as of 2026-07-17<a class="anchor" aria-label="anchor" href="#state-as-of-2026-07-17"></a></h2>
-<p>Version <strong>1.0.3</strong>, branch <code>feature/phase-a</code>, <strong>not merged to <code>main</code></strong> (the design layer is unfinished — see below). Latest <code>run-report.txt</code>: all 11 authored styles render <strong>OK</strong>, <code>ajs</code> skipped (no <code>format.yml</code> yet). A new token-faithful model set (four <code>.dc.html</code> pages per style) is installed under <code>repo/design-sets/&lt;style&gt;/</code>. <code>sociology</code> is active.</p>
-<p><code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> passes clean; <code><a href="reference/designer_specimens.html">designer_specimens()</a></code> renders every style.</p>
+<h2 id="state-as-of-2026-08-26">State as of 2026-08-26<a class="anchor" aria-label="anchor" href="#state-as-of-2026-08-26"></a></h2>
+<p>Version <strong>1.0.5</strong>, tagged <code>v1.0.5</code>. <code>main</code>, <code>feature/phase-a</code> and <code>origin</code> all sit at the same commit — the June-era <code>main</code> is no longer stranded.</p>
+<p>All <strong>12</strong> styles validate at 0 errors and render OK, from the workshop drafts <em>and</em> from the installed sets; 84/84 token-to-page checks pass. <code>R CMD check</code> on the built tarball is <strong>Status: OK</strong>. The rebuilt <code>format.yml</code> files were promoted into <code>inst/sets/</code> on 2026-08-26 — before that the package shipped last-generation styles while the reports looked green, because <code>run.R</code> renders the workshop drafts, not the installed sets.</p>
+<p>The pkgdown site at <a href="https://jncohen.github.io/docdesigner/" class="uri">https://jncohen.github.io/docdesigner/</a> is live and built from <code>gh-pages</code>. There is no CI: it updates only when someone runs <code><a href="https://pkgdown.r-lib.org/reference/deploy_to_branch.html" class="external-link">pkgdown::deploy_to_branch()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="the-one-thing-you-must-understand">The one thing you must understand<a class="anchor" aria-label="anchor" href="#the-one-thing-you-must-understand"></a></h2>
@@ -57,7 +58,7 @@
 <div class="section level2">
 <h2 id="verification-honestly">Verification, honestly<a class="anchor" aria-label="anchor" href="#verification-honestly"></a></h2>
 <ul><li>
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> and <code>tests/test-package.R</code> verify <strong>token resolution</strong>, not rendering. Nothing in the test suite invokes xelatex.</li>
+<code>devtools::check()</code> and <code>tests/test-package.R</code> verify <strong>token resolution</strong>, not rendering. Nothing in the test suite invokes xelatex.</li>
 <li>
 <code><a href="reference/designer_specimens.html">designer_specimens()</a></code> is the only code path that compiles a PDF — the real smoke test. <code>run.R</code> (project root) does install + validate + render + verify in a <code>callr</code> subprocess.</li>
 </ul></div>
@@ -83,7 +84,12 @@
 <td>~1,430 lines. <code><a href="reference/snapshot.html">snapshot()</a></code> only. The design <code><a href="reference/pdf.html">pdf()</a></code> is missing lives here.</td>
 </tr><tr><td><code>planning/NOTEBOOK.md</code></td>
 <td>
-<strong>The canonical developer reference.</strong> Start here for anything non-trivial.</td>
+<strong>The canonical developer reference.</strong> Start here for anything non-trivial. <em>(Stale as of 2026-08-26 — still describes 2026-07-17.)</em>
+</td>
+</tr><tr><td><code>repo/dev/run.R</code></td>
+<td>install + validate + render + verify. The root <code>run.R</code> is a shim onto it.</td>
+</tr><tr><td><code>repo/TESTING.md</code></td>
+<td>What pilot reviewers are told to try, and not to report.</td>
 </tr></tbody></table></div>
 <div class="section level2">
 <h2 id="invariants">Invariants<a class="anchor" aria-label="anchor" href="#invariants"></a></h2>
@@ -99,11 +105,11 @@
 <code>dd_font_family_dir()</code> returns a path <strong>with a trailing slash</strong>; do not <code><a href="https://rdrr.io/r/base/normalizePath.html" class="external-link">normalizePath()</a></code> it.</li>
 <li>Font faces of one family live in one directory: style → set → core.</li>
 <li>
-<code>NAMESPACE</code> is hand-maintained — roxygen skips it. Add exports by hand.</li>
+<code>NAMESPACE</code> is <strong>roxygen-generated</strong> (since 2026-08-26). Add an <code>@export</code> tag and run <code>devtools::document()</code>; never hand-edit it. It used to be hand-maintained, and because it had lost its roxygen header <code>document()</code> skipped it silently on every run.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="environment-windows">Environment (Windows)<a class="anchor" aria-label="anchor" href="#environment-windows"></a></h2>
-<p>R is not on <code>PATH</code>. R 4.5.1; <code>xelatex</code> from TinyTeX; pandoc from RStudio’s quarto tools. PowerShell 5.1 has no <code>&amp;&amp;</code>; use <code>;</code>.</p>
+<p>R is not on <code>PATH</code> (it is at <code>C:\Program Files\R\R-4.5.1\bin</code>). R 4.5.1; <code>xelatex</code> from <strong>MiKTeX</strong>; pandoc at <code>~\AppData\Local\Pandoc</code>. PowerShell 5.1 has no <code>&amp;&amp;</code>; use <code>;</code>. Multi-line <code>Rscript -e</code> strings do not survive Git Bash — write the R to a file and <code>Rscript</code> the file.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">Path</span> <span class="op">=</span> <span class="st">'C:\Program Files\R\R-4.5.1\bin;'</span> <span class="op">+</span> <span class="va">$env</span><span class="op">:</span><span class="va">Path</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">Path</span> <span class="op">+=</span> <span class="st">';C:\Program Files\RStudio\resources\app\bin\quarto\bin\tools'</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>Rscript <span class="op">-</span>e <span class="st">"devtools::document(); devtools::install(quick=TRUE, upgrade='never')"</span></span>
@@ -129,7 +135,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
