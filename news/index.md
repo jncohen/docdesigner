@@ -1,5 +1,23 @@
 # Changelog
 
+## docdesigner 1.0.6
+
+- **[`html()`](https://jncohen.github.io/docdesigner/reference/html.md)
+  leaked script and stylesheet contents into the body.** The format
+  exists to produce body HTML safe to paste into a CMS, and it was doing
+  the opposite: the body-only pass dropped the `<script>`/`<style>` tag
+  lines but kept everything between them, so the JavaScript and CSS
+  survived as bare text. A trivial document rendered six lines of jQuery
+  into its output, which a CMS would publish as visible paragraphs.
+  Blocks are now removed whole, one-liners included. Found by
+  smoke-testing the output formats that recent work had not touched;
+  [`snapshot()`](https://jncohen.github.io/docdesigner/reference/snapshot.md)
+  was fine.
+- CI: `R CMD check` runs on ubuntu and windows on every push and pull
+  request, and the pkgdown site rebuilds and redeploys on every push to
+  `main`. Both gaps had already caused a failure — the check had never
+  run before 1.0.5, and the published site had gone stale invisibly.
+
 ## docdesigner 1.0.5
 
 Documentation and portability. No engine or style changes: every style

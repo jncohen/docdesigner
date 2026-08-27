@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">docdesigner</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,12 @@
       <small>Source: <a href="https://github.com/jncohen/docdesigner/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.6" id="docdesigner-106">docdesigner 1.0.6<a class="anchor" aria-label="anchor" href="#docdesigner-106"></a></h2>
+<ul><li>
+<strong><code><a href="../reference/html.html">html()</a></code> leaked script and stylesheet contents into the body.</strong> The format exists to produce body HTML safe to paste into a CMS, and it was doing the opposite: the body-only pass dropped the <code>&lt;script&gt;</code>/<code>&lt;style&gt;</code> tag lines but kept everything between them, so the JavaScript and CSS survived as bare text. A trivial document rendered six lines of jQuery into its output, which a CMS would publish as visible paragraphs. Blocks are now removed whole, one-liners included. Found by smoke-testing the output formats that recent work had not touched; <code><a href="../reference/snapshot.html">snapshot()</a></code> was fine.</li>
+<li>CI: <code>R CMD check</code> runs on ubuntu and windows on every push and pull request, and the pkgdown site rebuilds and redeploys on every push to <code>main</code>. Both gaps had already caused a failure — the check had never run before 1.0.5, and the published site had gone stale invisibly.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.5" id="docdesigner-105">docdesigner 1.0.5<a class="anchor" aria-label="anchor" href="#docdesigner-105"></a></h2>
 <p>Documentation and portability. No engine or style changes: every style resolves and renders exactly as it did in 1.0.4.</p>
