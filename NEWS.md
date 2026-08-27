@@ -1,3 +1,13 @@
+# docdesigner 1.0.7
+
+- Styles with `code.highlight: none` made pandoc print
+  `Deprecated: --no-highlight. Use --syntax-highlighting=none instead.` on
+  **every render**. `dd_preamble()` now emits the new flag on pandoc 3.2 and
+  later and keeps the old one below that, so no supported pandoc either warns
+  or breaks. The version gate is deliberately conservative: guessing the
+  boundary too early would be a hard error on an older pandoc, guessing late
+  costs only a cosmetic notice.
+
 # docdesigner 1.0.6
 
 - **`html()` leaked script and stylesheet contents into the body.** The format
