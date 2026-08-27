@@ -607,14 +607,15 @@ pdf <- function(..., style = "minimal") {
              "-V", paste0("urlcolor=", s$links$color %||% "accent"))
 
   hl <- s$code$highlight %||% "tango"
-  # pandoc deprecated --no-highlight in favour of --syntax-highlighting=none,
-  # and warns on every single render otherwise -- noise a tester will report as
-  # a bug. The version gate is deliberately conservative: --syntax-highlighting
-  # landed before 3.2, so anything older keeps the old flag and merely sees the
-  # deprecation notice. Guessing the boundary too EARLY would be a hard error on
-  # an older pandoc; guessing late costs only a cosmetic warning.
-  no_hl <- if (rmarkdown::pandoc_available("3.2")) "--syntax-highlighting=none" else "--no-highlight"
-  pargs <- c(pargs, if (identical(hl, "none")) no_hl else c("--highlight-style", hl))
+  # BOTH old spellings are deprecated: --no-highlight and --highlight-style are
+  # replaced by --syntax-highlighting=<none|style>. --highlight-style is the
+  # branch 11 of the 12 styles take, so fixing only the "none" case left the
+  # warning on almost every render.
+  if (rmarkdown::pandoc_available("3.2")) {
+    pargs <- c(pargs, paste0("--syntax-highlighting=", hl))
+  } else {
+    pargs <- c(pargs, if (identical(hl, "none")) "--no-highlight" else c("--highlight-style", hl))
+  }
 
   if ((s$page$columns %||% 1) == 2) {
     pargs <- c(pargs, "-V", "classoption=twocolumn")

@@ -1,3 +1,17 @@
+# docdesigner 1.0.8
+
+- Completes the pandoc flag fix 1.0.7 started. **`--highlight-style` is
+  deprecated too**, and that is the branch 11 of the 12 styles take, so 1.0.7
+  removed the warning only from `economist` and left it on almost every other
+  render. Both spellings now become `--syntax-highlighting=<none|style>` on
+  pandoc 3.2 and later. Verified as zero deprecation warnings across a full
+  12-style run, and that highlighting still applies (`tango` emits
+  `\Highlighting` macros, `none` emits plain verbatim).
+
+  1.0.7 shipped incomplete because its check grepped for the exact string just
+  fixed rather than for deprecation warnings in general. Match the class, not
+  the instance.
+
 # docdesigner 1.0.7
 
 - Styles with `code.highlight: none` made pandoc print
