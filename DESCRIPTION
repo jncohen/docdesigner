@@ -10,6 +10,8 @@ Description: Pandoc/R Markdown templates for research papers, book chapters,
     style sets so researchers can produce polished, audience-aware PDF output
     from R and reproduce the look of well-known publications.
 License: MIT + file LICENSE
+URL: https://jncohen.github.io/docdesigner/, https://github.com/jncohen/docdesigner
+BugReports: https://github.com/jncohen/docdesigner/issues
 Imports:
     rmarkdown,
     yaml

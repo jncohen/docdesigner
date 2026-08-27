@@ -43,6 +43,10 @@ reference:
       - designer_new_style
       - designer_validate_style
       - designer_tokens
+  - title: Designing from a mockup
+    contents:
+      - designer_ai_brief
+      - designer_import_claude_design
   - title: Style sets
     contents:
       - designer_sets

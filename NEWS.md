@@ -1,6 +1,4 @@
-# docdesigner News
-
-## docdesigner 1.0.5
+# docdesigner 1.0.5
 
 Documentation and portability. No engine or style changes: every style resolves
 and renders exactly as it did in 1.0.4.
@@ -28,7 +26,7 @@ and renders exactly as it did in 1.0.4.
   list of the six known-incomplete areas not worth reporting, and what makes a
   bug report actionable. Not shipped in the tarball; read it on GitHub.
 
-## docdesigner 1.0.4
+# docdesigner 1.0.4
 
 - **All 12 rebuilt styles are now the shipped styles.** `inst/sets/` held the
   thin v1 files while the rebuilt, schema-clean `format.yml` lived only in the
@@ -77,7 +75,7 @@ and renders exactly as it did in 1.0.4.
   calls passing a repo slug as the first argument now install the wrong
   thing (a `set` id, not a `repo`) — update any saved calls.
 
-## docdesigner 1.0.3
+# docdesigner 1.0.3
 
 Fidelity fixes found by comparing rendered specimens against style-set
 mockups (the per-style findings live in `design-sets/<style>/fidelity.md`):
@@ -176,7 +174,7 @@ render as `plain`), the remaining `title.subtitle.*`/`byline.*`/
 `abstract.*`/`keywords.*` port tokens, and `table.style` (`grid`/`zebra`/
 `minimal` still inert; only `booktabs` renders).
 
-## docdesigner 1.0.2
+# docdesigner 1.0.2
 
 - Added a **token-driven style engine**. A style is a flat dotted-key
   `format.yml` of design tokens, resolved through a full `inherits` chain
@@ -198,7 +196,7 @@ render as `plain`), the remaining `title.subtitle.*`/`byline.*`/
   style tokens from the engine's `policy` style.
 - Added `STYLE-SPEC.md`, the format-version-2 token reference.
 
-## docdesigner 1.0.1
+# docdesigner 1.0.1
 
 - Reduced the public output API to `pdf()`, `html()`, and `snapshot()`.
 - Added `designer_use()` starters for PDF, HTML, and Snapshot.

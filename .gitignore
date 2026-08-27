@@ -48,3 +48,6 @@ CLAUDE.md
 # Google Drive mount debris. The .dc.html models and format.yml ARE tracked.
 design-sets/*/specimen.pdf
 design-sets/**/.fuse_hidden*
+
+# pkgdown site: built artefact, published to the gh-pages branch
+docs/
