@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">docdesigner</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,17 +34,20 @@
 <div id="testing-docdesigner" class="section level1">
 
 <p>Thanks for taking a look. This is a pre-release pilot: the rendering engine is solid, the <em>design</em> layer is deliberately unfinished. <strong>Please read <a href="#what-not-to-report">What not to report</a> first</strong> — it will save you writing up three or four things we already know about.</p>
-<p>Version 1.0.4 (tag <code>v1.0.4</code>). Fifteen minutes gets you through “Setup” and the first task.</p>
+<p>Version 1.0.9. Fifteen minutes gets you through “Setup” and the first task.</p>
 <hr><div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a></h2>
 <p>You need R, a LaTeX installation with <code>xelatex</code>, and pandoc. RStudio bundles pandoc; TinyTeX or MiKTeX both work for LaTeX.</p>
+<p>You will have been sent <strong><code>docdesigner_1.0.9.tar.gz</code></strong>. Install it from wherever you saved it — there is no CRAN or GitHub install, so the path is the only fiddly part:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jncohen/docdesigner"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"~/Downloads/docdesigner_1.0.9.tar.gz"</span>,</span>
+<span>                 repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jncohen.github.io/docdesigner/">docdesigner</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/designer_check.html">designer_check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># reports anything missing from the toolchain</span></span>
 <span><span class="fu"><a href="reference/designer_styles.html">designer_styles</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># the twelve styles, with their sets</span></span></code></pre></div>
+<p>On Windows use forward slashes or doubled backslashes in that path (<code>"C:/Users/you/Downloads/docdesigner_1.0.9.tar.gz"</code>). If R reports that the package is not available, it is nearly always the path rather than the file.</p>
+<p>The tarball carries everything — engine, all twelve styles, fonts. There is nothing else to download.</p>
 <p>If <code><a href="reference/designer_check.html">designer_check()</a></code> complains, fix that before anything else — almost every confusing failure downstream is a missing <code>xelatex</code> or a missing font.</p>
 <hr></div>
 <div class="section level2">
@@ -102,9 +105,9 @@
 </ol><hr></div>
 <div class="section level2">
 <h2 id="how-to-report">How to report<a class="anchor" aria-label="anchor" href="#how-to-report"></a></h2>
-<p>Open an issue at <a href="https://github.com/jncohen/docdesigner/issues" class="external-link uri">https://github.com/jncohen/docdesigner/issues</a>, one issue per problem. What makes a report actionable, in rough order of value:</p>
+<p>Email <strong><a href="mailto:josephncohen@gmail.com" class="email">josephncohen@gmail.com</a></strong>, one message per problem, with <code>docdesigner alpha</code> somewhere in the subject line. What makes a report actionable, in rough order of value:</p>
 <ol style="list-style-type: decimal"><li>
-<strong>The PDF</strong>, or a screenshot of the part that is wrong. We cannot judge a layout complaint from prose.</li>
+<strong>Attach the PDF</strong>, or a screenshot of the part that is wrong. We cannot judge a layout complaint from prose.</li>
 <li>
 <strong>Which style</strong>, and whether other styles do the same thing. “<code>sociology</code> only” and “all twelve” are different bugs.</li>
 <li>

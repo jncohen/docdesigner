@@ -5,8 +5,8 @@ engine is solid, the *design* layer is deliberately unfinished. **Please
 read [What not to report](#what-not-to-report) first** — it will save
 you writing up three or four things we already know about.
 
-Version 1.0.4 (tag `v1.0.4`). Fifteen minutes gets you through “Setup”
-and the first task.
+Version 1.0.9. Fifteen minutes gets you through “Setup” and the first
+task.
 
 ------------------------------------------------------------------------
 
@@ -15,15 +15,27 @@ and the first task.
 You need R, a LaTeX installation with `xelatex`, and pandoc. RStudio
 bundles pandoc; TinyTeX or MiKTeX both work for LaTeX.
 
+You will have been sent **`docdesigner_1.0.9.tar.gz`**. Install it from
+wherever you saved it — there is no CRAN or GitHub install, so the path
+is the only fiddly part:
+
 ``` r
 
-# install.packages("remotes")
-remotes::install_github("jncohen/docdesigner")
+install.packages("~/Downloads/docdesigner_1.0.9.tar.gz",
+                 repos = NULL, type = "source")
 library(docdesigner)
 
 designer_check()      # reports anything missing from the toolchain
 designer_styles()     # the twelve styles, with their sets
 ```
+
+On Windows use forward slashes or doubled backslashes in that path
+(`"C:/Users/you/Downloads/docdesigner_1.0.9.tar.gz"`). If R reports that
+the package is not available, it is nearly always the path rather than
+the file.
+
+The tarball carries everything — engine, all twelve styles, fonts. There
+is nothing else to download.
 
 If
 [`designer_check()`](https://jncohen.github.io/docdesigner/reference/designer_check.md)
@@ -140,12 +152,12 @@ you time and tells us nothing new.
 
 ## How to report
 
-Open an issue at <https://github.com/jncohen/docdesigner/issues>, one
-issue per problem. What makes a report actionable, in rough order of
-value:
+Email **<josephncohen@gmail.com>**, one message per problem, with
+`docdesigner alpha` somewhere in the subject line. What makes a report
+actionable, in rough order of value:
 
-1.  **The PDF**, or a screenshot of the part that is wrong. We cannot
-    judge a layout complaint from prose.
+1.  **Attach the PDF**, or a screenshot of the part that is wrong. We
+    cannot judge a layout complaint from prose.
 2.  **Which style**, and whether other styles do the same thing.
     “`sociology` only” and “all twelve” are different bugs.
 3.  **A minimal `.Rmd` that reproduces it.** If your document is
