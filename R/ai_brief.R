@@ -100,7 +100,7 @@ designer_ai_brief <- function(path = NULL) {
     "- Heading weight: light, regular, or bold -- no in-between.",
     "- Heading case: none, upper, lower, or smallcaps.",
     "",
-    "## Rules and rhythm — named steps only",
+    "## Rules and rhythm \u2014 named steps only",
     "",
     "These are enums, not free dimensions. A design that uses a rule weight",
     "or a spacing value off this list cannot be represented exactly.",
