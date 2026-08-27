@@ -1,5 +1,33 @@
 # docdesigner News
 
+## docdesigner 1.0.5
+
+Documentation and portability. No engine or style changes: every style resolves
+and renders exactly as it did in 1.0.4.
+
+- `R CMD check` on the built tarball is now **Status: OK** — no errors,
+  warnings or notes. It had never been run. It caught one real defect: a
+  literal em dash in a string literal in `R/ai_brief.R`. Portable packages must
+  keep non-ASCII out of R code, comments aside; replaced with the `—`
+  escape, so the generated brief prints identically.
+- **The style tables were describing styles that no longer shipped.** Promoting
+  the rebuilt styles in 1.0.4 silently falsified them: all ten documented accent
+  colours were wrong, `economist` was listed as one column when it sets two, and
+  `sociology` and `ajs` were missing. The gallery vignette ships in the tarball
+  and renders on the pkgdown site, so this was a reviewer's first contact with
+  the package.
+- The Style Gallery vignette now **generates** that table from the installed
+  styles at build time, reading the resolved tokens, so it cannot disagree with
+  what ships. `USER-MANUAL.md` no longer duplicates the per-style values —
+  duplicating them is what produced the drift — and points at the vignette and
+  `designer_styles()` instead.
+- `README.md`: the academic set listing gains `sociology` and `ajs`; two stale
+  known-limitations entries corrected (the styles are no longer "ten styles in
+  ten accent colours", and `examples/fontset-*.Rmd` no longer exists).
+- Added `TESTING.md` for pilot reviewers: setup, four graded tasks, an explicit
+  list of the six known-incomplete areas not worth reporting, and what makes a
+  bug report actionable. Not shipped in the tarball; read it on GitHub.
+
 ## docdesigner 1.0.4
 
 - **All 12 rebuilt styles are now the shipped styles.** `inst/sets/` held the
