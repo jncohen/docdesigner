@@ -246,8 +246,8 @@ tokens:
   table.row_stretch: {type: num, min: 1.0, max: 2.0, default: 1.2, status: impl}
   table.size:        {type: num, min: 0.7, max: 1.1, default: 0.9, status: impl}
   table.zebra_color: {type: role, nullable: true, status: impl}
-  table.header.weight:     {type: enum, values: [regular, bold], default: bold, status: new}
-  table.header.case:       {type: enum, values: [none, upper, smallcaps], default: none, status: new}
+  table.header.weight:     {type: enum, values: [regular, bold], default: bold, status: impl}
+  table.header.case:       {type: enum, values: [none, upper, smallcaps], default: none, status: impl}
   table.header.rule_below: {type: bool, default: true, status: new}
   table.caption.position:  {type: enum, values: [above, below], default: above, status: new}
 

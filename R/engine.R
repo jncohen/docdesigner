@@ -734,6 +734,17 @@ pdf <- function(..., style = "minimal") {
     pargs <- c(pargs, if (identical(hl, "none")) "--no-highlight" else c("--highlight-style", hl))
   }
 
+  # Table header treatment. Pandoc gives the header row no macro to hook from
+  # the preamble, so it is done on the document tree. This must be added BEFORE
+  # the two-column filter, which rewrites Tables into raw LaTeX.
+  thw <- s$table$header$weight
+  thc <- s$table$header$case
+  if (!is.null(thw) || !is.null(thc)) {
+    pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "table-header.lua"))
+    if (!is.null(thw)) pargs <- c(pargs, "--metadata", paste0("dd-table-header-weight=", thw))
+    if (!is.null(thc)) pargs <- c(pargs, "--metadata", paste0("dd-table-header-case=", thc))
+  }
+
   if ((s$page$columns %||% 1) == 2) {
     pargs <- c(pargs, "-V", "classoption=twocolumn")
     # longtable (pandoc's default table) is illegal under twocolumn; convert
