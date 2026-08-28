@@ -104,8 +104,8 @@ tokens:
   typography.base_size:   {type: enum, values: ["8pt","8.5pt","9pt","9.5pt","10pt","10.5pt","11pt","11.5pt","12pt"], default: "10pt", status: impl}
   typography.line_height: {type: num, min: 1.0, max: 2.0, default: 1.30, status: impl}
   typography.mono_scale:  {type: num, min: 0.6, max: 1.0, default: 0.82, status: impl}
-  typography.numbers:     {type: enum, values: [lining, oldstyle], default: lining, status: new}
-  typography.justification: {type: enum, values: [justified, ragged-right], default: justified, status: new}
+  typography.numbers:     {type: enum, values: [lining, oldstyle], default: lining, status: impl}
+  typography.justification: {type: enum, values: [justified, ragged-right], default: justified, status: impl}
   typography.hyphenation: {type: bool, default: true, status: new}
   typography.microtype:   {type: bool, default: true, status: impl}
 
@@ -225,7 +225,7 @@ tokens:
   # -- paragraph -------------------------------------------------------------
   paragraph.indent:  {type: "scale:indent", default: none, status: impl}
   paragraph.spacing: {type: "scale:space",  default: sm,   status: impl}
-  paragraph.indent_after_heading: {type: bool, default: false, status: new}
+  paragraph.indent_after_heading: {type: bool, default: false, status: impl}
   paragraph.drop_cap.lines: {type: int, min: 2, max: 4, status: new, doc: "Set to enable a drop cap."}
   paragraph.drop_cap.color: {type: role, default: accent, status: risk, doc: "lettrine; unreliable under columns: 2."}
 
@@ -244,8 +244,8 @@ tokens:
   # -- table -----------------------------------------------------------------
   table.style:       {type: enum, values: [booktabs, grid, zebra, minimal], default: booktabs, status: impl}
   table.row_stretch: {type: num, min: 1.0, max: 2.0, default: 1.2, status: impl}
-  table.size:        {type: num, min: 0.7, max: 1.1, default: 0.9, status: new}
-  table.zebra_color: {type: role, nullable: true, status: new}
+  table.size:        {type: num, min: 0.7, max: 1.1, default: 0.9, status: impl}
+  table.zebra_color: {type: role, nullable: true, status: impl}
   table.header.weight:     {type: enum, values: [regular, bold], default: bold, status: new}
   table.header.case:       {type: enum, values: [none, upper, smallcaps], default: none, status: new}
   table.header.rule_below: {type: bool, default: true, status: new}
@@ -264,8 +264,8 @@ tokens:
   quote.rule:   {type: bool, default: false, status: impl, doc: "Vertical accent rule at the left."}
 
   # -- footnotes -------------------------------------------------------------
-  footnotes.size:      {type: num, min: 0.6, max: 1.0, default: 0.8, status: new}
-  footnotes.numbering: {type: enum, values: [arabic, symbol], default: arabic, status: new}
+  footnotes.size:      {type: num, min: 0.6, max: 1.0, default: 0.8, status: impl}
+  footnotes.numbering: {type: enum, values: [arabic, symbol], default: arabic, status: impl}
 
   # -- running heads ---------------------------------------------------------
   header_footer.header.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}

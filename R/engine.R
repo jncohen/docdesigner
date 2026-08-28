@@ -283,7 +283,10 @@ dd_preamble <- function(s) {
     add("\\providecommand{\\ddlabelfont}{}")
   }
 
-  add("\\usepackage{xcolor}")
+  # colortbl (pulled in by xcolor's [table] option) can disturb booktabs
+  # rule spacing, so it is loaded only for a style that actually shades rows.
+  add(if (!is.null(s$table$zebra_color)) "\\usepackage[table]{xcolor}"
+      else "\\usepackage{xcolor}")
   for (role in dd_schema()$roles) {
     if (!is.null(col[[role]])) add("\\definecolor{", role, "}{HTML}{", dd_hex(col[[role]]), "}")
   }
@@ -334,7 +337,10 @@ dd_preamble <- function(s) {
   add(hspec("h4", "\\paragraph",     shape = "runin"))
   for (lvl in c("h1", "h2", "h3", "h4")) {
     cmd <- c(h1 = "\\section", h2 = "\\subsection", h3 = "\\subsubsection", h4 = "\\paragraph")[[lvl]]
-    add("\\titlespacing*{", cmd, "}{0pt}{",
+    # titlesec: the STARRED form suppresses the indent on the following
+    # paragraph, the unstarred form keeps it. That is the whole token.
+    add(if (isTRUE(s$paragraph$indent_after_heading)) "\\titlespacing{" else "\\titlespacing*{",
+        cmd, "}{0pt}{",
         dd_len("space", hd[[lvl]]$space_before, "lg"), "}{",
         dd_len("space", hd[[lvl]]$space_after, "sm"), "}")
   }
@@ -532,6 +538,41 @@ dd_preamble <- function(s) {
     if (identical(fc$align, "center")) opts <- c(opts, "justification=centering")
     if (identical(fc$align, "left"))   opts <- c(opts, "justification=raggedright")
     if (length(opts)) add("\\captionsetup[figure]{", paste(opts, collapse = ","), "}")
+  }
+
+  # --- Body typography, tables, footnotes ------------------------------------
+  # Small independent tokens the styles declared and the engine ignored.
+  if (identical(ty$justification, "ragged-right")) {
+    add("\\usepackage{ragged2e}\\RaggedRight")
+  }
+  # Oldstyle figures are a font FEATURE, not a face. Applying it at
+  # begin-document re-selects the current family with the feature added,
+  # which avoids rebuilding every \newfontfamily declaration above.
+  if (identical(ty$numbers, "oldstyle")) {
+    add("\\AtBeginDocument{\\addfontfeature{Numbers=OldStyle}}")
+  }
+  tb <- s$table
+  if (!is.null(tb$size)) {
+    tsz <- round(base * as.numeric(tb$size), 1)
+    add("\\AtBeginEnvironment{longtable}{\\fontsize{", tsz, "}{",
+        round(tsz * 1.2, 1), "}\\selectfont}")
+  }
+  if (!is.null(tb$zebra_color)) {
+    # rowcolors starts shading at the first BODY row: the header sits between
+    # \toprule and \midrule and must not be tinted.
+    add("\\AtBeginEnvironment{longtable}{\\rowcolors{2}{}{", tb$zebra_color, "}}")
+  }
+  fn <- s$footnotes
+  if (!is.null(fn$size)) {
+    fsz <- round(base * as.numeric(fn$size), 1)
+    # \\setfontsize is the documented way to redefine a size command. This
+    # also reaches anything else using \footnotesize, which in practice is
+    # little now that captions carry their own size token.
+    add("\\makeatletter\\renewcommand\\footnotesize{\\\\setfontsize\\footnotesize{",
+        fsz, "}{", round(fsz * 1.2, 1), "}}\\makeatother")
+  }
+  if (identical(fn$numbering, "symbol")) {
+    add("\\renewcommand{\\thefootnote}{\\fnsymbol{footnote}}")
   }
 
   # --- Quote block ----------------------------------------------------------
