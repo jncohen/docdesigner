@@ -111,12 +111,12 @@ tokens:
 
   # -- colour ----------------------------------------------------------------
   color.accent:     {type: hex, default: "333333", status: impl}
-  color.accent2:    {type: hex, nullable: true, status: new}
+  color.accent2:    {type: hex, nullable: true, status: impl}
   color.text:       {type: hex, default: "000000", status: impl}
   color.muted:      {type: hex, default: "5B6470", status: impl}
   color.rule:       {type: hex, default: "333333", status: impl}
   color.background: {type: hex, nullable: true, status: new}
-  color.code_bg:    {type: hex, nullable: true, status: new}
+  color.code_bg:    {type: hex, nullable: true, status: impl}
   color.knockout:   {type: hex, default: "FFFFFF", status: new, doc: "Text drawn on an accent-filled bar."}
 
   # -- headings --------------------------------------------------------------
@@ -226,15 +226,15 @@ tokens:
   paragraph.indent:  {type: "scale:indent", default: none, status: impl}
   paragraph.spacing: {type: "scale:space",  default: sm,   status: impl}
   paragraph.indent_after_heading: {type: bool, default: false, status: impl}
-  paragraph.drop_cap.lines: {type: int, min: 2, max: 4, status: new, doc: "Set to enable a drop cap."}
-  paragraph.drop_cap.color: {type: role, default: accent, status: risk, doc: "lettrine; unreliable under columns: 2."}
+  paragraph.drop_cap.lines: {type: int, min: 2, max: 4, status: impl, doc: "Set to enable a drop cap."}
+  paragraph.drop_cap.color: {type: role, default: accent, status: impl, doc: "lettrine; unreliable under columns: 2."}
 
   # -- figure ----------------------------------------------------------------
   figure.style:         {type: enum, values: [plain, ruled, inset], default: plain, status: new}
   figure.width:         {type: "scale:width", default: full, status: new}
   figure.placement:     {type: enum, values: [here, top, bottom, page], default: top, status: new}
   figure.span_columns:  {type: bool, default: false, status: risk, doc: "figure* under columns: 2."}
-  figure.caption.position:    {type: enum, values: [above, below], default: below, status: new}
+  figure.caption.position:    {type: enum, values: [above, below], default: below, status: impl}
   figure.caption.family:      {type: enum, values: [body, heading, mono], default: body, status: impl}
   figure.caption.size:        {type: num, min: 0.6, max: 1.0, default: 0.85, status: impl}
   figure.caption.align:       {type: enum, values: [left, center], default: left, status: impl}
@@ -249,13 +249,14 @@ tokens:
   table.header.weight:     {type: enum, values: [regular, bold], default: bold, status: impl}
   table.header.case:       {type: enum, values: [none, upper, smallcaps], default: none, status: impl}
   table.header.rule_below: {type: bool, default: true, status: new}
-  table.caption.position:  {type: enum, values: [above, below], default: above, status: new}
+  table.caption.position:  {type: enum, values: [above, below], default: above, status: impl,
+                            doc: "Only `above` is achievable: pandoc renders tables as longtable, which is not a float, so the caption cannot be relocated from the preamble. `above` is pandoc's own default and every shipped style wants it."}
 
   # -- code ------------------------------------------------------------------
   code.highlight:    {type: enum, values: [pygments, tango, espresso, zenburn, kate, monochrome, breezedark, haddock, none], default: tango, status: impl}
   code.background:   {type: role, nullable: true, status: impl}
   code.border:       {type: bool, default: false, status: impl}
-  code.line_numbers: {type: bool, default: false, status: new}
+  code.line_numbers: {type: bool, default: false, status: impl}
 
   # -- quote -----------------------------------------------------------------
   quote.indent: {type: "scale:indent", default: md, status: impl}

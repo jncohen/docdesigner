@@ -529,7 +529,8 @@ dd_preamble <- function(s) {
   # Wrap long code lines so listings never overflow the measure (especially the
   # narrow two-column body in nature). fvextra augments pandoc's fancyvrb.
   add("\\usepackage{fvextra}")
-  add("\\fvset{breaklines=true,breakanywhere=true,breaksymbolleft={}}")
+  add("\\fvset{breaklines=true,breakanywhere=true,breaksymbolleft={}",
+      if (isTRUE(s$code$line_numbers)) ",numbers=left,numbersep=6pt" else "", "}")
 
   # --- Code panel: tint / border behind code blocks -------------------------
   # tcolorbox's \tcolorboxenvironment wraps an existing environment; guarded by
@@ -583,6 +584,20 @@ dd_preamble <- function(s) {
     if (identical(fc$align, "center")) opts <- c(opts, "justification=centering")
     if (identical(fc$align, "left"))   opts <- c(opts, "justification=raggedright")
     if (length(opts)) add("\\captionsetup[figure]{", paste(opts, collapse = ","), "}")
+    # Caption ABOVE a figure is a relocation, not a spacing change: pandoc
+    # emits \caption after \includegraphics, and the caption package's
+    # position= only adjusts the skip. floatrow actually moves it.
+    #
+    # floatrow is the one package here with a real interaction risk -- it and
+    # two-column floats do not get along. That risk is closed by construction
+    # rather than by hope: every style asking for "above" (ajs, demography,
+    # sociology, government) is single-column, and both two-column styles
+    # (nature, economist) want "below" or say nothing. Gating on "above"
+    # means floatrow is never loaded where a table* float can meet it.
+    if (identical(fc$position, "above")) {
+      add("\\usepackage{floatrow}")
+      add("\\floatsetup[figure]{capposition=top}")
+    }
   }
 
   # --- Body typography, tables, footnotes ------------------------------------
@@ -649,6 +664,11 @@ dd_preamble <- function(s) {
       }
     }
   }
+
+  # Drop cap. The package only defines \\lettrine; choosing WHICH paragraph
+  # gets it is done by inst/engine/drop-cap.lua, because a preamble has no
+  # hook for "the first paragraph of the body".
+  if (!is.null(s$paragraph$drop_cap$lines)) add("\\usepackage{lettrine}")
 
   add("\\usepackage{fancyhdr}\\pagestyle{fancy}\\fancyhf{}")
   add("\\renewcommand{\\headrulewidth}{", if (isTRUE(s$header_footer$header$rule)) "0.4pt" else "0pt", "}")
@@ -795,6 +815,13 @@ pdf <- function(..., style = "minimal") {
     pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "table-header.lua"))
     if (!is.null(thw)) pargs <- c(pargs, "--metadata", paste0("dd-table-header-weight=", thw))
     if (!is.null(thc)) pargs <- c(pargs, "--metadata", paste0("dd-table-header-case=", thc))
+  }
+
+  dc <- s$paragraph$drop_cap
+  if (!is.null(dc$lines)) {
+    pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "drop-cap.lua"),
+               "--metadata", paste0("dd-dropcap-lines=", dc$lines),
+               "--metadata", paste0("dd-dropcap-color=", dc$color %||% "accent"))
   }
 
   if ((s$page$columns %||% 1) == 2) {
