@@ -235,11 +235,11 @@ tokens:
   figure.placement:     {type: enum, values: [here, top, bottom, page], default: top, status: new}
   figure.span_columns:  {type: bool, default: false, status: risk, doc: "figure* under columns: 2."}
   figure.caption.position:    {type: enum, values: [above, below], default: below, status: new}
-  figure.caption.family:      {type: enum, values: [body, heading, mono], default: body, status: new}
-  figure.caption.size:        {type: num, min: 0.6, max: 1.0, default: 0.85, status: new}
-  figure.caption.align:       {type: enum, values: [left, center], default: left, status: new}
-  figure.caption.color:       {type: role, default: muted, status: new}
-  figure.caption.label_style: {type: enum, values: [bold, italic, smallcaps, none], default: bold, status: new}
+  figure.caption.family:      {type: enum, values: [body, heading, mono], default: body, status: impl}
+  figure.caption.size:        {type: num, min: 0.6, max: 1.0, default: 0.85, status: impl}
+  figure.caption.align:       {type: enum, values: [left, center], default: left, status: impl}
+  figure.caption.color:       {type: role, default: muted, status: impl}
+  figure.caption.label_style: {type: enum, values: [bold, italic, smallcaps, none], default: bold, status: impl}
 
   # -- table -----------------------------------------------------------------
   table.style:       {type: enum, values: [booktabs, grid, zebra, minimal], default: booktabs, status: impl}

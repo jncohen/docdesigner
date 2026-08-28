@@ -488,6 +488,42 @@ dd_preamble <- function(s) {
     }
   }
 
+  # --- Figure and table captions --------------------------------------------
+  # Ten styles declare figure.caption.* / table.caption.*; none of it rendered.
+  # The caption package owns all of this cleanly. Caption REPOSITIONING (above
+  # vs below the float) is deliberately not here -- it needs floatrow, which
+  # interacts badly with two-column floats, so it is a separate batch.
+  fc <- s$figure$caption
+  if (length(fc)) {
+    add("\\usepackage{caption}")
+    # caption's font= runs a KEYWORD parser over its value, so arbitrary LaTeX
+    # cannot be passed there in any form -- neither mixed with keywords nor
+    # alone. It expands the first token inside \\csname and fails with
+    # "Missing \\endcsname inserted". \\DeclareCaptionFont is the package's
+    # documented escape hatch for exactly this: name a bundle of raw
+    # declarations, then refer to it by that name.
+    fnt <- character()
+    if (!is.null(fc$color)) fnt <- c(fnt, paste0("\\color{", fc$color, "}"))
+    if (!is.null(fc$size)) {
+      csz <- round(base * as.numeric(fc$size), 1)
+      fnt <- c(fnt, paste0("\\fontsize{", csz, "}{", round(csz * 1.2, 1), "}\\selectfont"))
+    }
+    if (identical(fc$family, "heading")) fnt <- c(fnt, head_cmd)
+    if (identical(fc$family, "mono"))    fnt <- c(fnt, "\\ttfamily")
+    opts <- character()
+    if (length(fnt)) {
+      add("\\DeclareCaptionFont{ddcapfont}{", paste(fnt, collapse = ""), "}")
+      opts <- c(opts, "font=ddcapfont")
+    }
+    lab <- switch(fc$label_style %||% "",
+      bold = "labelfont=bf", italic = "labelfont=it", smallcaps = "labelfont=sc",
+      none = "labelformat=empty", "")
+    if (nzchar(lab)) opts <- c(opts, lab)
+    if (identical(fc$align, "center")) opts <- c(opts, "justification=centering")
+    if (identical(fc$align, "left"))   opts <- c(opts, "justification=raggedright")
+    if (length(opts)) add("\\captionsetup[figure]{", paste(opts, collapse = ","), "}")
+  }
+
   # --- Quote block ----------------------------------------------------------
   # quote.{indent,style,color,rule} were declared by six shipped styles and
   # rendered by none of them -- the tokens validated, then were silently
