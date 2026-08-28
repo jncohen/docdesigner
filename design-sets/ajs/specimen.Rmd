@@ -1,6 +1,6 @@
 ---
 title: "The Shape of Household Wealth"
-subtitle: "Standalone specimen — style: STYLE_ID"
+subtitle: "Standalone specimen — style: ajs"
 author: |
   Joseph N. Cohen\
   *Meridian University*
@@ -17,7 +17,7 @@ output:
 ---
 
 <!--
-Standalone rendering check for the "STYLE_ID" design-sets draft.
+Standalone rendering check for the "ajs" design-sets draft.
 Knit this file directly, or via ../../render-design-sets.R, to confirm the
 draft format.yml in this same folder still compiles cleanly before you
 promote it to repo/inst/sets/. `style: "."` points at this folder's own
