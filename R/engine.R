@@ -703,15 +703,56 @@ dd_preamble <- function(s) {
     surname = "\\theauthor",
     section = "\\rightmark",
     "\\thepage")
+  hfill <- s$header_footer$header$fill
   for (pos in names(slot)) {
     hwhat <- s$header_footer$header[[pos]] %||% "none"
-    if (!identical(hwhat, "none")) {
+    if (!identical(hwhat, "none") && is.null(hfill)) {
       add("\\fancyhead[", slot[[pos]], "]{\\small\\color{muted}", hf_content(hwhat), "}")
     }
     fwhat <- s$header_footer$footer[[pos]] %||% "none"
     if (!identical(fwhat, "none")) {
       add("\\fancyfoot[", slot[[pos]], "]{\\small\\color{muted}", hf_content(fwhat), "}")
     }
+  }
+
+  # --- Full-bleed masthead band ---------------------------------------------
+  # header.fill turns the running head into a colour band spanning the whole
+  # PAPER width, not the text block -- the Economist flag, a government
+  # masthead. fancyhdr can only lay type inside the text measure, so the band
+  # is drawn by one \\fancyhead[L] box that starts at the paper edge:
+  # back out by (\\oddsidemargin + 1in), which is exactly the distance from the
+  # paper edge to the text block, then draw a \\paperwidth-wide box and re-indent
+  # the contents by the same amount so the type still aligns with the body.
+  #
+  # All three slots go inside that single box, so the per-slot loop above is
+  # skipped when a fill is set -- otherwise fancyhdr would also typeset them
+  # separately, on top of the band.
+  if (!is.null(hfill)) {
+    hcol  <- s$header_footer$header$color %||% "text"
+    inset <- "\\dimexpr\\oddsidemargin+1in\\relax"
+    bandh <- round(base * 2.0, 1)
+    cont  <- vapply(c("left", "center", "right"), function(p) {
+      w <- s$header_footer$header[[p]] %||% "none"
+      if (identical(w, "none")) "" else hf_content(w)
+    }, character(1))
+    # \\fboxsep 0: the parbox height supplies the padding, so the band is a
+    # predictable height rather than colorbox's default 3pt inset plus content.
+    add("\\fancyhead[L]{{\\setlength{\\fboxsep}{0pt}%")
+    add("  \\hspace*{-", inset, "}%")
+    add("  \\colorbox{", hfill, "}{%")
+    add("    \\parbox[c][", bandh, "pt][c]{\\paperwidth}{%")
+    add("      \\hspace*{", inset, "}%")
+    # The band is a SINGLE-LINE object. \\theauthor legitimately carries a
+    # \\\\ (name over affiliation), which broke out of the fixed-height box and
+    # spilled the affiliation onto the page below the band. Collapsing \\\\ to
+    # a space inside the group keeps any slot content on one line whatever a
+    # document puts in it.
+    add("      {\\color{", hcol, "}\\ddlabelfont\\small\\renewcommand{\\\\}{ }%")
+    add("       ",
+        cont[["left"]], "\\hfill ", cont[["center"]], "\\hfill ", cont[["right"]], "}%")
+    add("      \\hspace*{", inset, "}}}}}")
+    # A filled band supplies its own edge; a rule under it reads as an error.
+    add("\\renewcommand{\\headrulewidth}{0pt}")
   }
   # article's \maketitle forces \thispagestyle{plain} on the opening page, which
   # drops the fancy running head there — so a header shows on page 2+ but never

@@ -91,8 +91,16 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
       mg <- s$page$margins
       want_l <- (mg$inner %||% shorthand)
       want_r <- (mg$outer %||% shorthand)
-      got_l <- min(d$x) / 72
-      got_r <- (pw - max(d$x + d$width)) / 72
+      # Measure BODY ink only. A style with header_footer.header.fill draws a
+      # masthead band that deliberately bleeds to the paper edge, and including
+      # it made economist report a 0.000in left margin -- the band, not the
+      # text block. Same lesson as the two-column detector: page furniture is
+      # not body text. Trim the top and bottom bands before measuring.
+      ph_pt <- max(d$y, na.rm = TRUE)
+      body <- d[d$y > 0.06 * ph_pt & d$y < 0.94 * ph_pt, , drop = FALSE]
+      if (!nrow(body)) body <- d
+      got_l <- min(body$x) / 72
+      got_r <- (pw - max(body$x + body$width)) / 72
       emit(style, "page.margins.inner (left)", sprintf("%.3f in", want_l),
            sprintf("%.3f in", got_l),
            if (abs(got_l - want_l) < tol) "PASS" else "FAIL")

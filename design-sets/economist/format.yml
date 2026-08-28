@@ -48,6 +48,7 @@ typography.label: Arial
 color.text: "#111111"
 color.accent: "#E3120B"              # the Economist red: flag, kicker, rules, links
 color.muted: "#6E6E6E"
+color.knockout: "#FFFFFF"
 color.rule: "#C9C9C9"
 color.code_bg: "#F5F5F4"             # light-grey code block ground
 links.color: accent
@@ -124,9 +125,16 @@ quote.rule: true                     # vertical red accent rule at the left
 # hairline; the folio is CENTRED at the foot. The opener's red flag band is a
 # separate object with no token (see fidelity). footer.right: none suppresses
 # the default second folio; footer.rule off (the folio stands alone).
-header_footer.header.left: runningtitle
-header_footer.header.right: author
-header_footer.header.rule: true
+# The red flag band: white-on-red, full paper width, the style's signature
+# furniture. header.fill suppresses header.rule -- a filled band carries its
+# own edge.
+header_footer.header.left: page
+header_footer.header.center: runningtitle
+header_footer.header.right: none        # the model flag carries no byline
+header_footer.header.fill: accent      # the Economist red
+header_footer.header.color: knockout   # white out of the band
+header_footer.header.rule: false
+header_footer.first_page: header       # the flag runs on page 1 too
 header_footer.footer.center: page
 header_footer.footer.right: none
 header_footer.footer.rule: false

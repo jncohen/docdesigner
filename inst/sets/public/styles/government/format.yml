@@ -44,6 +44,7 @@ color.text: "#1C2126"
 color.accent: "#1A3A5C"              # federal navy — section heads, rules, (masthead)
 color.accent2: "#C4A64B"             # gold masthead/running-head stripe (see fidelity)
 color.muted: "#5A636B"
+color.knockout: "#FFFFFF"
 color.rule: "#C7CDD3"
 color.code_bg: "#F2F5F7"             # re-homes the zebra-stripe tint (fed to table.zebra_color)
 links.color: accent
@@ -93,5 +94,11 @@ code.highlight: none
 # Continuation pages carry a thin ruled running head; the folio + footer rule
 # inherit the footer defaults (footer.right: page, footer.rule: true), matching
 # the page-1 and page-2 footers.
+# Navy agency masthead: a full-bleed band across the head of every page,
+# which is what makes this read as a statistical bulletin rather than a report.
 header_footer.header.left: runningtitle
-header_footer.header.rule: true
+header_footer.header.right: page
+header_footer.header.fill: accent      # agency navy
+header_footer.header.color: knockout   # white out of the band
+header_footer.header.rule: false
+header_footer.first_page: header

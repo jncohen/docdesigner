@@ -273,6 +273,10 @@ tokens:
   header_footer.header.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.header.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.header.rule:   {type: bool, default: false, status: impl}
+  header_footer.header.fill:   {type: role, nullable: true, status: impl,
+                                doc: "Fill the running head with a full-bleed colour band spanning the whole paper width, not just the text block. The Economist flag and a government masthead. Suppresses header.rule, which a filled band does not want."}
+  header_footer.header.color:  {type: role, default: text, status: impl,
+                                doc: "Ink used inside the running head. With header.fill set this is the knockout colour -- white-on-red is fill: accent, color: knockout."}
   header_footer.footer.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: page, status: impl}
