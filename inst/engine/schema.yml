@@ -122,7 +122,7 @@ tokens:
   # -- headings --------------------------------------------------------------
   headings.number_sections: {type: bool, default: false, status: impl}
   headings.numbering:       {type: enum, values: [arabic, roman, alpha, none], default: arabic, status: new}
-  headings.run_in:          {type: list, values: [h2, h3, h4], status: new, doc: "Levels typeset run-in with the paragraph."}
+  headings.run_in:          {type: list, values: [h2, h3, h4], status: impl, doc: "Levels typeset run-in with the paragraph."}
 
   headings.<h>.family:       {type: enum, values: [body, heading, display, mono], default: heading, status: new}
   headings.<h>.scale:        {type: num, min: 0.5, max: 4.0, status: impl, doc: "Multiple of typography.base_size."}

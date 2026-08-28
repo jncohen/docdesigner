@@ -320,8 +320,18 @@ dd_preamble <- function(s) {
     if (nzchar(rule)) line <- paste0(line, "[\\vspace{2pt}", rule, "]")
     line
   }
-  add(hspec("h1", "\\section")); add(hspec("h2", "\\subsection")); add(hspec("h3", "\\subsubsection"))
-  add(hspec("h4", "\\paragraph", shape = "runin"))
+  # headings.run_in names the levels that run into the following paragraph
+  # instead of standing on their own line -- the ASA/Chicago sub-subheading
+  # convention six of the shipped styles ask for. h4 is run-in unconditionally,
+  # as it always was. Note that a run-in level loses its section number: the
+  # label logic in hspec() keys off the shape, and a cascading "1.1.1" sitting
+  # in front of a run-in heading is never what a journal wants.
+  run_in <- as.character(hd$run_in %||% character())
+  shape_of <- function(lvl) if (lvl %in% run_in) "runin" else "block"
+  add(hspec("h1", "\\section"))
+  add(hspec("h2", "\\subsection",    shape = shape_of("h2")))
+  add(hspec("h3", "\\subsubsection", shape = shape_of("h3")))
+  add(hspec("h4", "\\paragraph",     shape = "runin"))
   for (lvl in c("h1", "h2", "h3", "h4")) {
     cmd <- c(h1 = "\\section", h2 = "\\subsection", h3 = "\\subsubsection", h4 = "\\paragraph")[[lvl]]
     add("\\titlespacing*{", cmd, "}{0pt}{",
