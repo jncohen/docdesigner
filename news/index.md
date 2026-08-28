@@ -1,6 +1,36 @@
 # Changelog
 
-## docdesigner 1.0.9
+## docdesigner 0.9.0
+
+**Renumbered.** Versions previously tagged 1.0.x were pre-release
+development, not a 1.0 release. The series is renumbered to 0.9.x so
+that **1.0 can mean “released after beta”**. No code was reverted: 0.9.0
+is the state formerly called 1.0.9 plus the design-token work below.
+
+Everything from the 1.0.4-1.0.9 entries below is included in 0.9.0.
+
+#### Design tokens wired (tier 1)
+
+Twenty-eight tokens were declared by the shipped styles, validated
+clean, and then silently ignored by the engine. These now render:
+
+- `quote.{indent,style,color,rule}` – ten styles.
+- `figure.caption.{color,size,align,family,label_style}` – ten styles.
+- `headings.run_in` – six styles; h3 now runs into its paragraph where
+  asked.
+- `typography.{numbers,justification}`,
+  `paragraph.indent_after_heading`, `table.{size,zebra_color}`,
+  `footnotes.{size,numbering}`.
+- `table.header.{weight,case}`, via a Lua filter – pandoc gives the
+  header row no macro for the preamble to hook.
+- `title.{case,byline.case,date.show,abstract.rule}`.
+
+Left deliberately unimplemented rather than faked: `links.underline`,
+`table.header.rule_below`, `color.background` (ambiguous – already works
+as a colour role; painting the page with it would be a regression), and
+`title.keywords.*` (pandoc puts keywords in PDF metadata, not the body).
+
+## docdesigner 1.0.9 (superseded numbering)
 
 - Alpha distribution is by tarball rather than `install_github()`,
   because the GitHub repository is private and a tester cannot reach it.
