@@ -488,6 +488,36 @@ dd_preamble <- function(s) {
     }
   }
 
+  # --- Quote block ----------------------------------------------------------
+  # quote.{indent,style,color,rule} were declared by six shipped styles and
+  # rendered by none of them -- the tokens validated, then were silently
+  # dropped. Everything here is gated on a token actually being set, so a
+  # style that says nothing about quotes keeps LaTeX's stock quote exactly.
+  q <- s$quote
+  if (length(q)) {
+    qpre <- paste0(
+      if (!is.null(q$color)) paste0("\\color{", q$color, "}") else "",
+      if (identical(q$style, "italic")) "\\itshape" else "")
+    if (nzchar(qpre)) add("\\AtBeginEnvironment{quote}{", qpre, "}")
+    # A left accent bar needs a frame, not an indent. tcolorbox's blanker
+    # skin draws nothing but the single borderline, so the quote keeps its
+    # ordinary look and gains only the rule.
+    if (isTRUE(q$rule) || !is.null(q$indent)) {
+      qind <- dd_len("indent", q$indent, "md")
+      if (isTRUE(q$rule)) {
+        add("\\usepackage{tcolorbox}\\tcbuselibrary{skins,breakable}")
+        add("\\AtBeginDocument{\\tcolorboxenvironment{quote}{blanker,breakable,",
+            "left=", qind, ",right=0pt,top=2pt,bottom=2pt,",
+            "borderline west={2pt}{0pt}{accent}}}")
+      } else {
+        add("\\AtBeginDocument{\\renewenvironment{quote}",
+            "{\\list{}{\\setlength{\\leftmargin}{", qind, "}",
+            "\\setlength{\\rightmargin}{", qind, "}}\\item\\relax}",
+            "{\\endlist}}")
+      }
+    }
+  }
+
   add("\\usepackage{fancyhdr}\\pagestyle{fancy}\\fancyhf{}")
   add("\\renewcommand{\\headrulewidth}{", if (isTRUE(s$header_footer$header$rule)) "0.4pt" else "0pt", "}")
   add("\\renewcommand{\\footrulewidth}{", if (isTRUE(s$header_footer$footer$rule)) "0.4pt" else "0pt", "}")

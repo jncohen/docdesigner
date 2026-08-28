@@ -258,10 +258,10 @@ tokens:
   code.line_numbers: {type: bool, default: false, status: new}
 
   # -- quote -----------------------------------------------------------------
-  quote.indent: {type: "scale:indent", default: md, status: new}
-  quote.style:  {type: enum, values: [normal, italic], default: normal, status: new}
-  quote.color:  {type: role, default: text, status: new}
-  quote.rule:   {type: bool, default: false, status: new, doc: "Vertical accent rule at the left."}
+  quote.indent: {type: "scale:indent", default: md, status: impl}
+  quote.style:  {type: enum, values: [normal, italic], default: normal, status: impl}
+  quote.color:  {type: role, default: text, status: impl}
+  quote.rule:   {type: bool, default: false, status: impl, doc: "Vertical accent rule at the left."}
 
   # -- footnotes -------------------------------------------------------------
   footnotes.size:      {type: num, min: 0.6, max: 1.0, default: 0.8, status: new}
