@@ -33,94 +33,54 @@
 
 <div id="testing-docdesigner" class="section level1">
 
-<p>Thanks for taking a look. This is a pre-release pilot: the rendering engine is solid, the <em>design</em> layer is deliberately unfinished. <strong>Please read <a href="#what-not-to-report">What not to report</a> first</strong> — it will save you writing up three or four things we already know about.</p>
-<p>Version 1.0.9. Fifteen minutes gets you through “Setup” and the first task.</p>
-<hr><div class="section level2">
+<p>Alpha, version 1.0.9. Thank you for taking a look.</p>
+<p><strong>The full instructions are in <code>alpha-testing-instructions.pdf</code></strong>, sent along with the link to this repository. This file is the short version, so nothing is lost if the PDF isn’t to hand.</p>
+<div class="section level2">
+<h2 id="what-were-testing">What we’re testing<a class="anchor" aria-label="anchor" href="#what-were-testing"></a></h2>
+<p>Two questions, and only two:</p>
+<ol style="list-style-type: decimal"><li>
+<strong>Does it work</strong> — on your machine, on your documents?</li>
+<li>
+<strong>Is it easy to learn</strong> — where did you get stuck, what did you have to look up, what did you expect to find and not find?</li>
+</ol><p>The <em>visual design</em> of the styles is deliberately unfinished and is <strong>not</strong> what this round is about. See “What we are not asking about” below.</p>
+</div>
+<div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a></h2>
-<p>You need R, a LaTeX installation with <code>xelatex</code>, and pandoc. RStudio bundles pandoc; TinyTeX or MiKTeX both work for LaTeX.</p>
-<p>You will have been sent <strong><code>docdesigner_1.0.9.tar.gz</code></strong>. Install it from wherever you saved it — there is no CRAN or GitHub install, so the path is the only fiddly part:</p>
+<p>You need R, a LaTeX installation providing <code>xelatex</code>, and pandoc. If you have knitted an R Markdown document to PDF before, you have all three.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"~/Downloads/docdesigner_1.0.9.tar.gz"</span>,</span>
-<span>                 repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jncohen.github.io/docdesigner/">docdesigner</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jncohen/docdesigner"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jncohen.github.io/docdesigner/">docdesigner</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/designer_check.html">designer_check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># reports anything missing from the toolchain</span></span>
 <span><span class="fu"><a href="reference/designer_styles.html">designer_styles</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># the twelve styles, with their sets</span></span></code></pre></div>
-<p>On Windows use forward slashes or doubled backslashes in that path (<code>"C:/Users/you/Downloads/docdesigner_1.0.9.tar.gz"</code>). If R reports that the package is not available, it is nearly always the path rather than the file.</p>
-<p>The tarball carries everything — engine, all twelve styles, fonts. There is nothing else to download.</p>
-<p>If <code><a href="reference/designer_check.html">designer_check()</a></code> complains, fix that before anything else — almost every confusing failure downstream is a missing <code>xelatex</code> or a missing font.</p>
-<hr></div>
+<p>Fix anything <code><a href="reference/designer_check.html">designer_check()</a></code> flags before going further. Please tell us how this step went even if it went fine — installation is the step most likely to lose a new user, and the one we can least easily test ourselves.</p>
+</div>
 <div class="section level2">
 <h2 id="what-to-try">What to try<a class="anchor" aria-label="anchor" href="#what-to-try"></a></h2>
-<p>Work through as many as you have appetite for. Tasks 1 and 2 are the ones we most need eyes on.</p>
-<div class="section level3">
-<h3 id="id_1-render-one-document-in-several-styles">1. Render one document in several styles<a class="anchor" aria-label="anchor" href="#id_1-render-one-document-in-several-styles"></a></h3>
-<p>The core promise is <em>same content, any style</em>. Take a real paper of your own — one with sections, a table, a figure, footnotes and a bibliography — and render it under three or four styles:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">  docdesigner:</span><span class="fu">:pdf</span><span class="kw">:</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">    </span><span class="fu">style</span><span class="kw">:</span><span class="at"> minimal</span><span class="co">      # then nature, sociology, humanities, ...</span></span></code></pre></div>
-<p>We want to know: does your content survive the switch? Tables that overflow the measure, figures that land in the wrong column, citations that stop resolving, headings that collide with the running head — that is the interesting failure class, and it is the one we cannot find by rendering our own specimen.</p>
-<p><strong><code>nature</code> and <code>economist</code> are two-column.</strong> Wide tables and code blocks are the usual casualty there; we would like to know how badly.</p>
-</div>
-<div class="section level3">
-<h3 id="id_2-judge-a-style-against-its-model">2. Judge a style against its model<a class="anchor" aria-label="anchor" href="#id_2-judge-a-style-against-its-model"></a></h3>
-<p>Every style imitates a real publication. <code><a href="reference/designer_specimens.html">designer_specimens()</a></code> renders our specimen document in each:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/designer_specimens.html">designer_specimens</a></span><span class="op">(</span>styles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sociology"</span>, <span class="st">"demography"</span>, <span class="st">"nature"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Look at one whose real-world model you know well — if you publish in demography journals, look at <code>demography</code>. Tell us where it reads <em>wrong</em> to a practised eye. “The section heads are too heavy”, “that gap belongs above the author, not below”, “no journal in this field numbers sections like that” is exactly the feedback we want. Be specific about which element.</p>
-</div>
-<div class="section level3">
-<h3 id="id_3-build-a-style-of-your-own">3. Build a style of your own<a class="anchor" aria-label="anchor" href="#id_3-build-a-style-of-your-own"></a></h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/designer_new_style.html">designer_new_style</a></span><span class="op">(</span><span class="st">"my-style"</span>, from <span class="op">=</span> <span class="st">"minimal"</span>, path <span class="op">=</span> <span class="st">"~/styles"</span><span class="op">)</span></span></code></pre></div>
-<p>Edit <code>format.yml</code>, then:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/designer_validate_style.html">designer_validate_style</a></span><span class="op">(</span><span class="st">"~/styles/my-style"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/designer_specimens.html">designer_specimens</a></span><span class="op">(</span>styles <span class="op">=</span> <span class="st">"my-style"</span><span class="op">)</span></span></code></pre></div>
-<p>We want to know whether the token vocabulary lets you express what you had in mind, and whether the validator’s messages actually tell you how to fix things. <strong>A token you went looking for and could not find is a finding</strong> — please report those.</p>
-</div>
-<div class="section level3">
-<h3 id="id_4-install-a-style-set-from-github">4. Install a style set from GitHub<a class="anchor" aria-label="anchor" href="#id_4-install-a-style-set-from-github"></a></h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/designer_install_set.html">designer_install_set</a></span><span class="op">(</span><span class="st">"academic"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/designer_sets.html">designer_sets</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Sets install to your R user data directory and survive package updates.</p>
-<hr></div>
-</div>
-<div class="section level2">
-<h2 id="what-not-to-report">What not to report<a class="anchor" aria-label="anchor" href="#what-not-to-report"></a></h2>
-<p>These are known, deliberate, and already scheduled. Reporting them costs you time and tells us nothing new.</p>
 <ol style="list-style-type: decimal"><li>
-<strong>Every style renders a plain title block.</strong> <code>title.layout</code> accepts five archetypes (<code>plain</code>, <code>essay</code>, <code>journal</code>, <code>report</code>, <code>masthead</code>) and the engine currently ignores all of them, because <code><a href="reference/pdf.html">pdf()</a></code> does not yet use the bundled LaTeX template. No style has a real title <em>page</em>.</li>
+<strong>Render something.</strong> Any small R Markdown document, with <code>output: docdesigner::pdf: {style: minimal}</code>. One line names the style; that is the whole interface.</li>
 <li>
-<strong><code>economist</code> and <code>government</code> do not look like The Economist or a federal statistical bulletin.</strong> Both depend on full-bleed coloured masthead bands and boxed panels — page furniture the token vocabulary cannot yet express. They are known to be the two weakest styles.</li>
+<strong>Render a real document of your own</strong> — the messier the better — then switch the <code>style:</code> line three or four times. <em>This is the one that matters.</em> We want to know whether your content survives the switch: tables overflowing, figures in the wrong column, citations not resolving, code running off the edge. <code>nature</code> and <code>economist</code> are two-column, where wide content suffers most.</li>
 <li>
-<strong><code>policy</code> is an imitation and is being redesigned</strong> from scratch as a token-native design.</li>
+<strong>Install a style set</strong>: <code>designer_install_set("academic")</code>.</li>
+</ol></div>
+<div class="section level2">
+<h2 id="what-we-are-not-asking-about">What we are not asking about<a class="anchor" aria-label="anchor" href="#what-we-are-not-asking-about"></a></h2>
+<p>Known, deliberate, already scheduled — reporting these costs you time and tells us nothing new:</p>
+<ol style="list-style-type: decimal"><li>Every style renders a plain title block; no style has a real title <em>page</em> yet.</li>
 <li>
-<strong>Validation reports “not yet implemented” tokens.</strong> That list is accurate and expected: those tokens are declared and schema-valid but the engine ignores them. It is a roadmap, not a fault.</li>
+<code>economist</code> and <code>government</code> do not look like their models — they need page furniture the engine cannot yet express.</li>
 <li>
-<strong>Fonts substitute.</strong> Proprietary faces are replaced by bundled open ones — XITS for Times, EB Garamond for oldstyle, Source Serif 4 for various. The substitution is intentional; that a style is “not quite the real typeface” is not a bug. A substitution that looks <em>wrong at the size used</em> is.</li>
-<li>
-<strong>CRAN.</strong> Not submitted, deliberately.</li>
-</ol><hr></div>
+<code>policy</code> is being redesigned from scratch.</li>
+<li>Validation reports “not yet implemented” tokens. That is a roadmap, not a fault.</li>
+<li>Fonts substitute (XITS for Times, EB Garamond for oldstyle, Source Serif 4 for various). Intentional.</li>
+</ol><p>Do tell us a style looks <strong>broken</strong>. Don’t tell us it looks <strong>unfinished</strong> — we know, and that’s a later round.</p>
+</div>
 <div class="section level2">
 <h2 id="how-to-report">How to report<a class="anchor" aria-label="anchor" href="#how-to-report"></a></h2>
-<p>Email <strong><a href="mailto:josephncohen@gmail.com" class="email">josephncohen@gmail.com</a></strong>, one message per problem, with <code>docdesigner alpha</code> somewhere in the subject line. What makes a report actionable, in rough order of value:</p>
-<ol style="list-style-type: decimal"><li>
-<strong>Attach the PDF</strong>, or a screenshot of the part that is wrong. We cannot judge a layout complaint from prose.</li>
-<li>
-<strong>Which style</strong>, and whether other styles do the same thing. “<code>sociology</code> only” and “all twelve” are different bugs.</li>
-<li>
-<strong>A minimal <code>.Rmd</code> that reproduces it.</strong> If your document is confidential, cut it down until it is not — that usually localises the problem anyway.</li>
-<li>
-<strong>The output of <code><a href="reference/designer_check.html">designer_check()</a></code></strong>, and <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code>.</li>
-<li>
-<strong>What you expected instead.</strong> For fidelity complaints, name the publication and, if you can, point at a page of it.</li>
-</ol><p>For a fidelity judgement — “this doesn’t look like the real thing” — the single most useful thing you can send is a side-by-side: our specimen next to a real article from that publication, with the difference circled.</p>
-<div class="section level3">
-<h3 id="a-note-on-what-counts-as-evidence">A note on what counts as evidence<a class="anchor" aria-label="anchor" href="#a-note-on-what-counts-as-evidence"></a></h3>
-<p>We check tokens against the rendered page, not against the mockup, so a style can pass every automated check and still look wrong. That gap is exactly what we need a human for. If it looks wrong on the page, it is wrong, regardless of what the tooling says — please report it even if you suspect it is intentional.</p>
-</div>
+<p>Email <strong><a href="mailto:josephncohen@gmail.com" class="email">josephncohen@gmail.com</a></strong>, one message per problem, <code>docdesigner alpha</code> in the subject line. Most useful, in order: the PDF or a screenshot; which style, and whether others do the same; a small <code>.Rmd</code> that reproduces it; the output of <code><a href="reference/designer_check.html">designer_check()</a></code> and <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code>; what you expected instead.</p>
+<p>If something failed to install, the full console output including the error is usually enough on its own.</p>
 </div>
 </div>
 
