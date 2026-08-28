@@ -436,6 +436,9 @@ dd_preamble <- function(s) {
       runin = paste0("\\noindent{\\scshape ", lab, "}\\hspace{0.7em}\\ignorespaces"),
       none  = "\\noindent\\ignorespaces",
       heading_lab)
+    # title.abstract.rule draws a hairline under the block, which is how the
+    # demography model separates the abstract from the body.
+    arule_tex <- if (isTRUE(ab$rule)) "\\par\\vskip0.6em\\hrule height0.4pt\\vskip0.2em" else ""
     body_fmt <- paste0("\\fontsize{", asize, "}{", round(asize * 1.4, 1), "}\\selectfont",
                        awt, "\\color{", ab$color %||% "text", "}%")
     if (isTRUE(ab$box)) {
@@ -447,13 +450,13 @@ dd_preamble <- function(s) {
           ",colframe=rule,arc=1pt,left=12pt,right=12pt,top=9pt,bottom=9pt]%")
       add("  ", body_fmt)
       add("  ", lab_tex)
-      add("}{\\end{tcolorbox}}")
+      add("}{\\end{tcolorbox}", arule_tex, "}")
     } else {
       add("\\renewenvironment{abstract}{%")
       add("  \\list{}{\\leftmargin=", aind, "\\rightmargin=", aind, "}\\item\\relax")
       add("  ", body_fmt)
       add("  ", lab_tex)
-      add("}{\\endlist}")
+      add("}{", arule_tex, "\\endlist}")
     }
   }
 
@@ -461,6 +464,48 @@ dd_preamble <- function(s) {
   add("\\postauthor{\\end{", align_env, "}}")
   add("\\predate{\\begin{", align_env, "}\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
+
+  # title.case / title.byline.case.
+  #
+  # These transform the title/author AS THEY ARE SET, by wrapping the \\title
+  # and \\author commands, rather than by rewriting \\\\title afterwards. That is
+  # not a stylistic choice -- rewriting \\\\title uppercases the SUBTITLE too,
+  # because pandoc appends the subtitle to \\\\title (see the \\subtitle block
+  # above) and the engine colours it \\color{muted}. Uppercasing that block asks
+  # xcolor for a colour named MUTED and the build dies at \\maketitle. Wrapping
+  # the setter sees only the clean title text. The engine already had to solve
+  # this once, which is what \\ddrtitle upstream is for.
+  #
+  # This works only because rmarkdown injects this preamble BEFORE pandoc's
+  # \\title{}/\\author{} lines, so the redefinition is in place when they run.
+  case_patch <- function(target, case) {
+    if (is.null(case) || identical(case, "none")) return(invisible(NULL))
+    inner <- switch(case,
+      upper     = "\\MakeTextUppercase{#1}",
+      # \\textsc alone, not \\textsc{\\MakeTextLowercase{..}} as the heading code
+      # does. An author field carries more than a name -- sociology's is
+      # "Joseph N. Cohen \\\\ \\emph{Meridian University}" -- and lowercasing the
+      # lot rendered the affiliation as "meridian university", which reads as
+      # a typo. Small caps over the text as written keeps proper nouns
+      # capitalised, which is the conventional byline look anyway.
+      smallcaps = "\\textsc{#1}",
+      NULL)
+    if (is.null(inner)) return(invisible(NULL))
+    saved <- paste0("\\dd@set", target)
+    add("\\usepackage{textcase}")
+    add("\\makeatletter\\let", saved, "\\", target,
+        "\\renewcommand{\\", target, "}[1]{", saved, "{", inner, "}}\\makeatother")
+  }
+  case_patch("title",  ti$case)
+  case_patch("author", ti$byline$case)
+
+  # title.date.show: false swallows the date block into a discarded vbox, the
+  # same lever the abstract uses. Clearing \\date{} instead would also empty
+  # \\thedate, which running heads may still want.
+  if (identical(ti$date$show, FALSE)) {
+    add("\\predate{\\setbox0\\vbox\\bgroup}")
+    add("\\postdate{\\egroup}")
+  }
 
   if (isTRUE(ty$microtype)) add("\\usepackage{microtype}")
   add("\\usepackage{booktabs}")
