@@ -610,10 +610,10 @@ dd_preamble <- function(s) {
   fn <- s$footnotes
   if (!is.null(fn$size)) {
     fsz <- round(base * as.numeric(fn$size), 1)
-    # \\setfontsize is the documented way to redefine a size command. This
+    # \@setfontsize is the documented way to redefine a size command. This
     # also reaches anything else using \footnotesize, which in practice is
     # little now that captions carry their own size token.
-    add("\\makeatletter\\renewcommand\\footnotesize{\\\\setfontsize\\footnotesize{",
+    add("\\makeatletter\\renewcommand\\footnotesize{\\@setfontsize\\footnotesize{",
         fsz, "}{", round(fsz * 1.2, 1), "}}\\makeatother")
   }
   if (identical(fn$numbering, "symbol")) {
@@ -662,7 +662,14 @@ dd_preamble <- function(s) {
     !identical(s$header_footer$header[[p]] %||% "none", "none")
   }, logical(1)))
   if (hdr_on) {
-    add("\\setlength{\\headheight}{14pt}\\addtolength{\\topmargin}{-2pt}")
+    # 14pt was not enough. Several styles set a TWO-line running head (author
+    # over affiliation), and fancyhdr then asks for ~21pt and overprints until
+    # it gets it. Scaling with the base size covers both one- and two-line
+    # heads across the 8-12pt range the schema allows; @topmargin absorbs the
+    # difference so the text block does not move.
+    hh <- max(14, round(base * 2.4, 1))
+    add("\\setlength{\\headheight}{", hh, "pt}",
+        "\\addtolength{\\topmargin}{", -(hh - 12), "pt}")
   }
   # titling's \thetitle/\theauthor stay live outside \maketitle. \rightmark is
   # the article-class running mark \sectionmark updates (article has no

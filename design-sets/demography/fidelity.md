@@ -45,7 +45,7 @@ fonts, and columns but not heading case.
   June 2026" across the top of page 1, and the "Article · pp. 411–438" line. No
   `journaltitle`/`issue`/`volume` running-head enum values exist, and there is
   no per-first-page running-head control (`header_footer.first_page` is
-  `status: new`). Same class of gap as `_inbox/PACKAGE-CHANGES.md`'s Economist
+  `status: new`). Same class of gap as `planning/PACKAGE-CHANGES.md`'s Economist
   running-header band. The continuation-page head (page · surname) is applied
   throughout as the approximation.
 - **True drop-folio** (folio bottom-centre on the opener, migrating to the top

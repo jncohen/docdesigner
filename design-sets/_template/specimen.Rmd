@@ -30,7 +30,11 @@ This paragraph establishes the body text. It should be long enough to show the
 measure, the leading, and how the typeface handles ordinary running prose at
 its intended reading size. Notice the treatment of *emphasis*, **strong
 emphasis**, and `inline code`, each of which draws on a different face of the
-type family.
+type family. A footnote hangs off this sentence,[^scale] so the footnote rule,
+size and numbering can be judged in place.
+
+[^scale]: Footnotes exercise `footnotes.size` and `footnotes.numbering`.
+    A second line confirms the indent of a wrapped footnote.
 
 A second paragraph confirms the paragraph spacing token and whether the style
 indents first lines or separates paragraphs with vertical space. The two
@@ -85,6 +89,8 @@ measure, and in two-column styles it must promote itself to a spanning float.
 | Middle   |     \$145,200 |           8.1% |             +6.2% |
 | Fourth   |     \$347,800 |          19.4% |             +5.5% |
 | Top      |   \$1,589,300 |          69.6% |            +11.3% |
+
+: Median household net worth by quintile, 2022.
 
 ## A figure
 
