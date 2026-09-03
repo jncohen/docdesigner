@@ -9,7 +9,7 @@ tokens; the engine turns those tokens into LaTeX. Styles are
 self-contained and independently upgradeable, and sets can be installed
 from GitHub.
 
-> **Status: 0.9.0, alpha.** The engine and the style-set format are
+> **Status: 0.9.1, alpha.** The engine and the style-set format are
 > working and tested: `R CMD check` is clean, all twelve styles validate
 > and render, and 84 token-to-page checks pass. The design layer is not
 > finished — see [Known limitations](#known-limitations) before judging

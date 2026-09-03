@@ -1,5 +1,40 @@
 # Changelog
 
+## docdesigner 0.9.1
+
+The design layer, as far as it can go without the template port.
+
+- **Tier 1 complete.** Every remaining token the shipped styles declared
+  and the engine ignored now renders: figure caption position (via
+  `floatrow`), the opening drop cap (via a Lua filter), code line
+  numbers, and the `accent2`/`code_bg` colour roles. Declared-but-inert
+  tokens are down from 28 to 6, and the schema from 102 implemented to
+  134.
+- **The masthead band.** `header_footer.header.{fill,color}` draw a
+  colour band across the full paper width, not just the text block – the
+  Economist red flag and the government navy masthead. These are the two
+  styles that did not resemble their models, and this is the furniture
+  they were missing.
+- **Unhighlighted code no longer escapes its column.** `vset` governs
+  fancyvrb environments only, and `code.highlight: none` makes pandoc
+  emit LaTeX’s built-in `verbatim`, which ignored line breaking
+  entirely. Ten of the twelve styles set `highlight: none`; it was
+  visible only in economist, whose two columns are narrow enough that
+  the overflow landed on the neighbouring column rather than in the
+  margin.
+- Running heads no longer overprint: `\headheight` scales with the base
+  size, which a two-line head needs and the previous hardcoded 14pt
+  could not hold.
+- `footnotes.size` emitted a malformed macro and would break any
+  document with a footnote. No specimen had one, so it rendered clean
+  for two commits.
+- The specimen gained a captioned table and a footnote, which is what
+  exposed the two defects above.
+
+Still incomplete, by design: no style has a true title *page* (that
+needs the LaTeX template port), and `policy` awaits its original
+redesign.
+
 ## docdesigner 0.9.0
 
 **Renumbered.** Versions previously tagged 1.0.x were pre-release
