@@ -531,6 +531,27 @@ dd_preamble <- function(s) {
   add("\\usepackage{fvextra}")
   add("\\fvset{breaklines=true,breakanywhere=true,breaksymbolleft={}",
       if (isTRUE(s$code$line_numbers)) ",numbers=left,numbersep=6pt" else "", "}")
+  # \\fvset governs FANCYVRB environments only. With code.highlight: none pandoc
+  # emits LaTeX's built-in `verbatim`, which is not one of them and ignores
+  # breaklines entirely -- so long code lines simply ran off the measure. Ten of
+  # the twelve styles set highlight: none, but it was invisible until economist,
+  # whose two columns are narrow enough that the overflow landed on top of the
+  # neighbouring column instead of quietly in the margin.
+  #
+  # Recasting `verbatim` as a fancyvrb Verbatim brings it under \\fvset. Options
+  # are left empty on purpose so it inherits whatever \\fvset just set, rather
+  # than duplicating the list and letting the two drift.
+  # Options are stated explicitly rather than left empty to inherit \\fvset:
+  # the inheriting form did not take, and an explicit list is one less thing
+  # to be wrong about.
+  # Deferred to \\AtBeginDocument. The same command in the preamble compiled
+  # fine and did nothing: something loaded after our header-includes was
+  # redefining `verbatim` again afterwards. Running at begin-document puts this
+  # last, and it is declared BEFORE the tcolorbox wrapper below so the recast
+  # happens before the panel wraps it. Verified in isolation first -- the
+  # technique itself was never the problem.
+  add("\\AtBeginDocument{\\RecustomVerbatimEnvironment{verbatim}{Verbatim}",
+      "{breaklines=true,breakanywhere=true,breaksymbolleft={}}}")
 
   # --- Code panel: tint / border behind code blocks -------------------------
   # tcolorbox's \tcolorboxenvironment wraps an existing environment; guarded by
