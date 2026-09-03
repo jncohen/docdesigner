@@ -2,9 +2,10 @@
 
 Alpha, version 0.9.1. Thank you for taking a look.
 
-**The full instructions are in `alpha-testing-instructions.pdf`**, sent along
-with the link to this repository. This file is the short version, so nothing is
-lost if the PDF isn't to hand.
+**The full instructions are in
+[alpha-testing-instructions.pdf](alpha-testing-instructions.pdf)**, in this
+repository — click it above, then use the download button. This file is the
+short version, so nothing is lost if you would rather not open the PDF.
 
 ## What we're testing
 
