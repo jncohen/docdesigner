@@ -1,6 +1,6 @@
 Package: docdesigner
 Title: Publication-Inspired Templates for Research PDFs and Slides
-Version: 0.9.0
+Version: 0.9.1
 Authors@R: person("Joseph N.", "Cohen", role = c("aut", "cre"),
     email = "joseph.cohen@qc.cuny.edu")
 Author: Joseph N. Cohen
