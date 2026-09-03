@@ -14,8 +14,9 @@ from GitHub.
 > and render, and 84 token-to-page checks pass. The design layer is not
 > finished — see [Known limitations](#known-limitations) before judging
 > output quality. If you are evaluating this for us, start with
-> `TESTING.md` — it is sent alongside the tarball, and is also in the
-> repository root.
+> [alpha-testing-instructions.pdf](https://jncohen.github.io/docdesigner/alpha-testing-instructions.pdf),
+> or [TESTING.md](https://jncohen.github.io/docdesigner/TESTING.md) for
+> the short version.
 
 ## Outputs
 
