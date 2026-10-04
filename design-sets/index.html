@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docdesigner — Style Gallery</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    font-family: Georgia, "Source Serif 4", serif;
+    margin: 0; padding: 0; background: #faf9f7; color: #1a1a1a;
+  }
+  header { max-width: 960px; margin: 0 auto; padding: 3rem 1.5rem 1.5rem; }
+  header h1 { font-size: 2rem; margin: 0 0 .4rem; letter-spacing: -.01em; }
+  header p { color: #555; font-size: 1.05rem; line-height: 1.5; max-width: 62ch; }
+  main { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  .set-heading {
+    font-size: .85rem; text-transform: uppercase; letter-spacing: .08em;
+    color: #777; margin: 2.5rem 0 1rem; border-bottom: 1px solid #ddd; padding-bottom: .4rem;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+  .card {
+    border: 1px solid #e2ded8; border-radius: 6px; overflow: hidden;
+    background: #fff; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: box-shadow .15s ease;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .swatch { height: 8px; }
+  .card-body { padding: 1rem 1.1rem 1.2rem; }
+  .card-body h3 { margin: 0 0 .3rem; font-size: 1.15rem; }
+  .card-body p { margin: 0 0 .6rem; font-size: .92rem; color: #555; line-height: 1.4; }
+  .card-body .meta { font-size: .78rem; color: #999; font-family: ui-monospace, Consolas, monospace; }
+  .placeholder-note {
+    font-size: .78rem; color: #a15c00; background: #fff6e8; border: 1px solid #f0dcb0;
+    border-radius: 4px; padding: .3rem .6rem; margin-top: .6rem; display: inline-block;
+  }
+  footer { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; color: #888; font-size: .85rem; }
+  footer a { color: #555; }
+</style>
+</head>
+<body>
+<header>
+  <h1>docdesigner — Style Gallery</h1>
+  <p>Publication-inspired, token-driven PDF styles for R Markdown. Ten
+  built-in styles across two sets — <code>academic</code> and
+  <code>public</code> — each independently installable and customizable.
+  Click a style to view a full specimen PDF.</p>
+</header>
+<main>
+
+  <div class="set-heading">Academic — journal- and preprint-inspired styles for scholarly articles</div>
+  <div class="grid">
+    <a class="card" href="./demography/specimen.pdf">
+      <div class="swatch" style="background:#000000"></div>
+      <div class="card-body">
+        <h3>Demography</h3>
+        <p>Demography / Social Forces social-science article style</p>
+        <div class="meta">academic · #000000</div>
+      </div>
+    </a>
+    <a class="card" href="./methods/specimen.pdf">
+      <div class="swatch" style="background:#003DA5"></div>
+      <div class="card-body">
+        <h3>Methods</h3>
+        <p>Computational social science and methods journals</p>
+        <div class="meta">academic · #003DA5</div>
+      </div>
+    </a>
+    <a class="card" href="./minimal/specimen.pdf">
+      <div class="swatch" style="background:#333333"></div>
+      <div class="card-body">
+        <h3>Minimal</h3>
+        <p>Clean arXiv / modern university preprint style</p>
+        <div class="meta">academic · #333333</div>
+      </div>
+    </a>
+    <a class="card" href="./nature/specimen.pdf">
+      <div class="swatch" style="background:#2F6F8F"></div>
+      <div class="card-body">
+        <h3>Nature</h3>
+        <p>Nature / Science scientific article style (two-column)</p>
+        <div class="meta">academic · #2F6F8F</div>
+      </div>
+    </a>
+    <a class="card" href="./ssrn/specimen.pdf">
+      <div class="swatch" style="background:#000000"></div>
+      <div class="card-body">
+        <h3>SSRN</h3>
+        <p>SSRN / NBER working paper style</p>
+        <div class="meta">academic · #000000</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="set-heading">Public — report and public-scholarship styles for policy and general audiences</div>
+  <div class="grid">
+    <a class="card" href="./atlantic/specimen.pdf">
+      <div class="swatch" style="background:#8F1D14"></div>
+      <div class="card-body">
+        <h3>Atlantic</h3>
+        <p>The Atlantic / long-form public scholarship</p>
+        <div class="meta">public · #8F1D14</div>
+      </div>
+    </a>
+    <a class="card" href="./economist/specimen.pdf">
+      <div class="swatch" style="background:#B21F24"></div>
+      <div class="card-body">
+        <h3>Economist</h3>
+        <p>The Economist and public data journalism</p>
+        <div class="meta">public · #B21F24</div>
+      </div>
+    </a>
+    <a class="card" href="./government/specimen.pdf">
+      <div class="swatch" style="background:#2F4F3E"></div>
+      <div class="card-body">
+        <h3>Government</h3>
+        <p>Census / Federal Reserve / statistical bulletin style</p>
+        <div class="meta">public · #2F4F3E</div>
+      </div>
+    </a>
+    <a class="card" href="./humanities/specimen.pdf">
+      <div class="swatch" style="background:#000000"></div>
+      <div class="card-body">
+        <h3>Humanities</h3>
+        <p>Critical Inquiry / university press essay style</p>
+        <div class="meta">public · #000000</div>
+      </div>
+    </a>
+    <a class="card" href="./policy/specimen.pdf">
+      <div class="swatch" style="background:#006A71"></div>
+      <div class="card-body">
+        <h3>Policy</h3>
+        <p>Brookings / Urban Institute / OECD policy report style</p>
+        <div class="meta">public · #006A71</div>
+      </div>
+    </a>
+  </div>
+
+  <p class="placeholder-note">
+    These cards link to ./&lt;style&gt;/specimen.pdf, which do not
+    exist yet in this session — render them locally first (see
+    README.md).
+    Before publishing, replace each link with the hosted PDF URL (GitHub
+    release asset or a Commons media-library upload) and consider adding a
+    real page-1 screenshot per card in place of the flat colour swatch. See
+    README.md in this folder for the full publishing checklist.
+  </p>
+
+</main>
+<footer>
+  docdesigner is developed by Joseph N. Cohen. Source and style sets on
+  GitHub (link TBD — see README.md, "GitHub hosting").
+</footer>
+</body>
+</html>

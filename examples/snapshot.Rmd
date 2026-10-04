@@ -1,0 +1,43 @@
+---
+title: "Finding-Forward Headline with a Number or Clear Comparison"
+author: "Your Name"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+institution: "Household Finance Working Group"
+snapshot_label: "Empirical Snapshot"
+snapshot_feature: "figures/featured-visualization.png"
+snapshot_feature_caption: "One-sentence caption naming the measure, population, data source, and year."
+# Build featured visualizations at 1080 x 1440 px (3:4 portrait).
+
+snapshot_byline_name: "Your Name"
+snapshot_byline_title: "Title or Role"
+snapshot_byline_affiliation: "Household Finance Working Group"
+snapshot_byline_link: "https://hhfinance.commons.gc.cuny.edu"
+snapshot_byline_bio: "One-line bio describing the author's relevant expertise."
+# snapshot_author_image: "images/author.png"
+# snapshot_code_url: "https://github.com/your-org/your-repo"
+
+snapshot_license: "cc-by-nc-sa-4.0"
+snapshot_data_note: "Data: 2022 Survey of Consumer Finances. For more information, visit: hhfinance.commons.gc.cuny.edu"
+
+abstract: |
+  Write the lead in one short paragraph: the finding, its magnitude, who is affected, and why it matters.
+
+output:
+  docdesigner::snapshot:
+    html: true
+---
+
+<!-- Snapshots are one-page public documents. Keep the writing tight, plain, and finding-centered. No subtitle, no methods section, no abstract heading. -->
+
+# Context
+
+<!-- 150-200 words. Name the data source, year, sample, and variables in plain language. -->
+
+# Finding
+
+<!-- 400-500 words. Explain the main result with concrete numbers and one visual. The featured visualization is set in YAML. -->
+
+# Implication
+
+<!-- 150-200 words. State what the finding suggests for practice, policy, or future research without overclaiming. -->

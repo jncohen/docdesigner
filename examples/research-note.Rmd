@@ -1,0 +1,50 @@
+---
+title: "Descriptive Title Naming the Pattern and Data Source"
+subtitle: "Optional short scope statement"
+author:
+  - name: "Your Name"
+    dept: "Department of Sociology"
+    inst: "Queens College, City University of New York"
+    email: "you@example.edu"
+    web: "https://example.edu"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+institution: "Household Finance Working Group"
+series: "Research Note"
+surname: "Surname"
+runningtitle: "Short Running Title"
+
+abstract: |
+  Write five sentences: problem motivation, data and sample, analytic approach, main finding, and scope statement.
+
+acknowledgements: |
+  Optional. Funding, data access, and comments.
+
+output:
+  docdesigner::pdf:
+    style: methods
+---
+
+<!-- Research notes document one bounded empirical pattern. Avoid a theory section, literature review, or separate conclusion. -->
+
+# Introduction
+
+<!-- 400-500 words. Establish the exact empirical gap, state the documentary contribution, and preview the structure. -->
+
+# Data and Methods
+
+<!-- 700-900 words. Name the data source, sample, weights, variables, and analytic approach. Justify only consequential design choices. -->
+
+# Results
+
+<!-- 1,200-1,500 words. Present one primary finding and, at most, one supporting analysis. Anchor the reader with a table or figure. -->
+
+```{r results-placeholder, echo=FALSE, message=FALSE, warning=FALSE}
+# Add a table or figure chunk here.
+```
+
+# Discussion
+
+<!-- 400-500 words. State what the finding establishes, what it does not establish, limitations, and the next question it raises. -->
+
+# References

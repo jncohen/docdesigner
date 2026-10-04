@@ -1,0 +1,11 @@
+---
+title: "Article Title"
+author: "Your Name"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  docdesigner::html
+---
+
+# Introduction
+
+Start writing here.

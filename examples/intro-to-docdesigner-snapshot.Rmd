@@ -1,0 +1,98 @@
+---
+title: "The docdesigner Template Turns R Markdown Into Publishable Lab Documents"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+author:
+  - name: "Household Finance Lab"
+
+institution: "Household Finance Lab"
+
+surname: "docdesigner"
+runningtitle: "docdesigner Template Snapshot"
+
+fontset: docdesigner
+fontpath: "../inst/fonts/"
+accent: 0066CC
+
+snapshot_label: "Empirical Snapshot"
+snapshot_abstract_label: "Lead"
+snapshot_feature: "intro-to-docdesigner-snapshot-feature.png"
+snapshot_feature_caption: |
+  Example rendering workflow for the docdesigner template. The values are synthetic
+  and are used only to test Snapshot layout, figure placement, and HTML
+  companion output.
+snapshot_byline_name: "Ada Template"
+snapshot_byline_title: "Research Associate, Household Finance Lab"
+snapshot_byline_affiliation: "Household Finance Lab"
+snapshot_byline_link: "hhfinance.commons.gc.cuny.edu"
+snapshot_byline_bio: "Writes public-facing notes on reproducible research workflows."
+snapshot_code_url: "https://github.com/jncohen/docdesigner-template"
+snapshot_license: "cc-by-nc-sa-4.0"
+snapshot_data_note: "Data: synthetic template test data. For more information, visit: hhfinance.commons.gc.cuny.edu"
+
+abstract: |
+  Students can write in ordinary R Markdown and produce polished PDFs and plain HTML from one source.
+
+output:
+  docdesigner::snapshot:
+    html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 4.5,
+  fig.height = 6
+)
+
+png("intro-to-docdesigner-snapshot-feature.png", width = 1080, height = 1440, res = 180)
+par(mar = c(3.5, 6.2, 2.5, 1.5), bg = "white")
+values <- c(1, 2, 4, 5)
+names(values) <- c("Write", "Knit", "PDF", "HTML")
+bars <- barplot(
+  values,
+  horiz = TRUE,
+  col = c("#B8C7D9", "#8FB3D9", "#0066CC", "#004C99"),
+  border = NA,
+  las = 1,
+  xlim = c(0, 5.8),
+  xlab = "Workflow support",
+  cex.axis = 1.1,
+  cex.lab = 1.15,
+  cex.names = 1.2,
+  space = 0.45
+)
+text(values + 0.18, bars, labels = values, cex = 1.35, font = 2, col = "#003DA5")
+title("Template Output Pipeline", adj = 0, cex.main = 1.55, font.main = 2)
+dev.off()
+```
+
+# Context
+
+The docdesigner template is designed for students and research assistants who already know the basics of R Markdown but do not know TeX. They can write text, code, figures, and tables in one `.Rmd` file, then let the template handle the PDF design.
+
+This matters because the Lab needs consistent output across working papers, research notes, Snapshots, and blogposts. Without a template, every student has to make dozens of small design decisions. With the template, those decisions live in one shared system.
+
+Lorem ipsum style filler: Curabitur households vitae augue at luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer porttitor, arcu vitae convallis porta, sem neque posuere lectus, vitae dignissim neque nibh non sapien.
+
+# Finding
+
+The core workflow is simple: write once in RStudio, then knit into multiple publication formats. The PDF uses the docdesigner LaTeX template. The HTML companion uses conservative markup that can be pasted into the CUNY Academic Commons editor without depending on special plugins.
+
+The Snapshot format is built for short, visual-forward public communication. Its first page uses a compact header, a lead paragraph, and one featured visualization. That makes it different from a standard report, which uses a fuller title page and more traditional academic structure.
+
+Nullam non lacus sed lorem sagittis bibendum. Aenean accumsan, nibh in tristique dignissim, enim massa tempor lectus, non porta lorem est nec justo. Sed vitae sem at ante varius facilisis, and the text continues here only to show how a fully built Snapshot fills the page.
+
+# Implication
+
+For students, the practical lesson is that TeX is part of the production system, not something they need to edit directly. Their job is to write clear R Markdown, provide accurate YAML metadata, make readable figures, and inspect the knitted output.
+
+For the Lab, the benefit is standardization. A research assistant can produce a PDF, an HTML paste file, an image asset folder, and a publishing checklist from the same source document.
+
+Praesent euismod, lorem ipsum in spirit if not in content, gives this inspection file enough prose to test the page rhythm. Donec vitae nulla at mi dictum rhoncus; vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
+
+# Production note
+
+This synthetic manual inspection file tests layout, figure handling, and publishing output only.

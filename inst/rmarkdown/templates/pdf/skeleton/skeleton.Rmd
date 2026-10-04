@@ -1,0 +1,14 @@
+---
+title: "Document Title"
+author: "Your Name"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+abstract: |
+  A short summary of the document.
+output:
+  docdesigner::pdf:
+    style: policy
+---
+
+# Introduction
+
+Start writing here.

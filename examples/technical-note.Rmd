@@ -1,0 +1,54 @@
+---
+title: "Tool or Method Name: Scope of the Technical Contribution"
+subtitle: "Optional short implementation context"
+author:
+  - name: "Your Name"
+    dept: "Department of Sociology"
+    inst: "Queens College, City University of New York"
+    email: "you@example.edu"
+    web: "https://example.edu"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
+institution: "Household Finance Working Group"
+series: "Technical Note"
+surname: "Surname"
+runningtitle: "Short Running Title"
+
+abstract: |
+  Write five elements: what the contribution is, what problem it solves, how it is implemented, what the worked example demonstrates, and where it is available.
+
+acknowledgements: |
+  Optional. Funding, contributors, software dependencies, and data providers.
+
+output:
+  docdesigner::pdf:
+    style: methods
+---
+
+<!-- Technical notes document a software, method, data, or measurement contribution that others can use and evaluate. -->
+
+# Statement of Need
+
+<!-- 300-400 words. Define the concrete workflow or analytic problem, explain why current solutions are inadequate, and state the contribution. -->
+
+# Implementation
+
+<!-- 800-1,200 words. Describe architecture, procedure, assumptions, inputs, outputs, dependencies, and design decisions. -->
+
+# Worked Example
+
+<!-- 600-900 words. Demonstrate the contribution on real or realistic data with reproducible code and interpretable output. -->
+
+```{r worked-example-placeholder, echo=TRUE, message=FALSE, warning=FALSE}
+# Add a minimal reproducible example here.
+```
+
+# Validation and Tests
+
+<!-- 300-500 words. Show evidence of correctness: tests, benchmarks, comparisons, edge cases, or known limitations. -->
+
+# Availability and Reproducibility
+
+<!-- 100-150 words. Provide repository, license, version, installation instructions, archive/DOI, and reproduction notes. -->
+
+# References

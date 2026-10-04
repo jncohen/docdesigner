@@ -1,0 +1,24 @@
+Package: docdesigner
+Title: Publication-Inspired Templates for Research PDFs and Slides
+Version: 0.9.10
+Authors@R: person("Joseph N.", "Cohen", role = c("aut", "cre"),
+    email = "joseph.cohen@qc.cuny.edu")
+Description: Pandoc/R Markdown templates for research papers, book chapters,
+    reports, briefs, and snapshots. Provides publication-inspired, token-driven
+    style sets so researchers can produce polished, audience-aware PDF output
+    from R and reproduce the look of well-known publications.
+License: MIT + file LICENSE
+URL: https://jncohen.github.io/docdesigner/, https://github.com/jncohen/docdesigner
+BugReports: https://github.com/jncohen/docdesigner/issues
+Imports:
+    rmarkdown,
+    yaml
+Suggests:
+    knitr,
+    pkgdown,
+    xml2
+VignetteBuilder: knitr
+Encoding: UTF-8
+Config/Needs/website: pkgdown
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
