@@ -1,3 +1,14 @@
+# docdesigner (development version)
+
+- **Titles, headings and other display text keep their own line spacing.** A
+  style's body line spacing (`typography.line_height`) was multiplying the
+  spacing of everything set at an explicit size. In loosely leaded styles a
+  two-line title split with a near-blank line between its lines (atlantic),
+  bylines drifted apart from affiliations, and tables were set at about 1.8×
+  their declared `table.row_stretch`. Title, subtitle, kicker, byline, date,
+  headings, abstract, captions, tables and footnotes now use the spacing
+  they declare; body text is unchanged.
+
 # docdesigner 0.9.10
 
 A bug-fix release from a full review of the package. Upgrade before testing:

@@ -230,6 +230,16 @@ designer_style <- function(style = "minimal") dd_resolve_style(style)
 # ---- preamble generation ---------------------------------------------------
 dd_pt <- function(x) as.numeric(sub("pt", "", x))
 
+# Set a size with ABSOLUTE leading. \linespread (typography.line_height) scales
+# every \selectfont, so a bare \fontsize{s}{l} inherits the body's stretch: a
+# 1.62 body turned a title's 1.18 leading into ~1.9 and split a two-line title
+# with a near-blank line. Display and furniture text -- title, subtitle,
+# kicker, headings, abstract, captions, tables, footnotes -- states its own
+# leading, so it resets the stretch first. Only body text keeps \linespread.
+dd_size <- function(size, lead) {
+  paste0("\\linespread{1}\\fontsize{", size, "}{", lead, "}\\selectfont")
+}
+
 dd_fontspec <- function(cmd, family, reg, dirs) {
   files <- reg[[family]]
   fontpath <- dd_font_family_dir(family, reg, dirs)
@@ -316,7 +326,7 @@ dd_preamble <- function(s) {
     label <- if (isTRUE(hd$number_sections) && !identical(shape, "runin")) {
       paste0("\\the", sub("^\\\\", "", cmd), "\\hspace{0.6em}")
     } else ""
-    fmt <- paste0(align_cmd(h$align), head_cmd, "\\fontsize{", size, "}{", lead, "}\\selectfont", wt, it,
+    fmt <- paste0(align_cmd(h$align), head_cmd, dd_size(size, lead), wt, it,
                   "\\color{", h$color %||% "accent", "}")
     line <- paste0("\\titleformat{", cmd, "}[", shape, "]{", fmt, "}{", label, "}{0pt}{", txt, "}")
     rule <- dd_rule_tex(h$rule, "medium")
@@ -367,8 +377,7 @@ dd_preamble <- function(s) {
   # (\thetitle would otherwise carry the appended subtitle markup and render as
   # garbage/"0" wherever runningtitle is used).
   add("\\newcommand{\\subtitle}[1]{\\global\\let\\ddrtitle\\@title\\apptocmd{\\@title}{\\par\\vspace{0.3em}",
-      "{\\normalfont\\mdseries", head_cmd, "\\fontsize{", ssize, "}{",
-      round(ssize * 1.35, 1), "}\\selectfont", sit, "\\color{",
+      "{\\normalfont\\mdseries", head_cmd, dd_size(ssize, round(ssize * 1.35, 1)), sit, "\\color{",
       sub$color %||% "muted", "}#1\\par}}{}{}}")
   add("\\makeatother")
 
@@ -385,11 +394,11 @@ dd_preamble <- function(s) {
       lower = paste0("\\MakeLowercase{", kick$text, "}"),
       smallcaps = paste0("\\textsc{\\MakeLowercase{", kick$text, "}}"),
       kick$text)
-    kicker_tex <- paste0("{", kfont, "\\fontsize{", ksize, "}{", round(ksize * 1.2, 1),
-      "}\\selectfont\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
+    kicker_tex <- paste0("{", kfont, dd_size(ksize, round(ksize * 1.2, 1)),
+      "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
   }
-  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, head_cmd, "\\fontsize{", tsize, "}{",
-      round(tsize * 1.18, 1), "}\\selectfont\\bfseries\\color{", ti$color %||% "text", "}}")
+  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, head_cmd,
+      dd_size(tsize, round(tsize * 1.18, 1)), "\\bfseries\\color{", ti$color %||% "text", "}}")
   # \titlerule takes [weight]; \rule takes {width}{height}. Build inline rather
   # than reuse dd_rule_tex(), whose output suits titlesec's after-code only.
   if (!is.null(ti$rule) && !identical(ti$rule$position %||% "none", "none")) {
@@ -439,7 +448,7 @@ dd_preamble <- function(s) {
     # title.abstract.rule draws a hairline under the block, which is how the
     # demography model separates the abstract from the body.
     arule_tex <- if (isTRUE(ab$rule)) "\\par\\vskip0.6em\\hrule height0.4pt\\vskip0.2em" else ""
-    body_fmt <- paste0("\\fontsize{", asize, "}{", round(asize * 1.4, 1), "}\\selectfont",
+    body_fmt <- paste0(dd_size(asize, round(asize * 1.4, 1)),
                        awt, "\\color{", ab$color %||% "text", "}%")
     if (isTRUE(ab$box)) {
       # Filled/bordered abstract panel; tcolorbox supplies the inset, so the
@@ -460,9 +469,11 @@ dd_preamble <- function(s) {
     }
   }
 
-  add("\\preauthor{\\begin{", align_env, "}\\large\\color{", ti$byline$color %||% "muted", "}}")
+  # Byline and date are title furniture too: \linespread{1} so a loosely
+  # leaded body does not prise the author's name from their affiliation.
+  add("\\preauthor{\\begin{", align_env, "}\\linespread{1}\\large\\color{", ti$byline$color %||% "muted", "}}")
   add("\\postauthor{\\end{", align_env, "}}")
-  add("\\predate{\\begin{", align_env, "}\\color{", ti$date$color %||% "muted", "}}")
+  add("\\predate{\\begin{", align_env, "}\\linespread{1}\\selectfont\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
 
   # title.page_break_after: give the title block a page to itself and start
@@ -629,7 +640,7 @@ dd_preamble <- function(s) {
     if (!is.null(fc$color)) fnt <- c(fnt, paste0("\\color{", fc$color, "}"))
     if (!is.null(fc$size)) {
       csz <- round(base * as.numeric(fc$size), 1)
-      fnt <- c(fnt, paste0("\\fontsize{", csz, "}{", round(csz * 1.2, 1), "}\\selectfont"))
+      fnt <- c(fnt, dd_size(csz, round(csz * 1.2, 1)))
     }
     if (identical(fc$family, "heading")) fnt <- c(fnt, head_cmd)
     if (identical(fc$family, "mono"))    fnt <- c(fnt, "\\ttfamily")
@@ -681,7 +692,7 @@ dd_preamble <- function(s) {
   tsetup <- character()
   if (!is.null(tb$size)) {
     tsz <- round(base * as.numeric(tb$size), 1)
-    tsetup <- c(tsetup, paste0("\\fontsize{", tsz, "}{", round(tsz * 1.2, 1), "}\\selectfont"))
+    tsetup <- c(tsetup, dd_size(tsz, round(tsz * 1.2, 1)))
   }
   if (!is.null(tb$zebra_color)) {
     # rowcolors starts shading at the first BODY row: the header sits between
@@ -696,7 +707,7 @@ dd_preamble <- function(s) {
     # \@setfontsize is the documented way to redefine a size command. This
     # also reaches anything else using \footnotesize, which in practice is
     # little now that captions carry their own size token.
-    add("\\makeatletter\\renewcommand\\footnotesize{\\@setfontsize\\footnotesize{",
+    add("\\makeatletter\\renewcommand\\footnotesize{\\linespread{1}\\@setfontsize\\footnotesize{",
         fsz, "}{", round(fsz * 1.2, 1), "}}\\makeatother")
   }
   if (identical(fn$numbering, "symbol")) {

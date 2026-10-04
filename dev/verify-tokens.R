@@ -82,9 +82,23 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
     # measuring them against page.margins.top would produce false failures.
     # Left/right have no such furniture and are exactly where the design error
     # showed up, so this is the check that earns its keep.
-    d <- tryCatch(pdftools::pdf_data(pdf)[[pg]], error = function(e) NULL)
+    #
+    # Measured over ALL pages, not one. A single page proves nothing about the
+    # right edge: nature's last page holds only its left column once the text
+    # runs short, and measuring that page alone reported a 2.6in right margin
+    # for a style whose margins had not changed. The text block's extent is
+    # the widest ink anywhere in the document. Under twoside the inner and
+    # outer margins swap on even pages, so only odd (recto) pages are pooled.
+    all_pages <- tryCatch(pdftools::pdf_data(pdf), error = function(e) NULL)
+    use <- seq_along(all_pages)
+    if (isTRUE(s$page$twoside)) use <- use[use %% 2 == 1]
+    d <- do.call(rbind, lapply(all_pages[use], function(p) {
+      if (is.null(p) || !nrow(p)) return(NULL)
+      ph_pt <- max(p$y, na.rm = TRUE)
+      p[p$y > 0.06 * ph_pt & p$y < 0.94 * ph_pt, , drop = FALSE]
+    }))
     if (is.null(d) || !nrow(d)) {
-      emit(style, "page.margins", "-", "-", "SKIP", "no text on page")
+      emit(style, "page.margins", "-", "-", "SKIP", "no body text found")
     } else {
       shorthand <- switch(as.character(s$page$margin %||% "normal"),
                           narrow = 0.75, wide = 1.35, 1)
@@ -95,10 +109,8 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
       # masthead band that deliberately bleeds to the paper edge, and including
       # it made economist report a 0.000in left margin -- the band, not the
       # text block. Same lesson as the two-column detector: page furniture is
-      # not body text. Trim the top and bottom bands before measuring.
-      ph_pt <- max(d$y, na.rm = TRUE)
-      body <- d[d$y > 0.06 * ph_pt & d$y < 0.94 * ph_pt, , drop = FALSE]
-      if (!nrow(body)) body <- d
+      # not body text. The top and bottom bands are trimmed per page above.
+      body <- d
       got_l <- min(body$x) / 72
       got_r <- (pw - max(body$x + body$width)) / 72
       emit(style, "page.margins.inner (left)", sprintf("%.3f in", want_l),
