@@ -13,6 +13,15 @@
   range that reads comfortably. Their side margins (and, for six of them,
   the body size) now give 66–71 characters per line. The two-column styles
   (economist, nature) were already in range and are unchanged.
+- **ajs, sociology and ssrn now look distinct.** They had been near-clones: the
+  same Times-like face, centred titles and loose leading.
+  - ajs: centred capital title over a short hairline, small-caps byline,
+    centred capital and italic heads, indented paragraphs, monochrome.
+  - sociology: Source Serif 4, a flush-left title under a sans "Research
+    Article" kicker with a burgundy rule, burgundy capital section heads, and
+    a small-caps run-in abstract.
+  - ssrn: a "Working Paper" series line over a centred title, numbered
+    sections, paragraphs separated by space, no running head, no colour.
 
 # docdesigner 0.9.10
 

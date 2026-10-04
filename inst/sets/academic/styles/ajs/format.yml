@@ -15,15 +15,16 @@ id: ajs
 label: American Journal of Sociology
 description: >
   The classic footnoted-journal look of the American Journal of Sociology
-  (Chicago house style). A single wide-measure column of Times-metrics type,
-  centred full-caps section heads, an unlabelled indented abstract, and
-  bottom-of-page footnotes. Near-monochrome and formal. XITS substitutes STIX.
+  (Chicago house style). A centred capital title over a short hairline, a
+  small-caps byline, centred capital and italic section heads, indented
+  paragraphs, an unlabelled abstract, and bottom-of-page footnotes.
+  Monochrome and formal. XITS substitutes STIX.
 
 # ---- page (symmetric margins measured from the models) ---------------------
 # firstpage/page padding 76/118/84 px; title 120/118/84 (px / 96 = inches).
 page.papersize: letter
-page.margins.top: 0.8
-page.margins.bottom: 0.875
+page.margins.top: 1                    # round 2
+page.margins.bottom: 1.15              # round 2
 page.margins.inner: 1.95   # measure: ~70 chars/line
 page.margins.outer: 1.95   # measure: ~70 chars/line
 page.columns: 1
@@ -33,23 +34,23 @@ typography.body: XITS
 typography.heading: XITS
 typography.mono: Fira Code           # first-page billing-code line only
 typography.base_size: "11.5pt" # measure: ~70 chars/line
-typography.line_height: 1.6
+typography.line_height: 1.5            # round 2
 typography.justification: justified
 typography.microtype: true
 # numbers: default lining — correct for a Times-family journal (no override).
 
 # ---- colour (near-monochrome; accent = links/rules only) -------------------
 color.text: "#1A1A1A"
-color.accent: "#333333"              # links + hairline rules only
-color.muted: "#555555"               # affiliation, footnotes, running head
-color.rule: "#111111"                # table + footnote rules, near-black
+color.accent: "#1A1A1A"                # round 2
+color.muted: "#5F5F5F"                 # round 2
+color.rule: "#1A1A1A"                  # round 2
 links.color: accent
 
 # ---- headings (all REGULAR weight; centred caps / centred italic / run-in) --
 headings.number_sections: false      # unnumbered; footnote apparatus instead
 headings.run_in: [h3]                # h3 typeset run-in with the paragraph
 # h1 = # A-head ("INTRODUCTION"): centred FULL CAPS, regular, near-black.
-headings.h1.scale: 1.0
+headings.h1.scale: 0.95                # round 2
 headings.h1.weight: regular          # models set 400, not bold
 headings.h1.case: upper
 headings.h1.align: center
@@ -80,9 +81,16 @@ title.abstract.label_style: none
 title.abstract.indent: md            # ~0.42in inset each side (scale tops below)
 title.abstract.size: 0.9             # 13px abstract / 15px body
 title.keywords.show: false           # AJS front matter has no keyword line
+title.case: upper                      # round 2
+title.rule.position: below             # round 2
+title.rule.weight: hairline            # round 2
+title.rule.length: 0.6                 # round 2
+title.rule.color: text                 # round 2
+title.subtitle.style: italic           # round 2
+title.subtitle.scale: 1                # round 2
 
 # ---- paragraphs (traditional first-line indent, no extra spacing) ----------
-paragraph.indent: lg                 # model text-indent 1.6em -> nearest step
+paragraph.indent: md                   # round 2
 paragraph.spacing: none
 paragraph.indent_after_heading: false  # first para after a head is flush
 
@@ -110,7 +118,7 @@ code.highlight: none                 # AJS sets no highlighted code
 header_footer.header.left: page
 header_footer.header.right: runningtitle
 header_footer.header.rule: false
-header_footer.first_page: header     # carry the running head onto the opener
+header_footer.first_page: plain        # round 2
 header_footer.footer.center: none
 header_footer.footer.right: none
 header_footer.footer.rule: false
