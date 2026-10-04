@@ -44,9 +44,12 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
         shell: Rscript {0}
 
+      # single-commit replaces gh-pages with one fresh commit on every deploy,
+      # so the branch carries only the current site, not a build history.
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
-          clean: false
+          clean: true
+          single-commit: true
           branch: gh-pages
           folder: docs
