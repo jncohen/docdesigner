@@ -8,7 +8,7 @@
 -- table becomes LaTeX.
 --
 -- Applied only when a style sets table.header.weight or .case away from the
--- engine default. Must run BEFORE twocolumn-tables.lua, which rewrites Tables
+-- engine default. Must run BEFORE tables.lua, which rewrites Tables
 -- into raw LaTeX -- that filter renders each cell with pandoc.write, so the
 -- markup added here survives the conversion.
 

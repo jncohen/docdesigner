@@ -73,7 +73,7 @@ page:
                            #       Advisory: sets margins if they are unset
 ```
 
-**Note on `columns: 2`.** Pandoc emits `longtable`, which is illegal in a two-column body. The engine applies `inst/engine/twocolumn-tables.lua` to convert tables into spanning `table*` floats. Figures behave the same way — a full-width figure in two-column mode must be a `figure*`. This is handled, but it is the single most fragile area of the renderer. `[risk]`
+**Note on `columns: 2`.** Pandoc emits `longtable`, which is illegal in a two-column body. The engine applies `inst/engine/tables.lua` to convert tables into spanning `table*` floats. Figures behave the same way — a full-width figure in two-column mode must be a `figure*`. This is handled, but it is the single most fragile area of the renderer. `[risk]`
 
 ---
 

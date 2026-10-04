@@ -171,7 +171,7 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
     # half of all lines begin in the right half; under one column almost none
     # do. Two cruder tests failed here first: word-starts near the centre (the
     # second column begins at about the midpoint, so it never fired) and words
-    # straddling the centre (nature's twocolumn-tables.lua promotes tables to
+    # straddling the centre (nature's tables.lua promotes tables to
     # spanning table* floats, whose rows legitimately cross it). Line starts are
     # immune to both -- a spanning float still starts at the left margin.
     # Scan EVERY page and take the max: a single page proves nothing. nature is

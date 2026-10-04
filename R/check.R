@@ -22,8 +22,8 @@ designer_check <- function(path = ".",
     # The schema is the source of truth for the token vocabulary AND supplies
     # every engine default. Without it nothing resolves.
     check_item("schema", file.exists(schema), schema),
-    check_item("lua filter", file.exists(dd_pkg_file("engine", "twocolumn-tables.lua")),
-               dd_pkg_file("engine", "twocolumn-tables.lua")),
+    check_item("lua filter", file.exists(dd_pkg_file("engine", "tables.lua")),
+               dd_pkg_file("engine", "tables.lua")),
     check_item("styles", length(style_names) > 0,
                paste(style_names, collapse = ", ")),
     check_item("rmarkdown", requireNamespace("rmarkdown", quietly = TRUE),

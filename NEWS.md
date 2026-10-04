@@ -22,6 +22,17 @@
     a small-caps run-in abstract.
   - ssrn: a "Working Paper" series line over a centred title, numbered
     sections, paragraphs separated by space, no running head, no colour.
+- **Short tables no longer split across pages.** In single-column styles a
+  table could break after its header and one row. Short, simple tables (up to
+  25 rows, plain columns) are now floats that stay whole, sitting where they
+  fall or moving to the top of the next page while the text keeps filling
+  the current one. Long tables, and tables with wrapping text columns, still
+  cross pages as before. The table filter is now `inst/engine/tables.lua`
+  (formerly `twocolumn-tables.lua`).
+- Table captions stay above their tables in styles that also put figure
+  captions above (ajs, demography, sociology, government).
+- Floats may now share a page with text more readily, so a table and a figure
+  no longer end up alone on a mostly empty page.
 
 # docdesigner 0.9.10
 

@@ -560,6 +560,14 @@ dd_preamble <- function(s) {
 
   if (isTRUE(ty$microtype)) add("\\usepackage{microtype}")
   add("\\usepackage{booktabs}")
+  # Float placement. LaTeX's defaults (a float may take at most 70% of a page
+  # top, and a page under 50% floats becomes a float-only page) were set for
+  # 1980s figures. With short tables and figures both floating, they left
+  # pages holding a table and a figure centred in white space while the text
+  # resumed overleaf. These are the usual journal-class values.
+  add("\\renewcommand{\\topfraction}{0.85}\\renewcommand{\\bottomfraction}{0.6}",
+      "\\renewcommand{\\textfraction}{0.1}\\renewcommand{\\floatpagefraction}{0.85}",
+      "\\setcounter{topnumber}{3}\\setcounter{totalnumber}{4}")
   add("\\renewcommand{\\arraystretch}{", s$table$row_stretch, "}")
   add("\\setlength{\\parindent}{", dd_len("indent", s$paragraph$indent, "none"), "}")
   add("\\setlength{\\parskip}{", dd_len("space", s$paragraph$spacing, "sm"), "}")
@@ -669,6 +677,12 @@ dd_preamble <- function(s) {
     if (identical(fc$position, "above")) {
       add("\\usepackage{floatrow}")
       add("\\floatsetup[figure]{capposition=top}")
+      # floatrow governs EVERY float, and its default puts captions below.
+      # Single-column tables are floats too now (tables.lua), so without this
+      # loading floatrow for figures silently moved every table caption under
+      # its table, against table.caption.position.
+      tcap <- if (identical(s$table$caption$position, "below")) "bottom" else "top"
+      add("\\floatsetup[table]{capposition=", tcap, "}")
     }
   }
 
@@ -684,7 +698,7 @@ dd_preamble <- function(s) {
     add("\\AtBeginDocument{\\addfontfeature{Numbers=OldStyle}}")
   }
   # Table setup lives in one macro, \ddtablesetup, rather than in a longtable
-  # hook alone: two-column styles never emit a longtable (twocolumn-tables.lua
+  # hook alone: two-column styles never emit a longtable (tables.lua
   # rewrites every table as a table* float), so a longtable-only hook left
   # nature and economist setting tables at full body size. The filter calls
   # \ddtablesetup inside each table* it writes.
@@ -944,12 +958,14 @@ pdf <- function(..., style = "minimal") {
                "--metadata", paste0("dd-dropcap-color=", dc$color %||% "accent"))
   }
 
-  if ((s$page$columns %||% 1) == 2) {
-    pargs <- c(pargs, "-V", "classoption=twocolumn")
-    # longtable (pandoc's default table) is illegal under twocolumn; convert
-    # tables to spanning table* floats with a booktabs tabular instead.
-    pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "twocolumn-tables.lua"))
-  }
+  cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
+  if (cols == 2L) pargs <- c(pargs, "-V", "classoption=twocolumn")
+  # Tables: under two columns longtable is illegal, so every table becomes a
+  # spanning table* float. Under one column, longtable splits a short table
+  # across a page break after a single row; tables.lua turns short, simple
+  # tables into floats that stay whole and leaves long ones as longtable.
+  pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "tables.lua"),
+             "--metadata", paste0("dd-columns=", cols))
 
   rmarkdown::pdf_document(...,
     latex_engine = "xelatex",
