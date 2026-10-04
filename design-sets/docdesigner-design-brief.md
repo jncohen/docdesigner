@@ -56,6 +56,27 @@ or a spacing value off this list cannot be represented exactly.
 - Paragraph indent: `none` = 0pt, `sm` = 0.75em, `md` = 1em, `lg` = 1.5em
 - Page margin: `narrow` = 0.75in, `normal` = 1in, `wide` = 1.35in (or a custom margin in inches, 0.4-2.0)
 
+## Line length and page proportions
+
+**Set the body to 60-72 characters per line** (spaces included) in a
+single-column design, and 40-55 per column in a two-column one. This is
+the most important constraint here: a long line is what makes a page
+read like a memo rather than a journal. Count characters on a full line
+of body text in the design before calling it done.
+
+- On US letter paper (8.5in wide) a serif body at 10-12pt sets roughly
+  14-17 characters per inch, so a single column wants a text block about
+  4.2-4.8in wide: side margins of roughly 1.85-2.0in. One-inch side
+  margins give 90-105 characters, which is too long.
+- If generous side margins look wrong for the design, raise the body
+  size by half a point or a point rather than widening the text block,
+  or use two columns.
+- Keep the bottom margin at least as large as the top. A tall, narrow
+  text block with thin top and bottom margins looks like a printout;
+  give the page some vertical air as well.
+- In a screen mockup the page is 816px wide (letter at 96px per inch),
+  so a single-column text block is about 400-460px wide.
+
 ## Title treatment
 
 Five archetypes exist for how the title/byline/abstract block reads.
