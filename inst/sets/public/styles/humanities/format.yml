@@ -26,8 +26,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1.125
 page.margins.bottom: 0.875
-page.margins.inner: 1.5625
-page.margins.outer: 1.5625
+page.margins.inner: 2      # measure: ~70 chars/line
+page.margins.outer: 2      # measure: ~70 chars/line
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------

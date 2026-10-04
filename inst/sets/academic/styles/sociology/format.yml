@@ -26,15 +26,15 @@ description: >
 page.papersize: letter
 page.margins.top: 0.958
 page.margins.bottom: 0.875
-page.margins.inner: 1.125
-page.margins.outer: 1.125
+page.margins.inner: 1.95   # measure: ~70 chars/line
+page.margins.outer: 1.95   # measure: ~70 chars/line
 page.columns: 1
 
 # ---- typography (Times-metrics XITS, loose ASA leading) -------------------
 typography.body: XITS
 typography.heading: XITS
 typography.mono: Fira Code
-typography.base_size: 11pt
+typography.base_size: "11.5pt" # measure: ~70 chars/line
 typography.line_height: 1.6            # ASA runs loose, near double-spaced feel
 typography.justification: justified
 typography.microtype: true

@@ -92,10 +92,13 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
     all_pages <- tryCatch(pdftools::pdf_data(pdf), error = function(e) NULL)
     use <- seq_along(all_pages)
     if (isTRUE(s$page$twoside)) use <- use[use %% 2 == 1]
-    d <- do.call(rbind, lapply(all_pages[use], function(p) {
+    d <- do.call(rbind, lapply(use, function(i) {
+      p <- all_pages[[i]]
       if (is.null(p) || !nrow(p)) return(NULL)
       ph_pt <- max(p$y, na.rm = TRUE)
-      p[p$y > 0.06 * ph_pt & p$y < 0.94 * ph_pt, , drop = FALSE]
+      p <- p[p$y > 0.06 * ph_pt & p$y < 0.94 * ph_pt, , drop = FALSE]
+      if (nrow(p)) p$page_id <- i
+      p
     }))
     if (is.null(d) || !nrow(d)) {
       emit(style, "page.margins", "-", "-", "SKIP", "no body text found")
@@ -110,9 +113,21 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
       # it made economist report a 0.000in left margin -- the band, not the
       # text block. Same lesson as the two-column detector: page furniture is
       # not body text. The top and bottom bands are trimmed per page above.
-      body <- d
-      got_l <- min(body$x) / 72
-      got_r <- (pw - max(body$x + body$width)) / 72
+      #
+      # The edges are measured on LINES, not on the single outermost glyph.
+      # Left: nearly every line starts at the left edge, so the 5% quantile
+      # of line starts finds it -- code line numbers (methods) are hung in
+      # the margin on purpose and must not read as a narrow margin. Right:
+      # only full justified lines reach it, and there may be few (nature's
+      # body sits mostly in the left column), so a quantile would land
+      # inside the measure; the third-largest line end tolerates a couple of
+      # overhanging glyphs instead. A wrong margin moves every line, so both
+      # still catch it.
+      key <- paste(d$page_id, round(d$y))
+      starts <- tapply(d$x, key, min)
+      ends <- sort(tapply(d$x + d$width, key, max), decreasing = TRUE)
+      got_l <- unname(stats::quantile(starts, 0.05)) / 72
+      got_r <- (pw - unname(ends[min(3, length(ends))])) / 72
       emit(style, "page.margins.inner (left)", sprintf("%.3f in", want_l),
            sprintf("%.3f in", got_l),
            if (abs(got_l - want_l) < tol) "PASS" else "FAIL")

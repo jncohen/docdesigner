@@ -22,15 +22,15 @@ description: >
 page.papersize: letter
 page.margins.top: 1.0
 page.margins.bottom: 0.875
-page.margins.inner: 1.375
-page.margins.outer: 1.375
+page.margins.inner: 2      # measure: ~70 chars/line
+page.margins.outer: 2      # measure: ~70 chars/line
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
 typography.body: EB Garamond
 typography.heading: EB Garamond
 typography.mono: Fira Code
-typography.base_size: 11pt
+typography.base_size: "12pt" # measure: ~70 chars/line
 typography.line_height: 1.5
 typography.justification: justified
 typography.numbers: oldstyle        # oldstyle numerals in running prose

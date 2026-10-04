@@ -8,6 +8,11 @@
   their declared `table.row_stretch`. Title, subtitle, kicker, byline, date,
   headings, abstract, captions, tables and footnotes now use the spacing
   they declare; body text is unchanged.
+- **Comfortable line length in every single-column style.** The ten
+  single-column styles set 83–104 characters per line, well past the 45–75
+  range that reads comfortably. Their side margins (and, for six of them,
+  the body size) now give 66–71 characters per line. The two-column styles
+  (economist, nature) were already in range and are unchanged.
 
 # docdesigner 0.9.10
 

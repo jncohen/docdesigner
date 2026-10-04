@@ -26,7 +26,10 @@ description: >
 # top 0.48in. The masthead band bleeds to the trim edge; there is no bleed
 # token, so margins are ordinary `normal` (1in), taken from the body page.
 page.papersize: letter
-page.margin: normal
+page.margins.top: 1        # measure: ~70 chars/line
+page.margins.bottom: 1     # measure: ~70 chars/line
+page.margins.inner: 1.95   # measure: ~70 chars/line
+page.margins.outer: 1.95   # measure: ~70 chars/line
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
@@ -34,7 +37,7 @@ typography.body: Source Serif 4
 typography.heading: Source Serif 4
 typography.mono: Fira Code           # table titles, running head, furniture
 typography.mono_scale: 0.9
-typography.base_size: 10pt
+typography.base_size: "10.5pt" # measure: ~70 chars/line
 typography.line_height: 1.32
 typography.justification: justified
 typography.microtype: true

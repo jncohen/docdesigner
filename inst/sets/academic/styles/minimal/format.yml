@@ -23,7 +23,10 @@ description: >
 
 # ---- page (stylesheet declares the symmetric shorthand: margin normal) ------
 page.papersize: letter
-page.margin: normal          # 1.25in all sides, per the style-sheet spec
+page.margins.top: 1        # measure: ~70 chars/line
+page.margins.bottom: 1     # measure: ~70 chars/line
+page.margins.inner: 1.85   # measure: ~70 chars/line
+page.margins.outer: 1.85   # measure: ~70 chars/line
 page.columns: 1
 
 # ---- typography (body/heading Source Serif 4, mono Fira Code = defaults) -----

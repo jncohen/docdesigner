@@ -23,7 +23,10 @@ description: >
 # (padding 0) — a bleed the token vocabulary cannot express; ordinary normal
 # margins are taken from the body-page model instead (see fidelity.md).
 page.papersize: letter
-page.margin: normal          # 1in text measure (stylesheet spec)
+page.margins.top: 1        # measure: ~70 chars/line
+page.margins.bottom: 1     # measure: ~70 chars/line
+page.margins.inner: 1.9    # measure: ~70 chars/line
+page.margins.outer: 1.9    # measure: ~70 chars/line
 page.columns: 1              # the two-column opener (stat rail) is mockup-only
 
 # ---- typography ------------------------------------------------------------

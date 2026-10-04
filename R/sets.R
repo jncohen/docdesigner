@@ -231,6 +231,9 @@ dd_scaffold_complete <- function(id, from, declared) {
            "")
 
   skip <- c("id", "label", "description", "inherits")
+  # page.margins.* override the page.margin shorthand. When the seed style
+  # sets them, writing the shorthand too only earns a "redundant" warning.
+  if (any(grepl("^page\\.margins\\.", names(flat)))) skip <- c(skip, "page.margin")
   tok <- tok[!tok$key %in% skip, , drop = FALSE]
 
   group_of <- function(k) sub("\\..*$", "", k)
