@@ -22,6 +22,12 @@
     a small-caps run-in abstract.
   - ssrn: a "Working Paper" series line over a centred title, numbered
     sections, paragraphs separated by space, no running head, no colour.
+- **policy is redesigned.** Its earlier description promised a wordmark, a
+  stat rail and a recommendation callout, none of which the tokens can
+  express. It is now a token-native think-tank brief: a sans "Policy Brief"
+  kicker over a large flush-left headline, a summary deck and a short heavy
+  forest-green bar, a green "Summary" block in place of the abstract, large
+  green section heads, and ragged-right text, the only ragged style.
 - **Short tables no longer split across pages.** In single-column styles a
   table could break after its header and one row. Short, simple tables (up to
   25 rows, plain columns) are now floats that stay whole, sitting where they

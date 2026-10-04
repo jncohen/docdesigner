@@ -1,22 +1,23 @@
 # docdesigner style — policy
-# The polished, persuasive look of a think-tank policy brief (OECD / Brookings
-# tradition): a branded wordmark line, a coloured kicker, a large confident
-# headline with a summary deck, a strong accent rule under the byline, a tinted
-# "By the numbers" stat rail with oversized figures, an executive Summary, and a
-# recommendation callout. Airy, single column, colour used assertively.
+# A think-tank policy brief, redesigned token-native in October 2026. The
+# earlier model's wordmark line, "By the numbers" stat rail and recommendation
+# callout had no expression in the token vocabulary and are dropped. What
+# carries the identity instead: a sans kicker, a large flush-left headline and
+# deck over a short heavy forest-green bar, a green "Summary" block, large
+# green section heads, and ragged-right text -- the only ragged style.
 #
-# Rebuilt 2026-07-18 from the token-faithful model set
-# (the policy design models). Bundled Source Serif 4 +
-# Fira Code. FLAT dotted-key format (schema v2). Validates clean against
-# schema.yml (0 errors; the prior 13 are resolved). Fidelity notes: fidelity.md.
+# Bundled Source Serif 4 + Fira Code; Arial (system) for the kicker only. FLAT
+# dotted-key format (schema v2). Lines tagged "# round 2" came from the
+# October 2026 design round.
 
 id: policy
 label: Policy
 description: >
-  The polished think-tank policy-brief look (OECD / Brookings tradition).
-  Coloured kicker, big headline with a summary deck, a tinted stat rail with
-  oversized figures, executive summary, and recommendation callouts. Confident
-  and persuasive. Source Serif 4 body, Fira Code for labels and folios.
+  A think-tank policy brief that persuades with scale and one colour. A sans
+  "Policy Brief" kicker over a large flush-left headline, a summary deck and a
+  short heavy forest-green bar; a green "Summary" block in place of the
+  abstract; large green section heads; ragged-right text with space between
+  paragraphs. Source Serif 4.
 
 # ---- page ------------------------------------------------------------------
 # Stylesheet declares margin: normal (1in). The cover masthead runs full-bleed
@@ -24,7 +25,7 @@ description: >
 # margins are taken from the body-page model instead (see fidelity.md).
 page.papersize: letter
 page.margins.top: 1        # measure: ~70 chars/line
-page.margins.bottom: 1     # measure: ~70 chars/line
+page.margins.bottom: 1.1               # round 2
 page.margins.inner: 1.9    # measure: ~70 chars/line
 page.margins.outer: 1.9    # measure: ~70 chars/line
 page.columns: 1              # the two-column opener (stat rail) is mockup-only
@@ -35,23 +36,24 @@ typography.heading: Source Serif 4
 typography.mono: Fira Code    # wordmark, kickers, labels, folios
 typography.mono_scale: 0.9
 typography.base_size: 10.5pt
-typography.line_height: 1.4
-typography.justification: justified
+typography.line_height: 1.45           # round 2
+typography.justification: ragged-right # round 2
 typography.microtype: true
+typography.label: Arial                # round 2
 
 # ---- colour (assertive single accent) --------------------------------------
-color.text: "#21262B"
-color.accent: "#C1442A"      # brand red-orange — kicker, stats, rules, callout, links
-color.muted: "#7A828A"
-color.rule: "#DBDFE3"        # hairline rules and header/footer separators
+color.text: "#1F2421"                  # round 2
+color.accent: "#1E6B3A"                # round 2
+color.muted: "#5C6660"                 # round 2
+color.rule: "#CFD8D2"                  # round 2
 links.color: accent
 
 # ---- headings (near-black, not accent; bold; unnumbered) -------------------
 headings.number_sections: false
-headings.h1.scale: 1.35      # stylesheet specimen 19px / 14px body
+headings.h1.scale: 1.45                # round 2
 headings.h1.weight: bold
-headings.h1.color: text      # section heads are near-black; accent lives elsewhere
-headings.h2.scale: 1.1       # stylesheet specimen 15px / 14px body
+headings.h1.color: accent              # round 2
+headings.h2.scale: 1.15                # round 2
 headings.h2.weight: bold
 headings.h2.color: text
 headings.h3.scale: 1.0       # stylesheet specimen 13px / 14px body
@@ -62,28 +64,43 @@ headings.h4.color: text      # else h4 falls through to the accent default
 # ---- title (REPORT layout: flush-left brand + kicker + deck + accent rule) --
 title.layout: report         # flush left, heavy rule, institution line (status: port)
 title.align: left            # the opener (firstpage) is flush-left
-title.scale: 2.5             # opener 35px / 14px body (large, confident headline)
-title.subtitle.style: normal # the deck is a large roman muted line, not italic
-title.subtitle.scale: 1.35   # opener deck 18px / 14px body
+title.scale: 2.6                       # round 2
+title.subtitle.style: normal           # round 2
+title.subtitle.scale: 1.35             # round 2
 title.rule.position: below   # strong accent rule under the byline
-title.rule.weight: thick     # model 3px accent rule (nearest step)
+title.rule.weight: heavy               # round 2
 title.rule.color: accent
 title.byline.color: text     # author name in text ink
 title.date.show: true        # "July 2026" in the byline row
+title.kicker.text: "Policy Brief"      # round 2
+title.kicker.font: label               # round 2
+title.kicker.case: upper               # round 2
+title.kicker.scale: 0.8                # round 2
+title.kicker.color: accent             # round 2
+title.rule.length: 0.75                # round 2
+title.abstract.label: "Summary"        # round 2
+title.abstract.label_style: heading    # round 2
+title.abstract.label_align: left       # round 2
+title.abstract.label_case: upper       # round 2
+title.abstract.label_color: accent     # round 2
+title.abstract.size: 1.05              # round 2
+title.abstract.rule: true              # round 2
 
 # ---- paragraphs (modern block: spaced, no indent, justified) ---------------
 paragraph.indent: none
 paragraph.spacing: sm        # model margin-bottom 0.7em (nearest step)
 
 # ---- quotes ----------------------------------------------------------------
-quote.style: normal          # stylesheet block quote is roman, not italicised
-quote.rule: true             # vertical accent rule at the left (status: new)
-quote.color: muted           # quote text set muted
+quote.style: italic                    # round 2
+quote.color: accent                    # round 2
+quote.indent: md                       # round 2
 
 # ---- figures / tables ------------------------------------------------------
 figure.style: plain
 figure.caption.position: below
 figure.caption.color: muted
+figure.caption.label_style: bold       # round 2
+figure.caption.align: left             # round 2
 table.style: booktabs
 table.header.weight: bold
 table.row_stretch: 1.15
@@ -92,5 +109,8 @@ table.row_stretch: 1.15
 code.highlight: none         # stylesheet sets code plain
 # Folio in the footer-right slot with a hairline rule above (both defaults);
 # the brand+series footer-left line has no token (see fidelity.md).
-header_footer.footer.right: page
-header_footer.footer.rule: true
+header_footer.footer.right: none       # round 2
+header_footer.footer.rule: false       # round 2
+header_footer.header.left: runningtitle # round 2
+header_footer.header.right: page       # round 2
+header_footer.first_page: plain        # round 2
