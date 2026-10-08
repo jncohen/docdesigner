@@ -13,6 +13,11 @@
   range that reads comfortably. Their side margins (and, for six of them,
   the body size) now give 66–71 characters per line. The two-column styles
   (economist, nature) were already in range and are unchanged.
+- **New: `doublespace` option for `pdf()`.** `docdesigner::pdf: {style: ...,
+  doublespace: true}` double-spaces the body text, as for a manuscript under
+  review, in any style. Titles, headings, tables, captions, footnotes and code
+  stay single-spaced. It replaces loading `setspace` and `\doublespacing`
+  through `header-includes`.
 - **methods uses journal-article margins:** 1 inch all round with an 11pt body
   (about 95 characters per line), like a downloaded article PDF. The shorter
   line-length pass left it a narrow text block with nearly 2-inch side

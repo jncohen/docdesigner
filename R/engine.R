@@ -907,13 +907,26 @@ dd_geometry <- function(s) {
 #'
 #' @param ... Passed to [rmarkdown::pdf_document()].
 #' @param style A style from [designer_styles()] or a style directory path.
+#' @param doublespace If `TRUE`, double-space the body text, as for a
+#'   manuscript under review. Titles, headings, tables, captions, footnotes
+#'   and code stay single-spaced. Overrides the style's
+#'   `typography.line_height` for body text only.
 #' @return An R Markdown output format.
 #' @export
-pdf <- function(..., style = "minimal") {
+pdf <- function(..., style = "minimal", doublespace = FALSE) {
   if (!requireNamespace("rmarkdown", quietly = TRUE)) stop("rmarkdown is required.", call. = FALSE)
   if (!requireNamespace("yaml", quietly = TRUE)) stop("The 'yaml' package is required.", call. = FALSE)
   s <- dd_resolve_style(style)
-  header <- tempfile(fileext = ".tex"); writeLines(dd_preamble(s), header)
+  preamble <- dd_preamble(s)
+  # Double spacing is a property of the DOCUMENT (a manuscript for review),
+  # not of the style, so it is an argument here rather than a token. It comes
+  # after dd_preamble()'s \linespread so it wins for body text; display text
+  # keeps its own leading because dd_size() resets the stretch locally, and
+  # setspace itself keeps floats and footnotes single-spaced.
+  if (isTRUE(doublespace)) {
+    preamble <- paste(preamble, "\\usepackage{setspace}", "\\doublespacing", sep = "\n")
+  }
+  header <- tempfile(fileext = ".tex"); writeLines(preamble, header)
 
   base <- dd_pt(s$typography$base_size)
   fontsize <- if (base >= 11.5) "12pt" else if (base >= 10.5) "11pt" else "10pt"
