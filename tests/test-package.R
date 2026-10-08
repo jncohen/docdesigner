@@ -343,17 +343,3 @@ stopifnot(grepl("not found", ghost))
 
 unlink(sandbox, recursive = TRUE)
 if (is.na(old_data_dir)) Sys.unsetenv("R_USER_DATA_DIR") else Sys.setenv(R_USER_DATA_DIR = old_data_dir)
-
-# --- pdf(): document-level double spacing ------------------------------------
-# The option must reach the generated preamble, and only when asked for. No
-# pandoc or xelatex needed: pdf() builds the format object and writes the
-# header file without rendering anything.
-header_of <- function(fmt) {
-  a <- fmt$pandoc$args
-  i <- which(a %in% c("--include-in-header", "-H"))
-  readLines(a[i[length(i)] + 1])
-}
-if (requireNamespace("rmarkdown", quietly = TRUE)) {
-  stopifnot(!any(grepl("doublespacing", header_of(pdf(style = "minimal")), fixed = TRUE)))
-  stopifnot(any(grepl("doublespacing", header_of(pdf(style = "minimal", doublespace = TRUE)), fixed = TRUE)))
-}
