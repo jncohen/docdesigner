@@ -4,12 +4,17 @@
 \alias{pdf}
 \title{Designed PDF output format}
 \usage{
-pdf(..., style = "minimal")
+pdf(..., style = "minimal", doublespace = FALSE)
 }
 \arguments{
 \item{...}{Passed to \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
 
 \item{style}{A style from \code{\link[=designer_styles]{designer_styles()}} or a style directory path.}
+
+\item{doublespace}{If \code{TRUE}, double-space the body text, as for a
+manuscript under review. Titles, headings, tables, captions, footnotes
+and code stay single-spaced. Overrides the style's
+\code{typography.line_height} for body text only.}
 }
 \value{
 An R Markdown output format.
