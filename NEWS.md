@@ -13,6 +13,10 @@
   range that reads comfortably. Their side margins (and, for six of them,
   the body size) now give 66–71 characters per line. The two-column styles
   (economist, nature) were already in range and are unchanged.
+- **methods uses journal-article margins:** 1 inch all round with an 11pt body
+  (about 95 characters per line), like a downloaded article PDF. The shorter
+  line-length pass left it a narrow text block with nearly 2-inch side
+  margins, which cramped its wide regression tables.
 - **ajs, sociology and ssrn now look distinct.** They had been near-clones: the
   same Times-like face, centred titles and loose leading.
   - ajs: centred capital title over a short hairline, small-caps byline,

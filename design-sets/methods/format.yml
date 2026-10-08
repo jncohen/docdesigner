@@ -22,17 +22,17 @@ description: >
 # Stylesheet spec sheet declares "margin: normal — 1in"; the model paddings
 # (sides a steady 96px = 1.0in) confirm it. Single column keeps code unwrapped.
 page.papersize: letter
-page.margins.top: 1        # measure: ~70 chars/line
-page.margins.bottom: 1     # measure: ~70 chars/line
-page.margins.inner: 1.95   # measure: ~70 chars/line
-page.margins.outer: 1.95   # measure: ~70 chars/line
+page.margins.top: 1.0        # journal-article margins: 1in all round
+page.margins.bottom: 1.0     # journal-article margins
+page.margins.inner: 1.0      # journal-article margins
+page.margins.outer: 1.0      # journal-article margins
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
 typography.body: Source Serif 4
 typography.heading: Source Serif 4
 typography.mono: Fira Code
-typography.base_size: "10.5pt" # measure: ~70 chars/line
+typography.base_size: "11pt"  # larger body for the wider journal measure (~95 chars)
 typography.line_height: 1.3
 typography.mono_scale: 0.88          # spec sheet: mono 0.88× (default 0.82)
 typography.justification: justified  # body specimens are justified with hyphens
