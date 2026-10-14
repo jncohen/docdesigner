@@ -16,6 +16,7 @@ articles:
   - title: Styles
     contents:
       - style-gallery
+      - creating-styles
   - title: Publishing
     contents:
       - publishing-workflows

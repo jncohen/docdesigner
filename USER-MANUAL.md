@@ -168,7 +168,7 @@ color.rule: "005EA8"
 headings.number_sections: true
 headings.h1.scale: 1.30
 
-title.layout: plain
+title.layout: header
 code.highlight: tango
 ```
 
@@ -185,7 +185,7 @@ docdesigner::designer_validate_style("my-style")
 ```
 
 `docdesigner::designer_tokens()` lists every available token with its type,
-allowed values, default, and implementation status. `STYLE-SPEC.md` documents
+allowed values, default, and implementation status. The *Creating a style* article documents
 the whole vocabulary. Use a local style by its folder path:
 
 ```yaml

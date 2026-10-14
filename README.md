@@ -77,7 +77,7 @@ designer_specimens()          # render a PDF specimen per style + gallery index
 
 ### A style file
 
-`format.yml` is a flat list of dotted-key tokens — one `key: value` per line. It declares only its identity (`id`, `label`, `description`) and the tokens that differ from the engine defaults; anything omitted falls back to the schema (`inst/engine/schema.yml`). Run `designer_tokens()` or read [STYLE-SPEC.md](STYLE-SPEC.md) for the full vocabulary.
+`format.yml` is a flat list of dotted-key tokens — one `key: value` per line. It declares only its identity (`id`, `label`, `description`) and the tokens that differ from the engine defaults; anything omitted falls back to the schema (`inst/engine/schema.yml`). Run `designer_tokens()` for the full vocabulary, and see [Creating a style](https://jncohen.github.io/docdesigner/articles/creating-styles.html) for how to write a style and what makes a good one.
 
 ```yaml
 id: methods
@@ -99,7 +99,7 @@ headings.h1.rule.position: below
 headings.h1.rule.weight: medium
 headings.h2.scale: 1.12
 
-title.layout: journal
+title.layout: header
 title.rule.position: below
 title.rule.weight: thick
 title.rule.color: rule

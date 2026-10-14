@@ -1,0 +1,325 @@
+---
+title: "Creating a style"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a style}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(docdesigner)
+tokens <- designer_tokens()
+```
+
+A docdesigner style is one file, `format.yml`, that lists design decisions
+as tokens: `color.accent`, `typography.base_size`, `headings.h1.scale`, and
+so on. The engine turns those tokens into LaTeX. You never write LaTeX, and a
+style cannot break a document: every token is checked against a schema with
+fixed types, bounds and named steps.
+
+This guide covers the workflow, the rules for setting tokens, the principles
+that separate a good style from a merely valid one, and closes with the full
+token reference, generated from the schema itself.
+
+# The workflow
+
+1. **Scaffold** a style from the existing style nearest to what you want.
+2. **Edit** only the tokens that differ.
+3. **Validate** it against the schema.
+4. **Render** a realistic document and look at the pages.
+5. Repeat 2 to 4. Then **share** it, as a folder or inside a set.
+
+```r
+# 1. A new folder my-brief/ with format.yml, seeded from `policy`.
+#    complete = FALSE copies only the tokens policy declares;
+#    complete = TRUE (the default) writes every token at its value, as a reference.
+designer_new_style("my-brief", from = "policy", path = ".", complete = FALSE)
+
+# 3. Errors must be fixed. Warnings flag risky combinations.
+#    "Not yet implemented" tokens validate but render nothing yet.
+designer_validate_style("my-brief")
+
+# 4. Render any document in the draft by pointing at the folder.
+rmarkdown::render("paper.Rmd", output_format = docdesigner::pdf(style = "my-brief"))
+```
+
+Inside a document's YAML header the same thing reads:
+
+```yaml
+output:
+  docdesigner::pdf:
+    style: "path/to/my-brief"
+    title_layout: page        # optional: override the style's title.layout
+```
+
+For step 4, use a document that looks like your real work: figures, tables
+of different shapes, a long title, an abstract, footnotes, a block quote and
+references. The package's specimen document, `examples/gallery-document.Rmd`
+in the source repository, carries all of these and is a good default.
+
+# Setting tokens
+
+## The format
+
+Keys are flat and dotted, one per line. Comments are encouraged; record
+*why* a value was chosen, not what it is.
+
+```yaml
+id: my-brief                 # required; lowercase letters, digits, hyphens
+label: "My Brief"            # required; how the style is listed
+description: >               # recommended; what it is for and what it imitates
+  A two-page policy brief with a sans kicker and a tinted callout.
+inherits: policy             # optional; see below
+
+color.accent: "#0B5E55"
+typography.base_size: 10.5pt
+title.layout: page
+callout.style: boxed
+```
+
+Each key appears once. To change a value the scaffold already declares, edit
+that line; adding the same key again further down is a YAML error.
+
+## Six rules
+
+1. **Declare only what differs.** Every token has a default. A style that
+   restates defaults freezes them: when the engine's default improves, your
+   style will not follow.
+2. **Hex colours live only under `color.*`.** Everywhere else a token names a
+   colour *role*: `accent`, `accent2`, `text`, `muted`, `rule`, `background`,
+   `code_bg` or `knockout`. Change the palette in one place and every element
+   that uses a role follows. Quote hex values (`"#0B5E55"`); unquoted, YAML can
+   read some of them as numbers.
+3. **Lengths are named steps, not dimensions.** `quote.indent: md`, not
+   `quote.indent: 1em`. The steps are fixed scales (space, indent, rule
+   weight, gutter, margin, width), so styles stay consistent with one another
+   and cannot produce invalid LaTeX. Margins are the exception: `page.margins.*`
+   take inches, because a page design needs asymmetric margins.
+4. **Sizes are multiples.** Heading, title, caption and table sizes are set
+   relative to `typography.base_size`, so changing the body size rescales the
+   whole hierarchy.
+5. **Use `inherits` for families of styles.** `inherits: policy` starts from
+   policy's declared tokens and applies yours on top. Chains resolve from the
+   root, and a cycle or missing parent is an error.
+6. **Check a token's status before relying on it.** `impl` tokens render.
+   `new` tokens validate and are ignored until the engine implements them;
+   `designer_validate_style()` lists them. `deprecated` tokens still work and
+   name their replacement.
+
+The validator also applies cross-token rules:
+
+```{r rules, echo = FALSE}
+rules <- yaml::read_yaml(system.file("engine", "schema.yml", package = "docdesigner"))$rules
+knitr::kable(data.frame(Rule = vapply(rules, `[[`, "", "id"),
+                        Meaning = vapply(rules, `[[`, "", "doc")),
+             format = "pipe")
+```
+
+## Structure versus look
+
+Two kinds of decision go into a page, and docdesigner keeps them apart.
+
+**Structure** is what goes where. `title.layout` is the main structural
+token: `header` sets the title block at the head of the first page, and `page`
+gives the title and abstract a page of their own. `page.columns` (one or two)
+is the other. Because structure varies by occasion as much as by style, the
+title layout can also be chosen per document with
+`pdf(title_layout = "page")`.
+
+**Look** is everything else: faces, sizes, colours, rules, spacing, and how
+each element (title, abstract, headings, quotes, callouts, tables, captions,
+running heads) is treated. Look tokens apply in every layout. A centred
+small-caps title with a short rule is centred, small-caps and ruled whether it
+opens page 1 or stands on a title page.
+
+Design the look once and check it in both layouts.
+
+## Block elements
+
+Three elements set text apart from the body, and a style should make them
+distinguishable at a glance.
+
+| Element | Written as | Tokens | Use it for |
+|:--|:--|:--|:--|
+| Block quote | `> text` | `quote.*` | Someone else's words |
+| Callout | `::: {.callout title="..."}` | `callout.*` | The author's own key point |
+| Abstract | `abstract:` in the YAML header | `title.abstract.*` | The summary |
+
+`callout.style` takes `filled` (a tinted panel), `ruled` (a bar at the left),
+`boxed` (a border round a tint) or `plain` (indented text under a title). If
+the style's quotes already carry a left bar, do not give callouts one too:
+readers will take the two for the same thing. The shipped styles show the
+pattern. atlantic, economist, minimal and nature rule their quotes and fill
+their callouts; methods, which boxes its abstract, boxes its callouts to
+match.
+
+# Principles of good style
+
+A style passes validation the moment its keys and values are legal. These
+principles decide whether it is any good. Each comes with the check that tells
+you whether you have met it.
+
+## Measure: 45 to 75 characters per line
+
+Line length governs reading comfort more than any other single choice. Below
+about 45 characters the eye jumps lines too often; above about 75 it loses
+its place on the return sweep. Aim for 60 to 72 in a single column and 40 to
+55 in each of two.
+
+Estimate it before you render. For a typical book serif, a line holds about
+
+$$\text{characters} \approx \frac{\text{text width in points}}{0.47 \times \text{body size in points}}$$
+
+An 8.5-inch page with 1.85-inch side margins leaves 4.8 inches (346 pt); at
+10.5 pt that is about 70 characters, which is what `minimal` sets. Then count
+a few full lines on the rendered page.
+
+Wide margins look generous on screen and wasteful in print. If a comfortable
+measure leaves the margins too wide, raise the body size by half a point, or
+use two columns, before you shrink the margins.
+
+## Leading: open enough to track, tight enough to hold
+
+`typography.line_height` multiplies LaTeX's own leading, which is already
+about 1.2 times the type size. Values from 1.1 to 1.25 suit most text faces.
+Open the leading as the measure lengthens; tighten it for short lines and
+large type. Display text (titles, headings, captions, tables, footnotes) keeps
+its own spacing whatever this token says.
+
+## Hierarchy: few signals, used consistently
+
+A reader should be able to tell a section from a subsection without reading
+the words. Use the fewest signals that achieve it: size, weight, case, colour,
+rules, numbering. Two or three distinct heading levels are enough for almost
+any paper.
+
+- Keep the size steps modest. `h1` at 1.3 to 1.5 times the body, `h2` at 1.1
+  to 1.2, `h3` at the body size. Large jumps look like a poster.
+- Change one signal per level where possible. If `h2` is bold, `h3` can be
+  bold italic or small capitals at the same size.
+- Do not repeat a signal for two different jobs. If the accent colour marks
+  headings, a link in the same colour reads as a heading fragment.
+
+## Colour: one accent, used sparingly
+
+Most good document designs use near-black text, one grey for secondary
+material, and a single accent. The accent carries meaning only while it is
+rare: put it on the title rule, the section numbers or headings, links, and
+callouts, and nowhere else. A second accent (`color.accent2`) is for data
+graphics that need two series, not for decoration.
+
+Check contrast. Body text needs a contrast ratio of at least 4.5 to 1 against
+the page (WCAG AA), and so does any coloured text a reader must read, such as
+captions in `muted` or links in `accent`. A light grey that looks refined on a
+screen often fails on paper.
+
+```{r contrast}
+contrast <- function(fg, bg = "#FFFFFF") {
+  lum <- function(hex) {
+    c <- grDevices::col2rgb(hex)[, 1] / 255
+    c <- ifelse(c <= 0.03928, c / 12.92, ((c + 0.055) / 1.055)^2.4)
+    sum(c(0.2126, 0.7152, 0.0722) * c)
+  }
+  l <- sort(c(lum(fg), lum(bg)), decreasing = TRUE)
+  round((l[1] + 0.05) / (l[2] + 0.05), 1)
+}
+pal <- designer_style("minimal")$color
+sapply(pal[c("text", "accent", "muted")], contrast)
+```
+
+## Paragraphs: indent or space, never both
+
+Separate paragraphs with a first-line indent (`paragraph.indent`) or with
+vertical space (`paragraph.spacing`), not both. Indents suit continuous
+argument and long reading; space suits reports that a reader scans. The
+validator warns if you set both.
+
+## Tables: let the data carry the structure
+
+Horizontal rules at the top, under the header and at the bottom
+(`table.style: booktabs`) suit nearly every research table. Vertical rules and
+full grids add noise without helping the eye along a row. Set tables slightly
+smaller than the body (`table.size` about 0.9) and keep their leading close
+(`table.row_stretch` 1.1 to 1.25). Right-align numbers; that is the author's
+job (in `knitr::kable`, `align = "lrr"`), not the style's.
+
+## Faces: open, legible, and few
+
+Use one family for text and at most one more for contrast, typically a sans
+for labels, kickers and table headers (`typography.label`). Never name a
+proprietary face: a style that imitates a publication uses an open substitute
+with similar proportions and records the original in `description`. The
+bundled families are Source Serif 4, EB Garamond, XITS and Fira Code; a style
+can ship others under `fonts.<Family>.<face>`.
+
+## Fit the occasion
+
+A style is for a kind of document read by a kind of reader. A journal
+manuscript under review wants plain structure, a header title, wide spacing
+(`pdf(doublespace = TRUE)`) and no ornament. A policy brief wants a kicker, a
+strong title, a callout for the finding, and a page a busy reader can scan. A
+long essay wants a book face, indented paragraphs, and quiet headings. Decide
+who reads the document and how, then choose.
+
+## Only the page is evidence
+
+A token can be correct in `format.yml`, correct in the resolved spec, and
+still wrong on the page. Look at every page of a realistic render, in both
+title layouts, before you share a style. In particular check:
+
+- a two-line title, and a long author line;
+- a table wider than half the measure, in a two-column style;
+- the last page, which often carries only a few references;
+- the first page of the body when `title.layout` is `page`.
+
+# Sharing a style
+
+The simplest way to share a style is the folder: anyone can render with
+`pdf(style = "path/to/folder")`. To ship several styles together, put them in
+a set: a folder holding `set.yml` and `styles/<id>/format.yml` for each style.
+Fonts a style needs go in `styles/<id>/assets/fonts/` or the set's own
+`assets/fonts/`.
+
+```yaml
+# set.yml
+id: my-house
+title: "My house styles"
+version: 1.0.0
+format_version: 2
+styles: [my-brief, my-paper]
+```
+
+`designer_install_set()` installs a set from a GitHub repository, and
+`designer_update_sets()` refreshes installed sets. A style in an installed
+set with the same id as a core style takes precedence, with a warning.
+
+# Token reference
+
+Every token the engine knows, generated from the schema when this page was
+built. **Allowed** gives the legal values: a list of names, a numeric range,
+a colour role, or a hex colour. **Status** says whether the engine renders it
+today.
+
+```{r reference, echo = FALSE, results = "asis"}
+tokens$group <- sub("\\..*$", "", tokens$key)
+tokens$group[tokens$key %in% c("id", "label", "description", "inherits")] <- "identity"
+order <- c("identity", "page", "typography", "color", "headings", "title",
+           "paragraph", "figure", "table", "code", "quote", "callout",
+           "footnotes", "header_footer", "links", "citations")
+order <- c(order, setdiff(unique(tokens$group), order))
+for (g in order) {
+  t <- tokens[tokens$group == g, ]
+  if (!nrow(t)) next
+  cat("\n## `", g, "`\n\n", sep = "")
+  tab <- data.frame(
+    Token = paste0("`", t$key, "`"),
+    Allowed = gsub("|", "\\|", t$allowed, fixed = TRUE),
+    Default = ifelse(is.na(t$default), "", t$default),
+    Status = t$status,
+    Notes = gsub("|", "\\|", t$doc, fixed = TRUE))
+  print(knitr::kable(tab, format = "pipe", row.names = FALSE))
+  cat("\n")
+}
+```

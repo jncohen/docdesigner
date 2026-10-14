@@ -53,13 +53,13 @@ typography.body: "Source Serif 4"
 color.accent: "006A71"
 color.rule: "006A71"
 headings.number_sections: false
-title.layout: report
+title.layout: header
 title.rule.position: below
 code.highlight: pygments
 ```
 
 Scaffold and validate with `designer_new_style()` and
-`designer_validate_style()`. `designer_tokens()` and `STYLE-SPEC.md` list the
+`designer_validate_style()`. `designer_tokens()` and the *Creating a style* article list the
 full vocabulary.
 
 Bundled font families: `Source Serif 4`, `EB Garamond`, `XITS`, `Fira Code`.

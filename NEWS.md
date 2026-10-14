@@ -1,5 +1,41 @@
 # docdesigner (development version)
 
+- **Title pages.** `title.layout` is now a structural choice with three
+  values: `header` (the title block at the head of page 1, as before),
+  `page` (title and abstract on a page of their own) and `masthead`
+  (reserved; renders as `header` for now). Any style can use either layout,
+  and `docdesigner::pdf(title_layout = "page")` chooses it per document.
+  A title page sets the title about a third of the way down
+  (`title.page.offset`), carries no running head, band or folio, and keeps
+  the abstract or moves it to the first body page (`title.page.abstract`).
+  All twelve styles default to `header`, so no existing document changes.
+  The old archetype names (`plain`, `essay`, `journal`, `report`) are read as
+  `header`, and `title.page_break_after: true` as `page`; the validator flags
+  both. Two-column styles get a full-width title page.
+- **`pdf()` renders through the package's own LaTeX template**
+  (`inst/templates/docdesigner.tex`) instead of pandoc's default. Pages set in
+  the `header` layout are unchanged: every style was compared against the
+  previous renders page by page.
+- **New: callouts.** A fenced div, `::: {.callout title="Key finding"}`,
+  sets an emphasis block in every style. `callout.style` is `filled`,
+  `ruled`, `boxed` or `plain`; `callout.color`, `callout.tint`,
+  `callout.rule`, `callout.size` and `callout.title.*` tune it. Eight
+  styles set their own treatment so that callouts stay distinct from their
+  quotes; the rest use a tinted panel in their accent colour.
+- **Pandoc 3.1.8 or newer is required.** Older versions write bibliographies
+  in a form the template cannot typeset; `pdf()` now says so plainly instead
+  of failing in LaTeX. `DESCRIPTION` records the requirement.
+- **New article: *Creating a style*.** The workflow, the rules for setting
+  tokens, principles of good document design (measure, leading, hierarchy,
+  colour and contrast, tables), and a full token reference generated from the
+  schema. It replaces `STYLE-SPEC.md`, which had drifted from the engine.
+- **New specimen gallery.** `examples/gallery-document.Rmd` is a short real
+  analysis of R's `airquality` data with three figures, three tables, a
+  quotation, code, a callout and a bibliography. `render-gallery.R` renders
+  it in every style and both title layouts and combines the results into one
+  PDF with a contents page; it also accepts a draft style folder.
+- The design brief (`designer_design_brief()`) describes the title layouts,
+  the callout, and the CSS conventions `designer_import_html()` needs.
 - **Titles, headings and other display text keep their own line spacing.** A
   style's body line spacing (`typography.line_height`) was multiplying the
   spacing of everything set at an explicit size. In loosely leaded styles a

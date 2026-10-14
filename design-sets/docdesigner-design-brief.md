@@ -79,30 +79,62 @@ of body text in the design before calling it done.
 
 ## Title treatment
 
-Five archetypes exist for how the title/byline/abstract block reads.
-**Pick one** and design toward it -- a design that mixes elements from
-several will not map cleanly onto any single archetype:
+`title.layout` decides structure only: whether the title block opens
+the first body page or takes a page of its own. Design the title's
+look (alignment, case, rule, kicker, subtitle, abstract panel) with the
+other `title.*` tokens; they apply to every layout.
 
-- **plain** -- flush left.
-- **essay** -- centred, book-like.
-- **journal** -- centred with rules, abstract, keywords.
-- **report** -- flush left, heavy rule, institution line.
-- **masthead** -- compact accent bar, one page.
+- **header** -- the title block sits at the top of the first body page.
+- **page** -- the title block and abstract take a page of their own and the body starts on the next.
+- **masthead** -- reserved for the snapshot format (port step 4); renders as header today.
 
-**Caveat, stated plainly:** `title.layout` is implemented in
-docdesigner's LaTeX template but not yet wired up to the `pdf()` output
-path. A design built around, say, a
-full-page `journal` title page is valuable now for its colour, type,
-and heading choices -- those import cleanly -- but the full-page
-treatment itself will not render until that port lands. Don't be
-surprised if an early import comes back with a plain flush-left title
-regardless of what the mockup shows; that's this gap, not
-a bug in the import.
+On a title page (`page`), the title block sits about a third of the way
+down (`title.page.offset`, a fraction of the text height), and the
+abstract sits either on the title page or at the head of the first body
+page (`title.page.abstract`). The title page carries no running head,
+band or folio.
+
+A model that shows both a standalone title page and a first page with
+the title at its head is two layouts of one style: design the tokens
+once and both render. The importer does not infer the layout; set it
+by hand.
 
 ## Tables and code
 
 - Table style: one of `booktabs`, `grid`, `zebra`, `minimal`.
 - Code syntax theme: one of `pygments`, `tango`, `espresso`, `zenburn`, `kate`, `monochrome`, `breezedark`, `haddock`, `none`.
+
+## Quotes, callouts and the abstract
+
+Three block elements set text apart. Make them distinguishable at a glance:
+if quotes carry a left bar, give the callout a fill or a border instead.
+
+- Quote: indent `none` = 0pt, `sm` = 0.75em, `md` = 1em, `lg` = 1.5em; style `normal` or `italic`; any colour role; optional left accent bar.
+- Callout (the author's key point, with a short title): `filled`, `ruled`, `boxed`, `plain`; a colour role for the bar, border and title; a fill tint of 0-40% of that colour; title case none, upper or smallcaps.
+- Abstract: label as a heading, run in, or none; optional rule below;
+  optional box with a background role.
+
+## Making the HTML importable
+
+`designer_import_html()` reads the page's CSS literally. Follow these
+conventions or the values will not be found:
+
+- Put all CSS in one `<style>` block in the page's `<head>`.
+- Style plain element selectors: `body`, `h1`, `h2`, `h3`. Classes and
+  descendant selectors are not read for these values.
+- Declare the palette as custom properties on `:root`: `--accent`,
+  `--color-text`, `--color-muted`, `--color-background`.
+- The accent is read from `h1 { color }` first and `--accent` only when
+  `h1` sets no colour. If headings are not in the accent colour, let `h1`
+  inherit its colour from `body` and declare `--accent`.
+- Give `body` a `font-size` in px and a unitless `line-height`; give each
+  heading a `font-size` in px, a `font-weight` and, if used, `text-transform`.
+- Name fonts by family (`font-family: "Source Serif 4", serif`).
+
+The import never reads layout: title layout, margins, columns, running
+heads, rules and colour roles are set by hand from the design. A
+stylesheet page listing every token value by name makes that step
+mechanical.
 
 ## Explicitly out of bounds
 
