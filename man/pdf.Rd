@@ -4,12 +4,17 @@
 \alias{pdf}
 \title{Designed PDF output format}
 \usage{
-pdf(..., style = "minimal", title_layout = NULL)
+pdf(..., style = "minimal", doublespace = FALSE, title_layout = NULL)
 }
 \arguments{
 \item{...}{Passed to \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
 
 \item{style}{A style from \code{\link[=designer_styles]{designer_styles()}} or a style directory path.}
+
+\item{doublespace}{If \code{TRUE}, double-space the body text, as for a
+manuscript under review. Titles, headings, tables, captions, footnotes
+and code stay single-spaced. Overrides the style's
+\code{typography.line_height} for body text only.}
 
 \item{title_layout}{\code{"header"} (title block at the top of the first page) or
 \code{"page"} (title and abstract on a page of their own). \code{NULL}, the default,

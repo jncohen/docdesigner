@@ -938,12 +938,16 @@ dd_title_layout <- function(s, override = NULL) {
 #'
 #' @param ... Passed to [rmarkdown::pdf_document()].
 #' @param style A style from [designer_styles()] or a style directory path.
+#' @param doublespace If `TRUE`, double-space the body text, as for a
+#'   manuscript under review. Titles, headings, tables, captions, footnotes
+#'   and code stay single-spaced. Overrides the style's
+#'   `typography.line_height` for body text only.
 #' @param title_layout `"header"` (title block at the top of the first page) or
 #'   `"page"` (title and abstract on a page of their own). `NULL`, the default,
 #'   uses the style's `title.layout` token.
 #' @return An R Markdown output format.
 #' @export
-pdf <- function(..., style = "minimal", title_layout = NULL) {
+pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL) {
   if (!requireNamespace("rmarkdown", quietly = TRUE)) stop("rmarkdown is required.", call. = FALSE)
   if (!requireNamespace("yaml", quietly = TRUE)) stop("The 'yaml' package is required.", call. = FALSE)
   # The structural template is pandoc 3.8's. Pandoc 3.1.7 and older write
@@ -959,7 +963,16 @@ pdf <- function(..., style = "minimal", title_layout = NULL) {
          call. = FALSE)
   }
   s <- dd_resolve_style(style)
-  header <- tempfile(fileext = ".tex"); writeLines(dd_preamble(s), header)
+  preamble <- dd_preamble(s)
+  # Double spacing is a property of the DOCUMENT (a manuscript for review),
+  # not of the style, so it is an argument here rather than a token. It comes
+  # after dd_preamble()'s \linespread so it wins for body text; display text
+  # keeps its own leading because dd_size() resets the stretch locally, and
+  # setspace itself keeps floats and footnotes single-spaced.
+  if (isTRUE(doublespace)) {
+    preamble <- paste(preamble, "\\usepackage{setspace}", "\\doublespacing", sep = "\n")
+  }
+  header <- tempfile(fileext = ".tex"); writeLines(preamble, header)
   layout <- dd_title_layout(s, title_layout)
 
   base <- dd_pt(s$typography$base_size)

@@ -370,3 +370,17 @@ for (st in designer_styles()$style) {
 # A callout tint comes from the style's own palette role.
 pre <- docdesigner:::dd_preamble(designer_style("minimal"))
 stopifnot(grepl("colback=accent!8!white", pre, fixed = TRUE))
+
+# --- pdf(): document-level double spacing ------------------------------------
+# The option must reach the generated preamble, and only when asked for. No
+# pandoc or xelatex needed: pdf() builds the format object and writes the
+# header file without rendering anything.
+header_of <- function(fmt) {
+  a <- fmt$pandoc$args
+  i <- which(a %in% c("--include-in-header", "-H"))
+  readLines(a[i[length(i)] + 1])
+}
+if (requireNamespace("rmarkdown", quietly = TRUE)) {
+  stopifnot(!any(grepl("doublespacing", header_of(pdf(style = "minimal")), fixed = TRUE)))
+  stopifnot(any(grepl("doublespacing", header_of(pdf(style = "minimal", doublespace = TRUE)), fixed = TRUE)))
+}
