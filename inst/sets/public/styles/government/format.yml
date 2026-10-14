@@ -71,7 +71,7 @@ headings.h3.color: text
 # Follows the opener (firstpage): flush-left near-black title, roman deck line,
 # muted byline below, a boxed "Highlights" block. The navy rule is supplied by
 # title.rule.* (impl); the report LAYOUT proper is still port (see fidelity).
-title.layout: report
+title.layout: header
 title.align: left
 title.scale: 2.2                     # stylesheet spec (30px title / 13.5px body ~= 2.2)
 title.rule.position: below
@@ -105,3 +105,8 @@ header_footer.header.fill: accent      # agency navy
 header_footer.header.color: knockout   # white out of the band
 header_footer.header.rule: false
 header_footer.first_page: header
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: boxed
+callout.rule: thin
+callout.tint: 8

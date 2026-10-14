@@ -206,6 +206,11 @@ designer_validate_style <- function(style) {
       add(key = k, severity = "warning",
           message = "fragile token; verify the rendered output")
     }
+    if (identical(spec$status, "deprecated")) {
+      add(key = k, severity = "warning",
+          message = paste0("deprecated; use ", spec$replaced_by %||% "its replacement",
+                           " instead"))
+    }
   }
 
   for (req in c("id", "label")) {

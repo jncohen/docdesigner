@@ -520,11 +520,44 @@ $if(has-frontmatter)$
 \frontmatter
 $endif$
 $if(title)$
+$if(dd-title-page)$
+$-- title.layout: page. The title block and abstract take a page of their own;
+$-- the body starts on the next. titlepage drops to one column and restores
+$-- two afterwards, so two-column styles get a full-width title page.
+$-- \ddtitlepagetop and \ddtitlepagebottom come from dd_preamble(): spacing is
+$-- look, so it stays with the tokens.
+\providecommand{\ddtitlepagetop}{}
+\providecommand{\ddtitlepagebottom}{\vfill}
+\begin{titlepage}
+\ddtitlepagetop
+\maketitle
+$if(abstract)$
+$if(dd-abstract-next)$
+$else$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$endif$
+\ddtitlepagebottom
+\end{titlepage}
+$if(abstract)$
+$if(dd-abstract-next)$
+$-- title.page.abstract: next. The abstract opens the first body page.
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$endif$
+$else$
+$-- title.layout: header (and masthead, until port step 4). The title block
+$-- sits at the top of the first body page.
 \maketitle
 $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
+$endif$
 $endif$
 $endif$
 

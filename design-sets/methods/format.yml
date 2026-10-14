@@ -65,7 +65,7 @@ headings.h3.style: italic
 headings.h3.color: text
 
 # ---- title (flush-left journal opener: title, subtitle, byline, abstract) --
-title.layout: journal
+title.layout: header
 title.align: left
 title.scale: 2.4                     # spec sheet: scale 2.4
 title.color: text                    # title is near-black (#16181C = color.text)
@@ -121,3 +121,8 @@ header_footer.header.rule: true
 header_footer.footer.center: page    # centred folio, matching the body page
 header_footer.footer.right: none     # avoid the default right-folio duplicate
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: boxed
+callout.rule: hairline
+callout.tint: 6

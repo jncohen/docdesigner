@@ -70,7 +70,7 @@ headings.h4.color: text              # else falls through to the accent default
 # short red rule sits below the headline. The kicker is now a native token: a
 # red sans eyebrow above the title, the Economist's signature furniture move —
 # here repurposed as the academic venue label.
-title.layout: plain                  # flush left, body follows on the same page
+title.layout: header
 title.align: left
 title.scale: 3.0                     # spec: 3.0
 title.color: text                    # headline is black, NOT the red accent

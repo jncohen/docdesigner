@@ -30,7 +30,7 @@ dd_role_doc <- function() {
 #' Generates a Markdown document that states docdesigner's token vocabulary
 #' as hard design constraints: the colour roles, the bundled fonts, the named
 #' scale steps (space, rule weight, margin, width), the bounded type scale,
-#' and the five `title.layout` archetypes. Give this to whoever designs a new
+#' and the `title.layout` structures. Give this to whoever designs a new
 #' style, before they start, so the result is something
 #' [designer_import_html()] can actually translate rather than a design that
 #' merely resembles one.
@@ -133,36 +133,72 @@ designer_design_brief <- function(path = NULL) {
     "",
     "## Title treatment",
     "",
-    "Five archetypes exist for how the title/byline/abstract block reads.",
-    "**Pick one** and design toward it -- a design that mixes elements from",
-    "several will not map cleanly onto any single archetype:",
+    "`title.layout` decides structure only: whether the title block opens",
+    "the first body page or takes a page of its own. Design the title's",
+    "look (alignment, case, rule, kicker, subtitle, abstract panel) with the",
+    "other `title.*` tokens; they apply to every layout.",
     ""
   )
 
   ti <- schema$tokens$title.layout
   for (v in ti$values) {
-    doc <- if (!is.null(ti$doc)) {
-      m <- regmatches(ti$doc, regexpr(paste0(v, ": [^.]*\\."), ti$doc))
-      if (length(m) && nzchar(m)) sub(paste0("^", v, ": "), "", m) else ""
-    } else ""
+    m <- regmatches(ti$doc, regexpr(paste0(v, ": [^.]*\\."), ti$doc))
+    doc <- if (length(m) && nzchar(m)) sub(paste0("^", v, ": "), "", m) else ""
     L <- c(L, paste0("- **", v, "**", if (nzchar(doc)) paste0(" -- ", doc) else ""))
   }
 
   L <- c(L, "",
-    "**Caveat, stated plainly:** `title.layout` is implemented in",
-    "docdesigner's LaTeX template but not yet wired up to the `pdf()` output",
-    "path. A design built around, say, a",
-    "full-page `journal` title page is valuable now for its colour, type,",
-    "and heading choices -- those import cleanly -- but the full-page",
-    "treatment itself will not render until that port lands. Don't be",
-    "surprised if an early import comes back with a plain flush-left title",
-    "regardless of what the mockup shows; that's this gap, not",
-    "a bug in the import.",
+    "On a title page (`page`), the title block sits about a third of the way",
+    "down (`title.page.offset`, a fraction of the text height), and the",
+    "abstract sits either on the title page or at the head of the first body",
+    "page (`title.page.abstract`). The title page carries no running head,",
+    "band or folio.",
+    "",
+    "A model that shows both a standalone title page and a first page with",
+    "the title at its head is two layouts of one style: design the tokens",
+    "once and both render. The importer does not infer the layout; set it",
+    "by hand.",
     "",
     "## Tables and code",
     "",
     paste0("- Table style: one of ", paste0("`", schema$tokens$table.style$values, "`", collapse = ", "), "."),
     paste0("- Code syntax theme: one of ", paste0("`", schema$tokens$code.highlight$values, "`", collapse = ", "), "."),
+    "",
+    "## Quotes, callouts and the abstract",
+    "",
+    "Three block elements set text apart. Make them distinguishable at a glance:",
+    "if quotes carry a left bar, give the callout a fill or a border instead.",
+    "",
+    paste0("- Quote: indent ", scale_table("indent"), "; style `normal` or `italic`;",
+           " any colour role; optional left accent bar."),
+    paste0("- Callout (the author's key point, with a short title): ",
+           paste0("`", schema$tokens$callout.style$values, "`", collapse = ", "),
+           "; a colour role for the bar, border and title; a fill tint of 0-40% of that colour;",
+           " title case none, upper or smallcaps."),
+    "- Abstract: label as a heading, run in, or none; optional rule below;",
+    "  optional box with a background role.",
+    "",
+    "## Making the HTML importable",
+    "",
+    "`designer_import_html()` reads the page's CSS literally. Follow these",
+    "conventions or the values will not be found:",
+    "",
+    "- Put all CSS in one `<style>` block in the page's `<head>`.",
+    "- Style plain element selectors: `body`, `h1`, `h2`, `h3`. Classes and",
+    "  descendant selectors are not read for these values.",
+    "- Declare the palette as custom properties on `:root`: `--accent`,",
+    "  `--color-text`, `--color-muted`, `--color-background`.",
+    "- The accent is read from `h1 { color }` first and `--accent` only when",
+    "  `h1` sets no colour. If headings are not in the accent colour, let `h1`",
+    "  inherit its colour from `body` and declare `--accent`.",
+    "- Give `body` a `font-size` in px and a unitless `line-height`; give each",
+    "  heading a `font-size` in px, a `font-weight` and, if used, `text-transform`.",
+    "- Name fonts by family (`font-family: \"Source Serif 4\", serif`).",
+    "",
+    "The import never reads layout: title layout, margins, columns, running",
+    "heads, rules and colour roles are set by hand from the design. A",
+    "stylesheet page listing every token value by name makes that step",
+    "mechanical.",
     "",
     "## Explicitly out of bounds",
     "",

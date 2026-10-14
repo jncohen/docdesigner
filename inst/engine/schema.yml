@@ -14,6 +14,7 @@
 #   port  the LaTeX exists in docdesignertemplate.tex; needs wiring
 #   new   requires new LaTeX; validates but is currently ignored
 #   risk  feasible but fragile, especially with columns: 2
+#   deprecated  still honoured, but superseded; `replaced_by` names the successor
 
 format_version: 2
 
@@ -169,8 +170,12 @@ tokens:
   headings.h4.style:  {type: enum, values: [normal, italic], default: italic, status: impl}
 
   # -- title -----------------------------------------------------------------
-  title.layout: {type: enum, values: [plain, essay, journal, report, masthead], default: plain, status: port,
-                 doc: "plain: flush left. essay: centred, book-like. journal: centred with rules, abstract, keywords. report: flush left, heavy rule, institution line. masthead: compact accent bar, one page."}
+  title.layout: {type: enum, values: [header, page, masthead], default: header, status: impl,
+                 doc: "Structure, not look. header: the title block sits at the top of the first body page. page: the title block and abstract take a page of their own and the body starts on the next. masthead: reserved for the snapshot format (port step 4); renders as header today. Alignment, case, rules, kicker, subtitle and abstract treatment are separate tokens and apply to every layout. pdf(title_layout = ) overrides it per document."}
+  title.page.offset: {type: num, min: 0.0, max: 0.4, default: 0.25, status: impl,
+                      doc: "layout: page only. Space above the title block, as a fraction of the text height. The default sets the title about a third of the way down a letter page."}
+  title.page.abstract: {type: enum, values: [title, next], default: title, status: impl,
+                        doc: "layout: page only. title: the abstract sits on the title page. next: it opens the first body page."}
   title.align:  {type: enum, values: [left, center], default: left, status: impl}
   title.scale:  {type: num, min: 1.0, max: 5.0, default: 2.6, status: impl}
   title.color:  {type: role, default: text, status: impl, doc: "Near-black is what every design-sets mockup specifies; accent titles are the exception, not the rule."}
@@ -181,7 +186,8 @@ tokens:
   title.rule.weight:   {type: "scale:rule_weight", default: thick, status: impl}
   title.rule.length: {type: inches, min: 0.3, max: 8.0, nullable: true, status: impl, doc: "Rule width in inches; omit for the full measure."}
   title.rule.color:    {type: role, default: rule, status: impl}
-  title.page_break_after: {type: bool, default: false, status: impl, doc: "true = a full title page."}
+  title.page_break_after: {type: bool, default: false, status: deprecated, replaced_by: "title.layout: page",
+                           doc: "Superseded by title.layout: page, which it now maps to."}
 
   # Kicker: a short eyebrow label set above the title (venue/section/series).
   title.kicker.text:  {type: string, nullable: true, status: impl, doc: "Eyebrow label above the title. Unset = no kicker."}
@@ -264,6 +270,24 @@ tokens:
   quote.style:  {type: enum, values: [normal, italic], default: normal, status: impl}
   quote.color:  {type: role, default: text, status: impl}
   quote.rule:   {type: bool, default: false, status: impl, doc: "Vertical accent rule at the left."}
+
+  # -- callout ---------------------------------------------------------------
+  # An emphasis block, written in a document as a fenced div:
+  #   ::: {.callout title="Key finding"}
+  #   Body text.
+  #   :::
+  # Every style renders one; these tokens tune it. Defaults give a lightly
+  # tinted accent panel, so a style that says nothing still gets a callout in
+  # its own colour.
+  callout.style: {type: enum, values: [filled, ruled, boxed, plain], default: filled, status: impl,
+                  doc: "filled: tinted panel, no border. ruled: a left bar, no fill. boxed: a border round a tinted panel. plain: indented text with the title, no ornament."}
+  callout.color: {type: role, default: accent, status: impl, doc: "The bar, border and title colour, and the base of the fill tint."}
+  callout.tint:  {type: num, min: 0, max: 40, default: 8, status: impl,
+                  doc: "Fill strength: percent of callout.color mixed into white. filled and boxed only; 0 = no fill."}
+  callout.rule:  {type: "scale:rule_weight", default: thick, status: impl, doc: "ruled: the bar. boxed: the border, where hairline or thin is usual."}
+  callout.size:  {type: num, min: 0.8, max: 1.1, default: 0.95, status: impl, doc: "Text size, as a multiple of typography.base_size."}
+  callout.title.case:  {type: enum, values: [none, upper, smallcaps], default: upper, status: impl}
+  callout.title.color: {type: role, nullable: true, status: impl, doc: "Defaults to callout.color."}
 
   # -- footnotes -------------------------------------------------------------
   footnotes.size:      {type: num, min: 0.6, max: 1.0, default: 0.8, status: impl}

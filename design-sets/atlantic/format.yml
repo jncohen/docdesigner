@@ -72,10 +72,9 @@ headings.h4.color: text              # else falls through to the accent default
 
 # ---- title — follows the OPENER (atlantic-firstpage) ------------------------
 # Centred kicker / title / deck / byline over a short red rule; the body flows
-# on the SAME page (no separate cover). layout `essay` (centred) is the nearest
-# enum to the model's "feature" and is status: port (inert today). No abstract:
+# on the SAME page (no separate cover), so layout `header`. No abstract:
 # a magazine feature carries a deck, not a labelled block.
-title.layout: essay
+title.layout: header
 title.align: center
 title.scale: 3.4                     # title 54px / 16px body (opener)
 title.color: text                    # title is near-black; the kicker is accent
