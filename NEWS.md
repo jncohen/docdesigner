@@ -132,7 +132,7 @@ The design layer, as far as it can go without the template port.
   across the full paper width, not just the text block -- the Economist red
   flag and the government navy masthead. These are the two styles that did not
   resemble their models, and this is the furniture they were missing.
-- **Unhighlighted code no longer escapes its column.** `vset` governs
+- **Unhighlighted code no longer escapes its column.** `\fvset` governs
   fancyvrb environments only, and `code.highlight: none` makes pandoc emit
   LaTeX's built-in `verbatim`, which ignored line breaking entirely. Ten of the
   twelve styles set `highlight: none`; it was visible only in economist, whose
