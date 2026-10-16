@@ -11,7 +11,7 @@
 #
 # status:
 #   impl  implemented and rendering today
-#   port  the LaTeX exists in docdesignertemplate.tex; needs wiring
+#   port  planned for the structural template; validates but is currently ignored
 #   new   requires new LaTeX; validates but is currently ignored
 #   risk  feasible but fragile, especially with columns: 2
 #   deprecated  still honoured, but superseded; `replaced_by` names the successor
@@ -174,8 +174,8 @@ tokens:
   headings.h4.style:  {type: enum, values: [normal, italic], default: italic, status: impl}
 
   # -- title -----------------------------------------------------------------
-  title.layout: {type: enum, values: [header, page, masthead], default: header, status: impl,
-                 doc: "Structure, not look. header: the title block sits at the top of the first body page. page: the title block and abstract take a page of their own and the body starts on the next. masthead: reserved for the snapshot format (port step 4); renders as header today. Alignment, case, rules, kicker, subtitle and abstract treatment are separate tokens and apply to every layout. pdf(title_layout = ) overrides it per document."}
+  title.layout: {type: enum, values: [header, page], default: header, status: impl,
+                 doc: "Structure, not look. header: the title block sits at the top of the first body page. page: the title block and abstract take a page of their own and the body starts on the next. Alignment, case, rules, kicker, subtitle and abstract treatment are separate tokens and apply to every layout. pdf(title_layout = ) overrides it per document."}
   title.page.offset: {type: num, min: 0.0, max: 0.4, default: 0.25, status: impl,
                       doc: "layout: page only. Space above the title block, as a fraction of the text height. The default sets the title about a third of the way down a letter page."}
   title.page.abstract: {type: enum, values: [title, next], default: title, status: impl,

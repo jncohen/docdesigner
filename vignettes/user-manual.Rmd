@@ -13,14 +13,12 @@ This manual gathers the main package documentation in one place.
 
 - `docdesigner::pdf` creates a designed PDF document.
 - `docdesigner::html` creates plain body HTML for WordPress or another CMS.
-- `docdesigner::snapshot` creates the official Snapshot PDF and, by default, a plain HTML companion.
 
 ## Start
 
 ```r
 docdesigner::designer_use(template = "pdf")
 docdesigner::designer_use(template = "html")
-docdesigner::designer_use(template = "snapshot")
 ```
 
 ## Styles

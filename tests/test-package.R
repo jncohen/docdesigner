@@ -203,10 +203,9 @@ stopifnot(any(grepl("colour role", v$message)))
 unlink(bad, recursive = TRUE)
 
 # --- Bundled assets are discoverable -----------------------------------------
-template <- docdesigner:::dd_template()
-fonts <- docdesigner:::dd_fonts()
-stopifnot(nzchar(template))
-stopifnot(nzchar(fonts))
+stopifnot(file.exists(docdesigner:::dd_template()))
+stopifnot(dir.exists(docdesigner:::dd_fonts_dir()))
+stopifnot(file.exists(docdesigner:::dd_csl()))
 
 # --- Output formats build ----------------------------------------------------
 minimal_format <- pdf(style = "minimal")
@@ -220,8 +219,6 @@ stopifnot(any(page_format$pandoc$args == "dd-title-page=true"))
 html_format <- html()
 stopifnot(inherits(html_format, "rmarkdown_output_format"))
 
-snapshot_format <- snapshot(html = FALSE)
-stopifnot(inherits(snapshot_format, "rmarkdown_output_format"))
 
 # --- Local gallery -----------------------------------------------------------
 gallery <- designer_gallery(output_dir = tempfile("docdesigner-gallery-"),

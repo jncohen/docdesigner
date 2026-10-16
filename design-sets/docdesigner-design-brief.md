@@ -86,7 +86,6 @@ other `title.*` tokens; they apply to every layout.
 
 - **header** -- the title block sits at the top of the first body page.
 - **page** -- the title block and abstract take a page of their own and the body starts on the next.
-- **masthead** -- reserved for the snapshot format (port step 4); renders as header today.
 
 On a title page (`page`), the title block sits about a third of the way
 down (`title.page.offset`, a fraction of the text height), and the

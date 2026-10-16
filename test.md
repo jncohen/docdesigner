@@ -12,7 +12,7 @@ author:
     email: "author@test.edu"
     orcid: "0000-0000-0000-0000"
 institution: "Household Finance Working Group"
-series: "Snapshot"
+series: "Working Paper"
 number: 1
 surname: "Author"
 runningtitle: "docdesigner-template Test"

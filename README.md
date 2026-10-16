@@ -4,13 +4,30 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 0.9.10, alpha.** The engine and the style-set format are working and tested: `R CMD check` is clean, all thirteen styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or [TESTING.md](TESTING.md) for the short version.
+> **Status: 0.9.10, alpha.** `R CMD check` passes on Linux and Windows, all
+> thirteen styles render, and 90 checks that each style's tokens reach the page
+> pass. See [Known limitations](#known-limitations). Testers can start with
+> [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or
+> [TESTING.md](TESTING.md) for the short version.
+
+See every style as a sample PDF in the
+[style gallery](https://jncohen.github.io/docdesigner/articles/gallery.html).
+
+## Install
+
+```r
+# install.packages("remotes")
+remotes::install_github("jncohen/docdesigner")
+```
+
+PDF output needs Pandoc 3.1.8 or newer (RStudio includes it) and xelatex
+(TinyTeX is enough).
 
 ## Outputs
 
-- `docdesigner::pdf` — designed PDF, driven by a style.
-- `docdesigner::html` — plain body HTML for pasting into WordPress or another CMS.
-- `docdesigner::snapshot` — the official Snapshot PDF layout, with an optional HTML companion.
+- `docdesigner::pdf`: a designed PDF, set in one of the styles.
+- `docdesigner::html`: plain body HTML for pasting into WordPress or another
+  CMS.
 
 ## Minimal YAML
 
@@ -90,28 +107,17 @@ output:
 ---
 ```
 
-```yaml
----
-title: "Finding-Forward Headline"
-snapshot_feature: "figures/chart.png"
-snapshot_data_note: "Data: source note."
-output:
-  docdesigner::snapshot:
-    html: true
----
-```
-
 ## Starters
 
 ```r
-docdesigner::designer_use(template = "pdf")       # or "html", "snapshot"
+docdesigner::designer_use(template = "pdf")       # or "html"
 ```
 
 RStudio users can also pick the package templates from **File > New File > R Markdown > From Template**.
 
 ## Styles and style sets
 
-A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Ten styles ship across two sets:
+A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Thirteen styles ship in two sets:
 
 ```text
 inst/sets/
@@ -141,7 +147,7 @@ designer_specimens()          # render a PDF specimen per style + gallery index
 id: methods
 label: Methods
 description: Computational social science and methods journals
-inherits: minimal            # optional; resolves a full chain
+inherits: modern             # optional; resolves a full chain
 
 typography.body: "Source Serif 4"
 typography.heading: "Source Serif 4"
@@ -223,39 +229,53 @@ All faces of a family must live in one directory — `fontspec`'s `Path=` applie
 designer_check()
 ```
 
-Reports whether the template, fonts, CSL, styles, Pandoc, and a LaTeX engine are all findable. PDF output requires **xelatex** (TinyTeX is fine) and **Pandoc**.
+Reports whether the template, fonts, citation style, styles, Pandoc and a LaTeX engine can all be found.
 
 ## Known limitations
 
-Read this before evaluating output.
-
-1. **`pdf()` does not use `inst/templates/docdesignertemplate.tex`.** It generates a preamble from tokens and hands it to `rmarkdown::pdf_document()`'s stock template. Only `snapshot()` uses the bundled template.
-2. **Consequently, `pdf()` cannot render** `subtitle` title pages, `institution` / `series` / `number`, `author_dept` / `_inst` / `_addr` / `_email` / `_orcid`, `keywords`, `acknowledgements`, `anonymize`, `doublespace`, `linenumbers`, or running heads (`surname`, `runningtitle`). The `.tex` supports all of these; the token engine does not yet reach them.
-3. **Page architecture is not tokenized.** The vocabulary now reaches fonts, sizes, colour roles, heading scales, columns, title kickers, boxed abstracts and code panels — so the twelve styles no longer differ only by accent colour. What it does not reach is page *furniture*: title-page layout, the author block, full-bleed masthead bands, boxed callouts. `economist` and `government` depend on exactly that, and are the two styles that still do not resemble their models.
-
-The fix for all three is one piece of work: port `pdf()` *onto* the template and tokenize its branching. See `docdesigner.md` for the staged plan.
+1. **Tables in two-column styles** (`nature`, `economist`) are floats: they
+   move, never split across pages, and lose their column widths. See the
+   warning above.
+2. **Some tokens validate but do nothing yet.** `designer_validate_style()`
+   lists them as "not yet implemented". The main ones: `table.style` (only
+   `booktabs` renders, so government's grid tables are plain rules),
+   `figure.placement`, `links.underline` and `title.keywords.show`.
+3. **Not printed:** `keywords` (they go into the PDF's metadata only) and the
+   author `orcid`.
+4. **The last page of a two-column document is not balanced**, so the right
+   column can end well above the left.
+5. **The bundled fonts take 3.4 MB.** That is too large for CRAN, which is on
+   hold until they move.
 
 ## Repository layout
 
 ```text
-R/                          package functions
-  engine.R                  token resolution, font registry, dd_preamble(), pdf()
-  sets.R                    install / list / update / scaffold
-  specimens.R               designer_specimens(): the only path that runs xelatex
-  snapshot.R  html.R  gallery.R  check.R  use.R  styles.R  utils.R
-inst/engine/schema.yml      token schema + defaults; every style inherits these
-inst/engine/*.lua           pandoc filters (two-column tables)
-inst/sets/                  bundled style sets
-inst/specimen/specimen.md   the document rendered by designer_specimens()
-inst/templates/             docdesignertemplate.tex (snapshot only, for now)
-inst/fonts/                 14 bundled font files (3.4 MB; slated to move)
+R/
+  engine.R                  token resolution, fonts, dd_preamble(), pdf()
+  schema.R                  reads and validates the token schema
+  sets.R                    install, list, update and scaffold styles and sets
+  specimens.R               designer_specimens()
+  html.R  html-assets.R     html() and its image and checklist helpers
+  gallery.R  check.R  use.R  styles.R  design_brief.R  import_html.R  utils.R
+inst/engine/schema.yml      the token vocabulary and its defaults
+inst/engine/*.lua           pandoc filters: authors, tables, table headers,
+                            callouts, drop caps
+inst/templates/docdesigner.tex   the LaTeX template pdf() renders through
+inst/sets/                  the bundled style sets
+inst/fonts/                 bundled fonts (3.4 MB)
+inst/specimen/specimen.md   the document designer_specimens() renders
 inst/rmarkdown/templates/   RStudio starter templates
-examples/                   fuller source examples and fixtures
-tests/test-package.R        R CMD check suite; does not render PDFs
-tools/render_style.py       dev harness; the executable spec for the engine
-rendered-examples/          created by designer_specimens(); git-ignored
+design-sets/                style drafts; not part of the package
+examples/                   example documents, including the gallery specimen
+dev/                        development scripts (render, verify, specimens)
+pkgdown/assets/specimens/   the gallery's PDFs and thumbnails
+tests/test-package.R        tests run by R CMD check; they do not render PDFs
 ```
 
 ## Documentation
 
-- [USER-MANUAL.md](USER-MANUAL.md) — full user manual.
+The website, <https://jncohen.github.io/docdesigner/>, has the function
+reference, the [style gallery](https://jncohen.github.io/docdesigner/articles/gallery.html),
+[Getting started](https://jncohen.github.io/docdesigner/articles/getting-started.html)
+and [Creating a style](https://jncohen.github.io/docdesigner/articles/creating-styles.html).
+[USER-MANUAL.md](USER-MANUAL.md) collects the user documentation in one file.

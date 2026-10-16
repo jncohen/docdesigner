@@ -12,7 +12,6 @@
 #   drafts/<style>.pdf      each design-sets draft, title as a header block
 #   titlepage/<style>.pdf   the same with title.layout: page
 #   installed/<style>.pdf   designer_specimens() from the INSTALLED package
-#   snapshot.pdf            snapshot() on the bundled example
 #   preamble/<style>.tex    dd_preamble() for each installed style
 #   manifest.txt            commit, package version, pandoc, page counts
 #
@@ -75,8 +74,7 @@ capture_baseline <- function(dir, root = .pb_root) {
     out
   }, args = list(ds = ds, styles = styles, dir = dir))
 
-  # The installed package's own specimens, every installed preamble, and
-  # snapshot() -- the format step 4 folds into pdf().
+  # The installed package's own specimens and every installed preamble.
   log <- c(log, callr::r(function(dir, root) {
     out <- character()
     tmp <- file.path(tempdir(), "pb-installed")
@@ -89,16 +87,7 @@ capture_baseline <- function(dir, root = .pb_root) {
       writeLines(docdesigner:::dd_preamble(docdesigner:::dd_resolve_style(r$style[i])),
                  file.path(dir, "preamble", paste0(r$style[i], ".tex")))
     }
-    ex <- file.path(root, "examples")
-    w <- file.path(tempdir(), "pb-snapshot")
-    unlink(w, recursive = TRUE); dir.create(w)
-    file.copy(list.files(ex, pattern = "^intro-to-docdesigner-snapshot", full.names = TRUE), w)
-    ok <- tryCatch({
-      pdf <- rmarkdown::render(file.path(w, "intro-to-docdesigner-snapshot.Rmd"), quiet = TRUE)
-      file.copy(pdf, file.path(dir, "snapshot.pdf"), overwrite = TRUE)
-      "OK"
-    }, error = function(e) paste("FAIL:", conditionMessage(e)))
-    c(out, sprintf("%-10s %-11s %s", "snapshot", "-", ok))
+    out
   }, args = list(dir = dir, root = root)))
 
   pdfs <- list.files(dir, pattern = "\\.pdf$", recursive = TRUE)

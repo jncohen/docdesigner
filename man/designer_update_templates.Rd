@@ -25,7 +25,6 @@ designer_update_templates(
 Invisibly returns \code{path}.
 }
 \description{
-Refreshes editable local copies of the LaTeX template, fonts, CSL file, and
-style manifests. Most projects do not need local assets; use this only when a
+Refreshes editable local copies of the fonts, CSL file and style sets. Most projects do not need local assets; use this only when a
 project deliberately keeps editable or frozen copies.
 }

@@ -4,7 +4,7 @@ Version: 0.9.10
 Authors@R: person("Joseph N.", "Cohen", role = c("aut", "cre"),
     email = "joseph.cohen@qc.cuny.edu")
 Description: Pandoc/R Markdown templates for research papers, book chapters,
-    reports, briefs, and snapshots. Provides publication-inspired, token-driven
+    reports and briefs. Provides publication-inspired, token-driven
     style sets so researchers can produce polished, audience-aware PDF output
     from R and reproduce the look of well-known publications.
 License: MIT + file LICENSE

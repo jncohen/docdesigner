@@ -1,5 +1,10 @@
 # docdesigner (development version)
 
+- **Removed: `snapshot()`.** The Household Finance Lab's one-page Snapshot
+  format now lives in the Lab's own package, hflsnap. Its template
+  (`docdesignertemplate.tex`), RStudio starter and examples are gone, and
+  `designer_use()` offers `"pdf"` and `"html"`. The `masthead` title layout,
+  reserved for it, is retired; a style that names it renders as `header`.
 - **Title-page furniture.** A document can carry a contact block, a warning
   line and acknowledgements. The corresponding author's `dept`, `inst`,
   `address`, `email` and `web` (author fields; mark one author
@@ -10,10 +15,9 @@
   In the header layout the warning sits above the title, and the contact
   details and acknowledgements become an unnumbered note at the foot of
   page 1. Every style.
-- **Title pages.** `title.layout` is now a structural choice with three
-  values: `header` (the title block at the head of page 1, as before),
-  `page` (title and abstract on a page of their own) and `masthead`
-  (reserved; renders as `header` for now). Any style can use either layout,
+- **Title pages.** `title.layout` is now a structural choice with two
+  values: `header` (the title block at the head of page 1, as before) and
+  `page` (title and abstract on a page of their own). Any style can use either layout,
   and `docdesigner::pdf(title_layout = "page")` chooses it per document.
   A title page sets the title about a third of the way down
   (`title.page.offset`), carries no running head, band or folio, and keeps

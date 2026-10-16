@@ -1,19 +1,19 @@
 #' Start a docdesigner document
 #'
 #' Creates a small starter R Markdown file. Package defaults already know where
-#' the bundled template, fonts, and CSL live, so project-local copies are only
+#' the bundled fonts, CSL and style sets live, so project-local copies are only
 #' needed for users who want to edit those assets.
 #'
 #' @param path Destination directory. Defaults to current working directory.
-#' @param template One of `"pdf"`, `"html"`, or `"snapshot"`.
+#' @param template One of `"pdf"` or `"html"`.
 #' @param file Optional output filename. Defaults to `<template>.Rmd`.
 #' @param overwrite If `TRUE`, replace an existing starter file.
-#' @param local_assets If `TRUE`, also copy the template, fonts, and CSL file
+#' @param local_assets If `TRUE`, also copy the fonts, CSL file and style sets
 #'   into the destination directory for local editing.
 #' @return Invisibly returns the starter path.
 #' @export
 designer_use <- function(path = ".",
-                         template = c("pdf", "html", "snapshot"),
+                         template = c("pdf", "html"),
                          file = NULL,
                          overwrite = FALSE,
                          local_assets = FALSE) {
@@ -54,7 +54,6 @@ designer_use <- function(path = ".",
   message("Minimal output choices:")
   message("  docdesigner::pdf       # designed PDF")
   message("  docdesigner::html      # plain web HTML")
-  message("  docdesigner::snapshot  # official Snapshot PDF + optional HTML")
   message("")
   message("Styles are optional for PDFs. See docdesigner::designer_styles().")
 
@@ -63,8 +62,7 @@ designer_use <- function(path = ".",
 
 #' Update local docdesigner assets
 #'
-#' Refreshes editable local copies of the LaTeX template, fonts, CSL file, and
-#' style manifests. Most projects do not need local assets; use this only when a
+#' Refreshes editable local copies of the fonts, CSL file and style sets. Most projects do not need local assets; use this only when a
 #' project deliberately keeps editable or frozen copies.
 #'
 #' @param path Destination directory.
@@ -92,16 +90,13 @@ designer_update_templates <- function(path = ".",
   message("Updated local docdesigner assets in: ", path)
   message("")
   message("Most documents can keep short YAML and use bundled package assets.")
-  message("If this project deliberately uses local assets, add or keep:")
-  message("  template: docdesignertemplate.tex")
+  message("To use the local citation style, add to the YAML:")
   message("  csl: default.csl")
-  message("  fontpath: fonts/")
 
   invisible(path)
 }
 
 copy_local_assets <- function(path, overwrite = FALSE) {
-  template_src <- dd_template()
   fonts_src <- dd_fonts_dir()
   csl_src <- dd_csl()
   sets_src <- dd_pkg_file("sets")
@@ -136,7 +131,6 @@ copy_local_assets <- function(path, overwrite = FALSE) {
     }
   }
 
-  copy_one(template_src, file.path(path, "docdesignertemplate.tex"))
   copy_one(fonts_src, file.path(path, "fonts"))
   copy_one(csl_src, file.path(path, "default.csl"))
   copy_one(sets_src, file.path(path, "sets"))
@@ -159,8 +153,6 @@ download_github_assets <- function(path, branch = "main", overwrite = TRUE) {
     invisible(TRUE)
   }
 
-  download_one("inst/templates/docdesignertemplate.tex",
-               file.path(path, "docdesignertemplate.tex"))
   download_one("inst/csl/default.csl", file.path(path, "default.csl"))
   # Engine defaults are derived from schema.yml; there has been no
   # defaults.yml since the token engine landed, and requesting it 404'd and

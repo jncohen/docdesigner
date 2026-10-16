@@ -1,200 +1,6 @@
-#' Render an official Snapshot
-#'
-#' Snapshot is a fixed official PDF layout. It can also write a plain HTML
-#' companion for web publishing.
-#'
-#' @param ... Arguments passed to [rmarkdown::pdf_document()].
-#' @param html If `TRUE`, write a plain HTML companion file.
-#' @param template LaTeX template path. Defaults to the bundled template.
-#' @param latex_engine LaTeX engine for the PDF. Defaults to `xelatex`.
-#' @param html_file Optional companion HTML filename.
-#' @param html_assets If `TRUE`, copy local images referenced by the HTML file.
-#' @param html_checklist If `TRUE`, write a short publishing checklist.
-#' @return An R Markdown output format.
-#' @export
-snapshot <- function(...,
-                     html = TRUE,
-                     template = dd_template(),
-                     latex_engine = "xelatex",
-                     html_file = NULL,
-                     html_assets = TRUE,
-                     html_checklist = TRUE) {
-  snapshot_output_format(
-    ...,
-    template = template,
-    latex_engine = latex_engine,
-    companion = if (isTRUE(html)) "html" else "none",
-    companion_file = html_file,
-    companion_assets = html_assets,
-    companion_checklist = html_checklist
-  )
-}
-
-# Snapshot's official look. It keeps the bundled snapshot LaTeX template but
-# now sources its style tokens (accent, columns, numbering) from the new
-# token engine's `policy` style rather than the retired inst/styles/ resolver.
-# `fontset` is fixed: snapshot is a single official house style.
-DD_SNAPSHOT_STYLE <- "policy"
-
-dd_snapshot_spec <- function(style = DD_SNAPSHOT_STYLE) {
-  s <- dd_resolve_style(style)
-  list(
-    fontset = "docdesigner",
-    accent = dd_hex(s$color$accent, default = "006A71"),
-    maincolumns = as.character(s$page$columns %||% 1L),
-    numbersections = if (isTRUE(s$headings$number_sections)) "true" else "false"
-  )
-}
-
-snapshot_output_format <- function(...,
-                                   template = dd_template(),
-                                   latex_engine = "xelatex",
-                                   companion = c("html", "markdown", "none"),
-                                   companion_file = NULL,
-                                   companion_assets = TRUE,
-                                   companion_checklist = TRUE) {
-  companion <- match.arg(companion)
-  spec <- dd_snapshot_spec()
-
-  companion_pdf_document(
-    ...,
-    template = template,
-    latex_engine = latex_engine,
-    style = DD_SNAPSHOT_STYLE,
-    document_type = "snapshot",
-    style_spec = spec,
-    companion = companion,
-    companion_file = companion_file,
-    companion_assets = companion_assets,
-    companion_checklist = companion_checklist
-  )
-}
-
-companion_pdf_document <- function(...,
-                                   template,
-                                   latex_engine,
-                                   style = NULL,
-                                   document_type = NULL,
-                                   style_spec = NULL,
-                                   companion,
-                                   companion_file = NULL,
-                                   companion_assets = TRUE,
-                                   companion_checklist = TRUE) {
-  if (!requireNamespace("rmarkdown", quietly = TRUE)) {
-    stop("The rmarkdown package is required for this output format.",
-         call. = FALSE)
-  }
-
-  dots <- list(...)
-  dots$template <- template
-  dots$latex_engine <- latex_engine
-  if (!is.null(document_type)) {
-    dots$pandoc_args <- c(dots$pandoc_args %||% character(),
-                          "--metadata",
-                          paste0(document_type, "=true"))
-  }
-  if (!is.null(style) && !is.null(style_spec)) {
-    dots$pandoc_args <- c(dots$pandoc_args %||% character(),
-                          dd_fontpath_metadata(dots$pandoc_args),
-                          "--metadata", paste0("style=", style),
-                          "--metadata", paste0("fontset=", style_spec$fontset),
-                          "--metadata", paste0("accent=", style_spec$accent),
-                          "--metadata",
-                          paste0("maincolumns=", style_spec$maincolumns),
-                          "--metadata",
-                          paste0("numbersections=", style_spec$numbersections))
-  }
-
-  format <- do.call(rmarkdown::pdf_document, dots)
-
-  previous_post_processor <- format$post_processor
-
-  format$post_processor <- function(metadata, input_file, output_file, clean, verbose) {
-    final_output <- output_file
-    if (is.function(previous_post_processor)) {
-      final_output <- previous_post_processor(
-        metadata = metadata,
-        input_file = input_file,
-        output_file = output_file,
-        clean = clean,
-        verbose = verbose
-      )
-    }
-
-    if (!identical(companion, "none")) {
-      make_html_companion_file(
-        input_file = input_file,
-        output_file = final_output,
-        companion = companion,
-        companion_file = companion_file,
-        copy_assets = companion_assets,
-        write_checklist = companion_checklist,
-        metadata = metadata,
-        verbose = verbose
-      )
-    }
-
-    final_output
-  }
-
-  format
-}
-
-make_html_companion_file <- function(input_file,
-                                     output_file,
-                                     companion,
-                                     companion_file = NULL,
-                                     copy_assets = TRUE,
-                                     write_checklist = TRUE,
-                                     metadata = list(),
-                                     verbose = FALSE) {
-  ext <- if (identical(companion, "html")) "html" else "md"
-  if (is.null(companion_file)) {
-    companion_file <- paste0(tools::file_path_sans_ext(output_file), ".", ext)
-  }
-
-  to <- if (identical(companion, "html")) "html5" else "gfm"
-  options <- if (identical(companion, "html")) {
-    c("--section-divs", "--wrap=none")
-  } else {
-    c("--wrap=none")
-  }
-
-  rmarkdown::pandoc_convert(
-    input = input_file,
-    to = to,
-    output = companion_file,
-    options = options,
-    verbose = verbose
-  )
-
-  assets_dir <- NULL
-  if (isTRUE(copy_assets)) {
-    assets_dir <- copy_html_assets(
-      companion_file = companion_file,
-      input_file = input_file,
-      companion = companion
-    )
-  }
-
-  if (isTRUE(write_checklist)) {
-    write_publishing_checklist(
-      output_file = output_file,
-      companion_file = companion_file,
-      assets_dir = assets_dir,
-      metadata = metadata
-    )
-  }
-
-  if (verbose) {
-    message("HTML companion written to: ", companion_file)
-    if (!is.null(assets_dir)) {
-      message("HTML assets written to: ", assets_dir)
-    }
-  }
-
-  invisible(companion_file)
-}
+# Helpers for html(): copy the local images an HTML file references into a
+# folder beside it (converting PDF figures to PNG), rewrite the paths, and
+# write a short publishing checklist.
 
 copy_html_assets <- function(companion_file, input_file, companion) {
   if (!file.exists(companion_file)) {
@@ -254,7 +60,7 @@ copy_html_assets <- function(companion_file, input_file, companion) {
   if (length(replacements)) {
     # Replace the reference only where it stands whole -- inside an attribute's
     # quotes or a Markdown link's parentheses. A bare substring replace turned
-    # "data.png" into "datsnapshot-assets/a.png" whenever "a.png" was also
+    # "data.png" into "datpage-assets/a.png" whenever "a.png" was also
     # referenced.
     for (ref in names(replacements)) {
       new <- replacements[[ref]]
@@ -398,12 +204,10 @@ write_publishing_checklist <- function(output_file,
     "4. Replace local image paths with Media Library image URLs if needed.",
     "5. Set the post title, excerpt, categories, tags, and featured image.",
     "6. Preview the post on desktop and mobile before publishing.",
-    "7. Confirm the post images are PNG/JPG assets; link the PDF separately only if needed.",
+    "7. Confirm the post images are PNG or JPG files.",
     "",
-    paste0("PDF: ", normalizePath(output_file, winslash = "/",
-                                  mustWork = FALSE)),
-    paste0("Companion: ", normalizePath(companion_file, winslash = "/",
-                                        mustWork = FALSE)),
+    paste0("HTML: ", normalizePath(companion_file, winslash = "/",
+                                   mustWork = FALSE)),
     if (!is.null(assets_dir)) {
       paste0("Assets: ", normalizePath(assets_dir, winslash = "/",
                                        mustWork = FALSE))

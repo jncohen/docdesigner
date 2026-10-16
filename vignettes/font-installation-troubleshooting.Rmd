@@ -11,7 +11,7 @@ Most users should not install fonts manually. `docdesigner` ships the text and c
 
 ## What the Package Bundles
 
-The bundled fonts live in `inst/fonts/` and are used automatically by `docdesigner::pdf` and `docdesigner::snapshot`.
+The bundled fonts live in `inst/fonts/` and are used automatically by `docdesigner::pdf`.
 
 Bundled font families:
 

@@ -19,13 +19,6 @@ output:
   docdesigner::html
 ```
 
-Snapshot uses one official house style:
-
-```yaml
-output:
-  docdesigner::snapshot
-```
-
 ## Built-In Styles
 
 Use:

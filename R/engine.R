@@ -1003,18 +1003,19 @@ dd_geometry <- function(s) {
 
 # The title layout for a render: the pdf() argument wins, then the style's
 # title.layout. The retired title.page_break_after still means "page", and the
-# pre-port archetype names (plain, essay, journal, report) mean "header", so an
-# unmigrated user style renders as it did before rather than failing.
+# pre-port archetype names (plain, essay, journal, report) and the retired
+# masthead mean "header", so an unmigrated user style renders as it did before
+# rather than failing.
 dd_title_layout <- function(s, override = NULL) {
   if (!is.null(override)) {
-    if (!override %in% c("header", "page", "masthead")) {
-      stop("title_layout must be \"header\", \"page\" or \"masthead\".", call. = FALSE)
+    if (!override %in% c("header", "page")) {
+      stop("title_layout must be \"header\" or \"page\".", call. = FALSE)
     }
     return(override)
   }
   lay <- s$title$layout %||% "header"
   if (isTRUE(s$title$page_break_after)) lay <- "page"
-  if (lay %in% c("plain", "essay", "journal", "report")) lay <- "header"
+  if (lay %in% c("plain", "essay", "journal", "report", "masthead")) lay <- "header"
   lay
 }
 

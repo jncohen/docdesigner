@@ -28,7 +28,6 @@ reference:
     contents:
       - pdf
       - html
-      - snapshot
   - title: Setup and Diagnostics
     contents:
       - designer_use

@@ -1,10 +1,9 @@
 # docdesigner User Manual
 
-`docdesigner` has three outputs:
+`docdesigner` has two outputs:
 
 - `docdesigner::pdf` creates a designed PDF document.
 - `docdesigner::html` creates plain body HTML for WordPress or another CMS.
-- `docdesigner::snapshot` creates the official Snapshot PDF and, by default, a plain HTML companion.
 
 The main design principle is simple YAML. A field should appear in YAML only when it changes the document, identifies the document, or helps publishing.
 
@@ -15,7 +14,6 @@ Create a starter:
 ```r
 docdesigner::designer_use(template = "pdf")
 docdesigner::designer_use(template = "html")
-docdesigner::designer_use(template = "snapshot")
 ```
 
 Or use RStudio:
@@ -32,7 +30,7 @@ Most projects should use bundled package assets. In that workflow, the update pa
 # reinstall or update docdesigner
 ```
 
-After the package is updated, documents using `docdesigner::pdf`, `docdesigner::html`, or `docdesigner::snapshot` use the updated bundled assets automatically.
+After the package is updated, documents using `docdesigner::pdf` or `docdesigner::html` use the updated bundled assets automatically.
 
 If a project keeps editable local copies, refresh those copies from the installed package:
 
@@ -136,25 +134,9 @@ output:
 ---
 ```
 
-Snapshot:
-
-```yaml
----
-title: "Finding-Forward Headline"
-author: "Your Name"
-snapshot_feature: "figures/chart.png"
-snapshot_data_note: "Data: source note."
-output:
-  docdesigner::snapshot:
-    html: true
----
-```
-
-Snapshot has one official style. Do not add `style` or `accent` to Snapshot YAML unless you are deliberately testing the template internals.
-
 ## Style Gallery
 
-Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`, and Snapshot uses its official house style.
+Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`.
 
 Thirteen styles ship in two sets: `academic` (`minimal`, `modern`, `nature`, `methods`,
 `demography`, `ssrn`, `sociology`, `ajs`) and `public` (`policy`, `government`,
@@ -269,20 +251,6 @@ keywords:
   - keyword two
 bibliography: references.bib
 csl: default.csl
-```
-
-Snapshot publishing fields:
-
-```yaml
-snapshot_feature: "figures/chart.png"
-snapshot_feature_caption: "Caption text."
-snapshot_byline_name: "Author Name"
-snapshot_byline_title: "Title"
-snapshot_byline_affiliation: "Affiliation"
-snapshot_byline_bio: "Short bio."
-snapshot_code_url: "https://github.com/..."
-snapshot_license: "cc-by-nc-sa-4.0"
-snapshot_data_note: "Data: source note."
 ```
 
 ## Diagnostics

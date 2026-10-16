@@ -6,7 +6,7 @@
 \usage{
 designer_use(
   path = ".",
-  template = c("pdf", "html", "snapshot"),
+  template = c("pdf", "html"),
   file = NULL,
   overwrite = FALSE,
   local_assets = FALSE
@@ -15,13 +15,13 @@ designer_use(
 \arguments{
 \item{path}{Destination directory. Defaults to current working directory.}
 
-\item{template}{One of \code{"pdf"}, \code{"html"}, or \code{"snapshot"}.}
+\item{template}{One of \code{"pdf"} or \code{"html"}.}
 
 \item{file}{Optional output filename. Defaults to \verb{<template>.Rmd}.}
 
 \item{overwrite}{If \code{TRUE}, replace an existing starter file.}
 
-\item{local_assets}{If \code{TRUE}, also copy the template, fonts, and CSL file
+\item{local_assets}{If \code{TRUE}, also copy the fonts, CSL file and style sets
 into the destination directory for local editing.}
 }
 \value{
@@ -29,6 +29,6 @@ Invisibly returns the starter path.
 }
 \description{
 Creates a small starter R Markdown file. Package defaults already know where
-the bundled template, fonts, and CSL live, so project-local copies are only
+the bundled fonts, CSL and style sets live, so project-local copies are only
 needed for users who want to edit those assets.
 }

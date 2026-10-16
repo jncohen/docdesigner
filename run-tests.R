@@ -31,7 +31,7 @@ if (requireNamespace("pkgload", quietly = TRUE)) {
   pkgload::load_all(repo_dir, quiet = TRUE)
 } else {
   source(file.path(repo_dir, "R", "styles.R"))
-  source(file.path(repo_dir, "R", "snapshot.R"))
+  source(file.path(repo_dir, "R", "html-assets.R"))
   source(file.path(repo_dir, "R", "html.R"))
 }
 
@@ -39,8 +39,6 @@ examples <- c(
   "research-note.Rmd",
   "technical-note.Rmd",
   "blog-post.Rmd",
-  "snapshot.Rmd",
-  "intro-to-docdesigner-snapshot.Rmd",
   "intro-to-docdesigner-blogpost.Rmd"
 )
 
