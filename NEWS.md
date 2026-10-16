@@ -20,7 +20,9 @@
   does.
 - **Tables stay in their column in two-column styles.** A table narrow
   enough for one column is now a float within it; only a wider table spans
-  both columns.
+  both columns. The README, user manual and getting-started
+  vignette now warn what floating tables mean in these styles: tables move,
+  never split across pages, and lose their column widths.
 - **New tokens:** `header_footer.header.bleed` (a band to the paper edge or
   to the text measure), `header_footer.footer.color`, `title.weight`
   (`regular` for an unbolded title), `figure.caption.label_style: plain`, and

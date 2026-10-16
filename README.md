@@ -47,6 +47,22 @@ output:
   in the byline, with several authors stacked. Other fields (`dept`, `inst`,
   `email`, `web`, `orcid`) are accepted but not printed yet.
 
+> **Warning: tables in two-column styles (`nature`, `economist`).** A
+> two-column page cannot hold a table that breaks across pages, so in these
+> styles every table becomes a float, placed by LaTeX:
+>
+> - **A table may not appear where you put it.** It moves to the top of a
+>   column or page, often after the paragraph that follows it. Refer to
+>   tables by number ("Table 2"), never as "the table below".
+> - **A table that fits one column stays in the column; a wider one spans
+>   both columns** and moves to the top of the next page that has room.
+> - **A table is never split.** One taller than a page runs off the bottom.
+>   Keep tables short, or split them yourself.
+> - **Column widths are not kept.** Text in cells does not wrap, so a long
+>   cell widens the whole table. Keep cell text short.
+>
+> For long or wide tables, use a single-column style.
+
 ```yaml
 ---
 title: "Article Title"
