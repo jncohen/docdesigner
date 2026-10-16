@@ -1,81 +1,87 @@
-# docdesigner style — minimal
-# The clean, modern preprint of the arXiv tradition: a single wide-measure
-# column of Source Serif 4, numbered accent section heads in the same face, a
-# flush-left accent title over a heavy accent rule, a run-in abstract, and a
-# near-monochrome palette whose one colour — a muted ink-blue — carries the
-# title rule, section numbers, headings, and links. A good default.
-#
-# Rebuilt 2026-07-18 from the token-faithful model set
-# (the minimal design models). FLAT dotted-key format
-# (schema v2). Validates clean against schema.yml (0 errors). Fidelity notes:
-# minimal-fidelity.md.
-#
-# Fonts, mono, microtype, links, table, and figure captions all sit at their
-# schema defaults (Source Serif 4 body/heading, Fira Code mono, booktabs tables,
-# tango code, accent links) and are inherited rather than re-declared.
-
 id: minimal
 label: Minimal
 description: >
-  A clean, modern preprint in the arXiv tradition. A single wide column of
-  Source Serif 4 with numbered accent section heads and a muted ink-blue
-  accent. A good default.
+  The look of an unstyled R Markdown PDF: LaTeX's own Latin Modern, 1in
+  margins, a centred title, bold unnumbered section heads, black ink
+  throughout. The default style, and the plainest starting point for a new
+  one.
 
-# ---- page (stylesheet declares the symmetric shorthand: margin normal) ------
+# Page: rmarkdown's pdf_document default.
 page.papersize: letter
-page.margins.top: 1        # measure: ~70 chars/line
-page.margins.bottom: 1     # measure: ~70 chars/line
-page.margins.inner: 1.85   # measure: ~70 chars/line
-page.margins.outer: 1.85   # measure: ~70 chars/line
+page.margin: normal                  # 1in all round
 page.columns: 1
 
-# ---- typography (body/heading Source Serif 4, mono Fira Code = defaults) -----
-typography.base_size: 10.5pt         # style sheet; body specimen renders 14px
-typography.line_height: 1.15         # tight arXiv leading
-typography.mono_scale: 0.9           # firstpage code note: Fira Code at 0.9
+# Type: LaTeX's article class at 10pt.
+typography.body: Latin Modern
+typography.heading: Latin Modern
+typography.mono: Latin Modern Mono
+typography.mono_scale: 1.0
+typography.base_size: "10pt"
+typography.line_height: 1.0
+typography.justification: justified
+typography.microtype: false
 
-# ---- colour (near-monochrome + one muted ink-blue accent) -------------------
-color.text:    "#1A1A1A"             # near-black body ink
-color.accent:  "#244A7A"            # muted ink-blue — title, heads, numbers, links
-color.muted:   "#6B6B6B"            # bylines, captions, running head
-color.rule:    "#C9C9C9"            # hairline rules / head separator
-color.code_bg: "#F6F7F9"            # light code panel (see declared-inert)
+# Ink: black throughout.
+color.text:   "#000000"
+color.accent: "#000000"
+color.muted:  "#000000"
+color.rule:   "#000000"
+links.color: text
 
-# ---- headings (numbered; accent is the default heading colour) --------------
-headings.number_sections: true       # "1  Introduction", numbers in accent
-headings.h1.scale: 1.5               # section: 21px on 14px base
-headings.h2.scale: 1.15              # subsection: 16px
-headings.h3.scale: 0.95              # sub-subsection: 13px
-# weight bold and colour accent are the schema defaults — inherited.
+# Headings: article's \Large / \large / \normalsize, bold, unnumbered
+# (pdf_document's default is number_sections: false).
+headings.number_sections: false
+headings.h1.scale: 1.44
+headings.h1.weight: bold
+headings.h1.color: text
+headings.h2.scale: 1.2
+headings.h2.weight: bold
+headings.h2.color: text
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.color: text
+headings.h4.scale: 1.0
+headings.h4.weight: bold
+headings.h4.color: text
 
-# ---- title (flush-left accent title over a heavy accent rule) ---------------
-title.layout: report                 # flush-left, heavy rule, institution line (port)
-title.scale: 2.2                     # style sheet
-title.color: accent                  # every minimal model draws the title in accent
-title.rule.position: below           # accent rule under the title
-title.rule.color: accent             # (weight inherits thick = 2pt ~ model 2px)
-title.abstract.label_style: runin    # bold "Abstract." run in with the first line
-title.abstract.indent: lg            # abstract inset from both margins
+# Title block: article's centred \LARGE title, not bold; \large byline and date.
+title.layout: plain
+title.align: center
+title.scale: 1.728
+title.weight: regular
+title.color: text
+title.subtitle.style: normal
+title.subtitle.scale: 1.44
+title.subtitle.color: text
+title.byline.color: text
+title.date.show: true
+title.date.color: text
+title.abstract.label: Abstract
+title.abstract.label_style: heading  # centred bold label over the block
+title.abstract.indent: lg
+title.abstract.size: 0.9             # article's \small
+title.keywords.show: false
 
-# ---- paragraphs (first-line indent, no inter-paragraph space) ---------------
-paragraph.indent: md                 # ~1.25em first-line indent
-paragraph.spacing: none              # indent OR space, not both
+# Body: indented paragraphs, no space between them.
+paragraph.indent: lg                 # 15pt at 10pt
+paragraph.spacing: none
 
-# ---- code (light panel with a hairline border) ------------------------------
-code.background: code_bg             # role -> color.code_bg (status new)
-code.border: true                    # 1px panel border (status new)
+# Floats and furniture.
+figure.caption.position: below
+figure.caption.size: 1.0
+figure.caption.color: text
+figure.caption.label_style: plain    # "Figure 1:"
+table.style: booktabs
+table.size: 1.0
+table.row_stretch: 1.0
+table.header.weight: regular
+table.caption.position: above
+footnotes.size: 0.8
+code.highlight: tango
 
-# ---- quotes (accent rule at the left, muted text) ---------------------------
-quote.rule: true                     # vertical accent rule (status new)
-quote.color: muted                   # style-sheet blockquote is muted (status new)
-
-# ---- running head + folio ---------------------------------------------------
-# Continuation pages carry a running head (short title left, surnames right)
-# with a hairline separator; the folio sits bottom-centre on every page. Page 1
-# stays plain (no head) via the default first_page.
-header_footer.header.left:   runningtitle
-header_footer.header.right:  surname     # renders full author name; model shows surnames
-header_footer.header.rule:   true
-header_footer.footer.center: page        # centred folio
-header_footer.footer.right:  none        # else the default `page` duplicates the folio
-header_footer.footer.rule:   false
+# A centred folio at the foot, none on page 1.
+header_footer.footer.center: page
+header_footer.footer.right: none
+header_footer.footer.rule: false
+header_footer.footer.color: text
+header_footer.first_page: none

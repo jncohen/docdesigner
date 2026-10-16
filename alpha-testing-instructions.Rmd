@@ -25,7 +25,7 @@ engine turns into a typeset page. The promise is *same content, any style*: you
 point one document at a different style and it re-typesets, without your touching
 a word of the prose.
 
-Twelve styles ship, in two sets. `academic` holds `minimal`, `nature`,
+Thirteen styles ship, in two sets. `academic` holds `minimal`, `modern`, `nature`,
 `methods`, `demography`, `ssrn`, `sociology` and `ajs`. `public` holds `policy`,
 `government`, `economist`, `atlantic` and `humanities`.
 
@@ -43,7 +43,7 @@ remotes::install_github("jncohen/docdesigner")
 
 library(docdesigner)
 designer_check()      # reports anything missing from the toolchain
-designer_styles()     # the twelve styles, with their sets
+designer_styles()     # the thirteen styles, with their sets
 ```
 
 If `designer_check()` reports a problem, fix that before going further. Nearly
@@ -161,7 +161,7 @@ What makes a report actionable, in rough order of value:
 1. **Attach the PDF**, or a screenshot of the part that went wrong. We cannot
    judge a layout problem from a description.
 2. **Which style**, and whether other styles do the same thing. "`sociology`
-   only" and "all twelve" are different bugs.
+   only" and "all thirteen" are different bugs.
 3. **A small `.Rmd` that reproduces it.** If your document is confidential, cut
    it down until it is not — that usually localises the problem anyway.
 4. **The output of `designer_check()`**, and of `sessionInfo()`.

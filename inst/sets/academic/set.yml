@@ -5,4 +5,4 @@ version: 2.1.0
 format_version: 2
 license: "MIT"
 description: "Journal- and preprint-inspired styles for scholarly articles."
-styles: [minimal, nature, methods, demography, ssrn, sociology, ajs]
+styles: [minimal, modern, nature, methods, demography, ssrn, sociology, ajs]

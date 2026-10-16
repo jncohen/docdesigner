@@ -1,5 +1,36 @@
 # docdesigner (development version)
 
+- **`minimal` is now LaTeX's own look; the old `minimal` is `modern`.** The
+  new `minimal`, still the default for `pdf()`, looks like an unstyled R
+  Markdown PDF: Latin Modern, 1-inch margins, a centred unbolded title, bold
+  unnumbered headings, black ink, and no page number on page 1. The previous
+  default, a clean modern preprint, is unchanged apart from its margins and
+  is now called `modern`. Documents that named `style: minimal` for that look
+  should name `style: modern`.
+- **Style review.** Wider text blocks: ajs, demography, modern, sociology and
+  policy now have 1.25-inch side margins; atlantic, government and humanities
+  are slightly narrower than before. ajs and demography put the folio at the
+  centre of the foot; demography's running head is set in text ink and ajs's
+  captions are no longer grey. sociology is monochrome. ssrn's block
+  quotations are italic with a left rule. methods no longer numbers code
+  lines. economist carries the running title top left and the folio top
+  right, with no running title on page 1. government's masthead bar now
+  aligns with the text block. humanities shows no folio on page 1. atlantic
+  (as a standfirst) and humanities now show the abstract, so every style
+  does.
+- **Tables stay in their column in two-column styles.** A table narrow
+  enough for one column is now a float within it; only a wider table spans
+  both columns.
+- **New tokens:** `header_footer.header.bleed` (a band to the paper edge or
+  to the text measure), `header_footer.footer.color`, `title.weight`
+  (`regular` for an unbolded title), `figure.caption.label_style: plain`, and
+  `header_footer.first_page: folio` (page 1 keeps the folio but not the
+  running title). `header_footer.first_page: none` now works; it had no
+  effect. `header_footer.header.color` now also sets the ink of a plain
+  running head, which stays muted when it is unset.
+- **Latin Modern** and **Latin Modern Mono** are available as font families.
+  They come with every TeX distribution, so they are not bundled.
+
 - **Titles, headings and other display text keep their own line spacing.** A
   style's body line spacing (`typography.line_height`) was multiplying the
   spacing of everything set at an explicit size. In loosely leaded styles a

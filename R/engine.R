@@ -27,7 +27,15 @@ dd_builtin_fonts <- function() list(
                           italic = "EBGaramond-Italic.otf", bolditalic = "EBGaramond-BoldItalic.otf"),
   "XITS"           = list(regular = "XITS-Regular.otf", bold = "XITS-Bold.otf",
                           italic = "XITS-Italic.otf", bolditalic = "XITS-BoldItalic.otf"),
-  "Fira Code"      = list(regular = "FiraCode-Regular.ttf", bold = "FiraCode-Bold.ttf")
+  "Fira Code"      = list(regular = "FiraCode-Regular.ttf", bold = "FiraCode-Bold.ttf"),
+  # LaTeX's own faces, the look of an unstyled R Markdown PDF. They ship with
+  # every TeX distribution (fontspec's defaults), so they are not bundled:
+  # `tex = TRUE` means "found by file name in the TeX tree", with no Path=.
+  "Latin Modern"      = list(regular = "lmroman10-regular.otf", bold = "lmroman10-bold.otf",
+                             italic = "lmroman10-italic.otf", bolditalic = "lmroman10-bolditalic.otf",
+                             tex = TRUE),
+  "Latin Modern Mono" = list(regular = "lmmono10-regular.otf", bold = "lmmonolt10-bold.otf",
+                             tex = TRUE)
 )
 
 dd_font_registry <- function(spec = NULL) {
@@ -58,6 +66,8 @@ dd_font_family_dir <- function(family, reg, dirs) {
          "\nDeclare it as fonts.", family, ".regular, or use one of: ",
          paste(names(dd_builtin_fonts()), collapse = ", "), call. = FALSE)
   }
+  # A TeX-tree family has no directory: xelatex finds it by file name.
+  if (isTRUE(files$tex)) return("")
   hit <- dirs[file.exists(file.path(dirs, files$regular))]
   if (!length(hit)) {
     stop("Font file not found for family '", family, "': ", files$regular,
@@ -243,7 +253,7 @@ dd_size <- function(size, lead) {
 dd_fontspec <- function(cmd, family, reg, dirs) {
   files <- reg[[family]]
   fontpath <- dd_font_family_dir(family, reg, dirs)
-  tail <- paste0("[Path=", fontpath, ",BoldFont=", files$bold)
+  tail <- paste0("[", if (nzchar(fontpath)) paste0("Path=", fontpath, ","), "BoldFont=", files$bold)
   if (!is.null(files$italic)) tail <- paste0(tail, ",ItalicFont=", files$italic,
                                              ",BoldItalicFont=", files$bolditalic)
   paste0(cmd, "{", files$regular, "}", tail, "]")
@@ -275,8 +285,9 @@ dd_preamble <- function(s) {
   add("\\usepackage{fontspec}"); add("\\usepackage{anyfontsize}")
   add(dd_fontspec("\\setmainfont", ty$body, reg, dirs))
   mono <- reg[[ty$mono]]
-  add("\\setmonofont{", mono$regular, "}[Path=", dd_font_family_dir(ty$mono, reg, dirs),
-      ",BoldFont=", mono$bold, ",Scale=", ty$mono_scale, "]")
+  mono_dir <- dd_font_family_dir(ty$mono, reg, dirs)
+  add("\\setmonofont{", mono$regular, "}[", if (nzchar(mono_dir)) paste0("Path=", mono_dir, ","),
+      "BoldFont=", mono$bold, ",Scale=", ty$mono_scale, "]")
   head_cmd <- ""
   if (!identical(ty$heading, ty$body)) {
     add(dd_fontspec("\\newfontfamily\\ddheadfont", ty$heading, reg, dirs))
@@ -398,7 +409,9 @@ dd_preamble <- function(s) {
       "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
   }
   add("\\pretitle{\\begin{", align_env, "}", kicker_tex, head_cmd,
-      dd_size(tsize, round(tsize * 1.18, 1)), "\\bfseries\\color{", ti$color %||% "text", "}}")
+      dd_size(tsize, round(tsize * 1.18, 1)),
+      if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries",
+      "\\color{", ti$color %||% "text", "}}")
   # \titlerule takes [weight]; \rule takes {width}{height}. Build inline rather
   # than reuse dd_rule_tex(), whose output suits titlesec's after-code only.
   if (!is.null(ti$rule) && !identical(ti$rule$position %||% "none", "none")) {
@@ -670,7 +683,8 @@ dd_preamble <- function(s) {
     }
     lab <- switch(fc$label_style %||% "",
       bold = "labelfont=bf", italic = "labelfont=it", smallcaps = "labelfont=sc",
-      none = "labelformat=empty", "")
+      # plain: the caption package's own label ("Figure 1:"), as LaTeX sets it.
+      none = "labelformat=empty", plain = "", "")
     if (nzchar(lab)) opts <- c(opts, lab)
     if (identical(fc$align, "center")) opts <- c(opts, "justification=centering")
     if (identical(fc$align, "left"))   opts <- c(opts, "justification=raggedright")
@@ -710,7 +724,7 @@ dd_preamble <- function(s) {
   }
   # Table setup lives in one macro, \ddtablesetup, rather than in a longtable
   # hook alone: two-column styles never emit a longtable (tables.lua
-  # rewrites every table as a table* float), so a longtable-only hook left
+  # rewrites every table as a float), so a longtable-only hook left
   # nature and economist setting tables at full body size. The filter calls
   # \ddtablesetup inside each table* it writes.
   tb <- s$table
@@ -808,22 +822,36 @@ dd_preamble <- function(s) {
     section = "\\rightmark",
     "\\thepage")
   hfill <- s$header_footer$header$fill
-  # The head/foot declarations are built once and emitted twice: into the
-  # fancy style here, and into the plain style when first_page: header. Built
-  # separately, the page-1 copy drifted -- it rebuilt plain text heads and so
-  # dropped the masthead band economist and government ask for on page 1.
-  hf_cmds <- character()
-  for (pos in names(slot)) {
-    hwhat <- s$header_footer$header[[pos]] %||% "none"
-    if (!identical(hwhat, "none") && is.null(hfill)) {
-      hf_cmds <- c(hf_cmds, paste0("\\fancyhead[", slot[[pos]], "]{\\small\\color{muted}",
-                                   hf_content(hwhat), "}"))
+  # Plain running heads and feet are muted unless a style names an ink; a
+  # filled band defaults to text ink (and usually names a knockout).
+  hink <- s$header_footer$header$color %||% "muted"
+  fink <- s$header_footer$footer$color %||% "muted"
+  # The head/foot declarations are built by one function and emitted more than
+  # once: into the fancy style here, and into the plain style that page 1 uses
+  # when first_page is header or folio. Built separately, the page-1 copy
+  # drifted -- it rebuilt plain text heads and so dropped the masthead band
+  # economist and government ask for on page 1.
+  #
+  # folio_only keeps just the slots that hold the page number: page 1 under
+  # first_page: folio carries its folio (and its band) but no running title,
+  # which would only repeat the title set directly below it.
+  build_hf <- function(folio_only = FALSE) {
+    keep <- function(what) !identical(what, "none") && (!folio_only || identical(what, "page"))
+    out <- character()
+    for (pos in names(slot)) {
+      hwhat <- s$header_footer$header[[pos]] %||% "none"
+      if (keep(hwhat) && is.null(hfill)) {
+        out <- c(out, paste0("\\fancyhead[", slot[[pos]], "]{\\small\\color{", hink, "}",
+                             hf_content(hwhat), "}"))
+      }
+      fwhat <- s$header_footer$footer[[pos]] %||% "none"
+      if (keep(fwhat)) {
+        out <- c(out, paste0("\\fancyfoot[", slot[[pos]], "]{\\small\\color{", fink, "}",
+                             hf_content(fwhat), "}"))
+      }
     }
-    fwhat <- s$header_footer$footer[[pos]] %||% "none"
-    if (!identical(fwhat, "none")) {
-      hf_cmds <- c(hf_cmds, paste0("\\fancyfoot[", slot[[pos]], "]{\\small\\color{muted}",
-                                   hf_content(fwhat), "}"))
-    }
+    if (!is.null(hfill)) out <- c(out, band_cmd(folio_only))
+    out
   }
 
   # --- Full-bleed masthead band ---------------------------------------------
@@ -838,14 +866,28 @@ dd_preamble <- function(s) {
   # All three slots go inside that single box, so the per-slot loop above is
   # skipped when a fill is set -- otherwise fancyhdr would also typeset them
   # separately, on top of the band.
-  if (!is.null(hfill)) {
+  #
+  # header.bleed: false keeps the band to the text measure instead (government:
+  # a bar aligned with the text block), with a small inset for the type.
+  band_cmd <- function(folio_only = FALSE) {
     hcol  <- s$header_footer$header$color %||% "text"
-    inset <- "\\dimexpr\\oddsidemargin+1in\\relax"
+    bleed <- !identical(s$header_footer$header$bleed, FALSE)
     bandh <- round(base * 2.0, 1)
     cont  <- vapply(c("left", "center", "right"), function(p) {
       w <- s$header_footer$header[[p]] %||% "none"
-      if (identical(w, "none")) "" else hf_content(w)
+      if (identical(w, "none") || (folio_only && !identical(w, "page"))) "" else hf_content(w)
     }, character(1))
+    if (!bleed) {
+      return(paste0(
+        "\\fancyhead[L]{{\\setlength{\\fboxsep}{0pt}%\n",
+        "  \\colorbox{", hfill, "}{%\n",
+        "    \\parbox[c][", bandh, "pt][c]{\\headwidth}{%\n",
+        "      \\hspace*{0.6em}%\n",
+        "      {\\color{", hcol, "}\\ddlabelfont\\small\\renewcommand{\\\\}{ }%\n",
+        "       ", cont[["left"]], "\\hfill ", cont[["center"]], "\\hfill ", cont[["right"]], "}%\n",
+        "      \\hspace*{0.6em}}}}}"))
+    }
+    inset <- "\\dimexpr\\oddsidemargin+1in\\relax"
     # \\fboxsep 0: the parbox height supplies the padding, so the band is a
     # predictable height rather than colorbox's default 3pt inset plus content.
     #
@@ -854,7 +896,7 @@ dd_preamble <- function(s) {
     # spilled the affiliation onto the page below the band. Collapsing \\\\ to
     # a space inside the group keeps any slot content on one line whatever a
     # document puts in it.
-    hf_cmds <- c(hf_cmds, paste0(
+    paste0(
       "\\fancyhead[L]{{\\setlength{\\fboxsep}{0pt}%\n",
       "  \\hspace*{-", inset, "}%\n",
       "  \\colorbox{", hfill, "}{%\n",
@@ -862,22 +904,29 @@ dd_preamble <- function(s) {
       "      \\hspace*{", inset, "}%\n",
       "      {\\color{", hcol, "}\\ddlabelfont\\small\\renewcommand{\\\\}{ }%\n",
       "       ", cont[["left"]], "\\hfill ", cont[["center"]], "\\hfill ", cont[["right"]], "}%\n",
-      "      \\hspace*{", inset, "}}}}}"))
+      "      \\hspace*{", inset, "}}}}}")
   }
   # A filled band supplies its own edge; a rule under it reads as an error.
   hrule_w <- if (is.null(hfill) && isTRUE(s$header_footer$header$rule)) "0.4pt" else "0pt"
   frule_w <- if (isTRUE(s$header_footer$footer$rule)) "0.4pt" else "0pt"
-  for (cmd in hf_cmds) add(cmd)
+  for (cmd in build_hf()) add(cmd)
   add("\\renewcommand{\\headrulewidth}{", hrule_w, "}")
   add("\\renewcommand{\\footrulewidth}{", frule_w, "}")
-  # article's \maketitle forces \thispagestyle{plain} on the opening page, which
-  # drops the fancy running head there — so a header shows on page 2+ but never
-  # on page 1. When first_page: header, redefine the plain style to mirror the
-  # fancy head/foot -- band included -- so it also appears on the first page.
-  if (identical(s$header_footer$first_page %||% "plain", "header") && hdr_on) {
-    add("\\fancypagestyle{plain}{\\fancyhf{}", paste(hf_cmds, collapse = ""),
-        "\\renewcommand{\\headrulewidth}{", hrule_w, "}",
-        "\\renewcommand{\\footrulewidth}{", frule_w, "}}")
+  # article's \maketitle forces \thispagestyle{plain} on the opening page, so
+  # page 1 is governed by redefining the plain style:
+  #   plain  -- fancyhdr's plain: a centred folio at the foot, nothing else.
+  #   none   -- nothing at all on page 1.
+  #   header -- the full running head and foot, band included.
+  #   folio  -- the band and the folio slots only, no running title.
+  # A rule is drawn on page 1 only under header, where the head is complete.
+  fp <- s$header_footer$first_page %||% "plain"
+  if (identical(fp, "none")) {
+    add("\\fancypagestyle{plain}{\\fancyhf{}",
+        "\\renewcommand{\\headrulewidth}{0pt}\\renewcommand{\\footrulewidth}{0pt}}")
+  } else if (fp %in% c("header", "folio")) {
+    add("\\fancypagestyle{plain}{\\fancyhf{}", paste(build_hf(fp == "folio"), collapse = ""),
+        "\\renewcommand{\\headrulewidth}{", if (fp == "header") hrule_w else "0pt", "}",
+        "\\renewcommand{\\footrulewidth}{", if (fp == "header") frule_w else "0pt", "}}")
   }
   paste(unlist(L), collapse = "\n")
 }

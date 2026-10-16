@@ -4,7 +4,8 @@
 -- problems this filter solves:
 --
 --   * Two columns: longtable cannot be used under \twocolumn ("longtable not
---     in 1-column mode"). Every table becomes a page-spanning `table*` float.
+--     in 1-column mode"). Every table becomes a float: a `table` in its
+--     column when it fits the column, a page-spanning `table*` when not.
 --
 --   * One column: longtable may break between ANY two rows, so a five-row
 --     table falling near the foot of a page splits after its header and one
@@ -78,29 +79,29 @@ local function floatable(tbl)
 end
 
 local function to_float(tbl)
-  local env, place = "table", "[!htbp]"
-  if columns == 2 then env, place = "table*", "[t]" end
-
   local aligns = {}
   for _, cs in ipairs(tbl.colspecs) do
     aligns[#aligns + 1] = align_char(cs[1])
   end
 
   local out = {}
-  out[#out + 1] = "\\begin{" .. env .. "}" .. place
-  out[#out + 1] = "\\centering"
-  -- Size and zebra shading, defined by the engine preamble. longtable gets the
-  -- same setup from a hook; this float is not a longtable, so it asks here.
-  out[#out + 1] = "\\ifdefined\\ddtablesetup\\ddtablesetup\\fi"
-
   -- Caption ABOVE the table, matching what pandoc's longtable does (and what
   -- table.caption.position declares). Written through pandoc rather than
   -- stringified, so inline markup survives and LaTeX specials (& % $ # _)
   -- are escaped instead of breaking the build.
   local caption = cell_latex({ contents = tbl.caption.long or {} })
-  if caption ~= "" then
-    out[#out + 1] = "\\caption{" .. caption .. "}"
-  end
+  local cap = caption ~= "" and ("\\caption{" .. caption .. "}") or ""
+
+  -- The tabular is set into a box first. Size and zebra shading come from the
+  -- engine preamble's \ddtablesetup; longtable gets the same setup from a
+  -- hook, and this float is not a longtable, so it asks here.
+  out[#out + 1] = "\\begingroup"
+  local setup = "\\ifdefined\\ddtablesetup\\ddtablesetup\\fi"
+  out[#out + 1] = "\\ifdefined\\ddtabbox\\else\\newsavebox{\\ddtabbox}\\fi"
+  -- \normalfont\normalsize: what a float resets to before its body, so the box
+  -- is set exactly as the tabular was inside the float (lining figures in a
+  -- style whose body text uses oldstyle ones).
+  out[#out + 1] = "\\sbox{\\ddtabbox}{\\normalfont\\normalsize" .. setup
   out[#out + 1] = "\\begin{tabular}{" .. table.concat(aligns, "") .. "}"
   out[#out + 1] = "\\toprule"
   for _, row in ipairs(tbl.head.rows) do
@@ -113,8 +114,25 @@ local function to_float(tbl)
     end
   end
   out[#out + 1] = "\\bottomrule"
-  out[#out + 1] = "\\end{tabular}"
-  out[#out + 1] = "\\end{" .. env .. "}"
+  out[#out + 1] = "\\end{tabular}}"
+
+  -- One column: a `table` float. Two columns: the table stays in its column
+  -- when it fits the column, and only a table wider than the column becomes a
+  -- page-spanning `table*` -- decided by LaTeX, which knows the set width.
+  -- Only the chosen branch runs, so the caption is counted once. The setup is
+  -- repeated inside the float so the caption is set at the table's size, as
+  -- it always was.
+  local function float(env, place)
+    return "\\begin{" .. env .. "}" .. place .. "\\centering" .. setup .. cap ..
+      "\\usebox{\\ddtabbox}\\end{" .. env .. "}"
+  end
+  if columns == 2 then
+    out[#out + 1] = "\\ifdim\\wd\\ddtabbox>\\columnwidth " .. float("table*", "[t]")
+    out[#out + 1] = "\\else " .. float("table", "[!htbp]") .. "\\fi"
+  else
+    out[#out + 1] = float("table", "[!htbp]")
+  end
+  out[#out + 1] = "\\endgroup"
 
   return pandoc.RawBlock("latex", table.concat(out, "\n"))
 end

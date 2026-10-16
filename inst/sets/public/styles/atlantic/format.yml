@@ -15,7 +15,7 @@ label: Atlantic
 description: >
   The Atlantic's long-form feature look: warm off-white paper, a large serif
   display title over a red accent kicker, an italic deck, a centred byline, a
-  short accent rule, a drop-cap opening and spaced small-caps cross-heads.
+  short accent rule, a standfirst, a drop-cap opening and spaced small-caps cross-heads.
   Playfair Display / Libre Caslon Text substituted with EB Garamond.
 
 # ---- page (symmetric wide measure; margins measured from the models) --------
@@ -25,8 +25,8 @@ description: >
 page.papersize: letter
 page.margins.top: 0.65
 page.margins.bottom: 0.81
-page.margins.inner: 1.95   # measure: ~70 chars/line
-page.margins.outer: 1.95   # measure: ~70 chars/line
+page.margins.inner: 1.65               # 2026-10 review
+page.margins.outer: 1.65               # 2026-10 review
 page.twoside: true
 page.columns: 1
 
@@ -87,7 +87,7 @@ title.rule.position: below
 title.rule.weight: thick             # 2px
 title.rule.length: 0.667             # 64px centred short rule (not full measure)
 title.rule.color: accent             # the short rule is red, not the grey rule role
-title.abstract.show: false           # feature has a deck, not an abstract
+title.abstract.show: true              # 2026-10 review
 
 # ---- paragraphs (first-line indent, no extra spacing; drop-cap opener) -------
 paragraph.indent: lg                 # model text-indent 1.4em -> nearest step (1.5em)
@@ -117,3 +117,6 @@ header_footer.header.right: runningtitle
 header_footer.header.rule: true
 header_footer.footer.right: page     # outer folio (schema default; kept explicit)
 header_footer.footer.rule: true
+title.abstract.label_style: none       # 2026-10 review
+title.abstract.size: 1.05              # 2026-10 review
+title.abstract.indent: md              # 2026-10 review

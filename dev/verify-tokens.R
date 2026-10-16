@@ -158,7 +158,7 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
              "family not in font registry")
         next
       }
-      hit <- any(grepl(stem, embedded, fixed = TRUE))
+      hit <- any(grepl(tolower(stem), tolower(embedded), fixed = TRUE))
       emit(style, paste0("typography.", role), fam,
            if (hit) stem else paste(utils::head(embedded, 3), collapse = " "),
            if (hit) "PASS" else "FAIL")

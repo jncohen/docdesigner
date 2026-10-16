@@ -178,7 +178,7 @@ designer_validate_style <- function(style) {
   declared <- unique(vapply(
     grep("^fonts\\.", names(raw), value = TRUE),
     function(k) strsplit(k, ".", fixed = TRUE)[[1]][[2]], character(1)))
-  known_fonts <- c(schema$bundled_fonts, schema$system_fonts, declared)
+  known_fonts <- c(schema$bundled_fonts, schema$tex_fonts, schema$system_fonts, declared)
 
   issues <- list()
   add <- function(...) issues[[length(issues) + 1]] <<- list(...)

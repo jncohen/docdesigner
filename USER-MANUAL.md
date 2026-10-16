@@ -121,7 +121,7 @@ Snapshot has one official style. Do not add `style` or `accent` to Snapshot YAML
 
 Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`, and Snapshot uses its official house style.
 
-Twelve styles ship in two sets: `academic` (`minimal`, `nature`, `methods`,
+Thirteen styles ship in two sets: `academic` (`minimal`, `modern`, `nature`, `methods`,
 `demography`, `ssrn`, `sociology`, `ajs`) and `public` (`policy`, `government`,
 `economist`, `atlantic`, `humanities`).
 

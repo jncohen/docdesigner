@@ -17,7 +17,7 @@ label: Humanities
 description: >
   The unhurried look of a university-press humanities essay. Oldstyle
   EB Garamond, generous leading, a centred small-caps title over a short rule,
-  an italic subtitle, footnotes, and block quotations. No abstract;
+  an italic subtitle, footnotes, block quotations and a short abstract;
   near-monochrome. Reflective and literary.
 
 # ---- page (asymmetric margins measured from the models) --------------------
@@ -26,8 +26,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1.125
 page.margins.bottom: 0.875
-page.margins.inner: 2      # measure: ~70 chars/line
-page.margins.outer: 2      # measure: ~70 chars/line
+page.margins.inner: 1.75               # 2026-10 review
+page.margins.outer: 1.75               # 2026-10 review
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
@@ -82,7 +82,7 @@ title.rule.weight: hairline
 title.rule.length: 0.5625             # 54px centred rule on the opener
 title.rule.color: rule
 title.byline.color: text              # author name in text ink, not muted
-title.abstract.show: false            # an essay opens on prose, not an abstract
+title.abstract.show: true              # 2026-10 review
 
 # ---- paragraphs (traditional first-line indent, no extra spacing) ---------
 paragraph.indent: lg                  # model text-indent 1.6em -> nearest step
@@ -110,3 +110,9 @@ header_footer.header.rule: false
 header_footer.footer.center: page
 header_footer.footer.right: none
 header_footer.footer.rule: false
+header_footer.first_page: none         # 2026-10 review
+title.abstract.label: Abstract         # 2026-10 review
+title.abstract.label_style: heading    # 2026-10 review
+title.abstract.label_case: smallcaps   # 2026-10 review
+title.abstract.indent: md              # 2026-10 review
+title.abstract.size: 0.95              # 2026-10 review

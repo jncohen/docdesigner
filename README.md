@@ -4,7 +4,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 0.9.10, alpha.** The engine and the style-set format are working and tested: `R CMD check` is clean, all twelve styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or [TESTING.md](TESTING.md) for the short version.
+> **Status: 0.9.10, alpha.** The engine and the style-set format are working and tested: `R CMD check` is clean, all thirteen styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or [TESTING.md](TESTING.md) for the short version.
 
 ## Outputs
 
@@ -83,7 +83,7 @@ inst/sets/
   academic/
     set.yml
     styles/
-      minimal/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
+      minimal/ modern/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
   public/
     set.yml
     styles/
