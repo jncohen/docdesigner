@@ -1,0 +1,25 @@
+# docdesigner style — qc-thesis
+# The thesis style with the Queens College title page for the MA in Data
+# Analytics and Applied Social Research: the degree and the college filled
+# in, the title in capitals, and a signature block for the committee, which a
+# document can switch off with `signatures: false`.
+#
+# College rules it follows (Graduate Division and College Library): 12pt,
+# double-spaced, a 1.5in left margin, page numbers at the bottom centre, the
+# title page unnumbered.
+
+id: qc-thesis
+label: Queens College thesis
+description: >
+  The thesis style with the Queens College title page for the MA in Data
+  Analytics and Applied Social Research, including a committee signature
+  block.
+inherits: thesis
+
+title.case: upper
+title.scale: 1.15
+thesis.degree: "Master of Arts in Data Analytics and Applied Social Research"
+thesis.institution: |
+  Queens College
+  The City University of New York
+thesis.signatures: true

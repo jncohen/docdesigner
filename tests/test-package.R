@@ -118,7 +118,8 @@ full_lines <- readLines(file.path(full_dir, "format.yml"))
 keyed <- grep("^[a-z]", full_lines, value = TRUE)
 stopifnot(length(keyed) > 40)
 stopifnot(!any(grepl("^\\s+\\S", full_lines)))          # nothing is indented
-stopifnot(any(grepl("NOT YET IMPLEMENTED", full_lines)))
+# Every token is implemented, so the scaffold flags none as ignored.
+stopifnot(!any(grepl("NOT YET IMPLEMENTED", full_lines)))
 full <- yaml::read_yaml(file.path(full_dir, "format.yml"))
 stopifnot(identical(full$id, "fullstyle"))
 stopifnot(is.null(full$inherits))                       # never scaffolded
@@ -433,7 +434,7 @@ if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available
             grepl("\\ddwarning{DRAFT: DO NOT CIRCULATE}", page_tex, fixed = TRUE),
             grepl("\\ddacknowledgements{", page_tex, fixed = TRUE))
   header_tex <- furniture_tex()
-  stopifnot(grepl("\\renewcommand{\\maketitlehooka}{\\ddwarning{", header_tex, fixed = TRUE),
+  stopifnot(grepl("\\preto{\\maketitlehooka}{\\ddwarning{", header_tex, fixed = TRUE),
             grepl("\\ddtitlenote{Correspondence: Ada Lovelace", header_tex, fixed = TRUE),
             grepl("\\ddtitlenote{\\ddacklabel", header_tex, fixed = TRUE),
             !grepl("\\ddcontact{", header_tex, fixed = TRUE))
@@ -472,3 +473,66 @@ stopifnot(has(pre_with(title.weight = "regular"), "\\mdseries\\color{"))
 mpre <- docdesigner:::dd_preamble(designer_style("minimal"))
 stopifnot(has(mpre, "\\setmainfont{lmroman10-regular.otf}[BoldFont="),
           has(mpre, "\\setmonofont{lmmono10-regular.otf}[BoldFont="))
+
+# --- Tokens brought to life in 0.11 ------------------------------------------
+# Every token in the schema is implemented: none is left "new", "port" or
+# "risk", so a style can no longer declare something that silently does
+# nothing.
+st <- vapply(docdesigner:::dd_token_table(), function(t) {
+  if (is.null(t$status)) "" else t$status
+}, character(1))
+stopifnot(!any(st %in% c("new", "port", "risk")))
+# The running title is captured when \title is set (titlesec's \thetitle is
+# the section number, which ran as the title in documents without a subtitle).
+stopifnot(has(pre_with(), "\\renewcommand{\\title}[1]{\\gdef\\ddrtitle{#1}"))
+stopifnot(has(pre_with(headings.h1.bar.fill = "accent"), "\\colorbox{accent}{\\parbox"))
+stopifnot(has(pre_with(headings.numbering = "alpha"), "\\renewcommand{\\thesection}{\\Alph{section}}"))
+stopifnot(has(pre_with(headings.h1.new_page = TRUE), "\\newcommand{\\sectionbreak}{\\clearpage}"))
+stopifnot(has(pre_with(page.column_rule = TRUE), "\\setlength{\\columnseprule}{0.4pt}"))
+stopifnot(has(pre_with(typography.hyphenation = FALSE), "\\hyphenpenalty=10000"))
+stopifnot(has(pre_with(title.byline.position = "above"), "\\renewcommand{\\maketitlehooka}"))
+stopifnot(has(pre_with(figure.placement = "here"), "\\def\\fps@figure{!htbp}"))
+stopifnot(has(pre_with(title.keywords.show = FALSE), "\\newcommand{\\ddkeywords}[1]{}"))
+# A ragged-right style keeps its paragraph indent.
+stopifnot(has(pre_with(typography.justification = "ragged-right", paragraph.indent = "lg"),
+              "\\setlength{\\RaggedRightParindent}{1.5em}"))
+stopifnot(identical(docdesigner:::dd_title_layout(designer_style("qc-thesis")), "thesis"))
+stopifnot(all(c("thesis", "qc-thesis", "bulletin") %in% designer_styles()$style))
+
+# The table filter writes grid rules, and leaves booktabs tables as they were.
+if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available()) {
+  table_tex <- function(style) {
+    md <- tempfile(fileext = ".md")
+    writeLines(c("| A | B |", "|---|--:|", "| x | 1 |", "| y | 2 |"), md)
+    tex <- tempfile(fileext = ".tex")
+    rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+      options = c("--lua-filter", docdesigner:::dd_pkg_file("engine", "tables.lua"),
+                  "--metadata", "dd-columns=1", "--metadata", paste0("dd-table-style=", style)))
+    paste(readLines(tex, warn = FALSE), collapse = "\n")
+  }
+  stopifnot(grepl("\\begin{tabular}{|l|r|}", table_tex("grid"), fixed = TRUE))
+  stopifnot(grepl("\\toprule", table_tex("booktabs"), fixed = TRUE),
+            !grepl("\\hline", table_tex("booktabs"), fixed = TRUE))
+
+  # thesis.lua: the document's fields win over the style's defaults, and the
+  # signature block can be switched off.
+  thesis_tex <- function(extra) {
+    md <- tempfile(fileext = ".md")
+    writeLines(c("---", "title: T", "author: A", "date: May 2027", extra, "---", "", "x"), md)
+    defaults <- tempfile(fileext = ".yaml")
+    yaml::write_yaml(list(`dd-thesis-defaults` = list(statement = "S", degree = "Default degree",
+      institution = list("College"), signatures = TRUE, roman = TRUE)), defaults)
+    tex <- tempfile(fileext = ".tex")
+    rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+      options = c("--standalone", "--template", docdesigner:::dd_pkg_file("templates", "docdesigner.tex"),
+                  "-V", "dd-title-thesis=true", "--metadata-file", defaults,
+                  "--lua-filter", docdesigner:::dd_pkg_file("engine", "thesis.lua")))
+    paste(readLines(tex, warn = FALSE), collapse = "\n")
+  }
+  th <- thesis_tex(c('degree: "Master of Arts in X"', "copyright: true"))
+  stopifnot(grepl("Master of Arts in X", th, fixed = TRUE), !grepl("Default degree", th, fixed = TRUE),
+            grepl("\\ddsignature{}{Committee Chair}", th, fixed = TRUE),
+            grepl("2027 A. All rights reserved.", th, fixed = TRUE),
+            grepl("\\pagenumbering{roman}", th, fixed = TRUE))
+  stopifnot(!grepl("\\ddsignatures", thesis_tex("signatures: false"), fixed = TRUE))
+}

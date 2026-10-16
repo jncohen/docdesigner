@@ -34,6 +34,16 @@ for (f in idx$file) {
   # high-density screen, at about 30 KB.
   pdftools::pdf_convert(file.path(src, f), pages = 1, dpi = 40, verbose = FALSE,
                         filenames = file.path(dest, sub("pdf$", "png", f)))
+  # A thesis specimen also gets its first chapter page, the first page whose
+  # text opens with the chapter "1 Introduction".
+  if (grepl("-thesis\\.pdf$", f)) {
+    txt <- pdftools::pdf_text(file.path(src, f))
+    body <- which(grepl("^\\s*1\\s+Introduction", txt))[1]
+    if (!is.na(body)) {
+      pdftools::pdf_convert(file.path(src, f), pages = body, dpi = 40, verbose = FALSE,
+                            filenames = file.path(dest, sub("\\.pdf$", "-body.png", f)))
+    }
+  }
 }
 size <- sum(file.size(list.files(dest, full.names = TRUE)))
 cat(sprintf("Published %d specimens (%.1f MB) to %s\n", nrow(idx), size / 2^20, dest))

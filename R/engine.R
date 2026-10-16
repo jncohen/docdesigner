@@ -35,6 +35,11 @@ dd_builtin_fonts <- function() list(
                              italic = "lmroman10-italic.otf", bolditalic = "lmroman10-bolditalic.otf",
                              tex = TRUE),
   "Latin Modern Mono" = list(regular = "lmmono10-regular.otf", bold = "lmmonolt10-bold.otf",
+                             tex = TRUE),
+  # A Helvetica-like sans from the TeX Gyre collection, also in every TeX
+  # distribution: a display and label face that needs no bundling.
+  "TeX Gyre Heros"    = list(regular = "texgyreheros-regular.otf", bold = "texgyreheros-bold.otf",
+                             italic = "texgyreheros-italic.otf", bolditalic = "texgyreheros-bolditalic.otf",
                              tex = TRUE)
 )
 
@@ -293,11 +298,23 @@ dd_preamble <- function(s) {
     add(dd_fontspec("\\newfontfamily\\ddheadfont", ty$heading, reg, dirs))
     head_cmd <- "\\ddheadfont"
   }
+  # Display face for titles and headings that ask for family: display. Unset,
+  # it is the heading face.
+  if (!is.null(ty$display) && !identical(ty$display, ty$heading)) {
+    add(dd_fontspec("\\newfontfamily\\dddisplayfont", ty$display, reg, dirs))
+  } else {
+    add("\\newcommand{\\dddisplayfont}{", head_cmd, "}")
+  }
+  family_cmd <- function(f) switch(f %||% "heading",
+    body = "\\rmfamily", display = "\\dddisplayfont", mono = "\\ttfamily", head_cmd)
   # Label/furniture face (kickers, callout titles, table headers). Loaded by
   # NAME so a style can point at a system grotesque (Arial, Archivo, ...)
   # without bundling it. \IfFontExistsTF guards a missing font, so \ddlabelfont
-  # is always defined and safe to use — it degrades to the body face.
-  if (!is.null(ty$label)) {
+  # is always defined and safe to use — it degrades to the body face. A family
+  # the registry knows (TeX Gyre Heros, a bundled face) is loaded by its files.
+  if (!is.null(ty$label) && !is.null(reg[[ty$label]])) {
+    add(dd_fontspec("\\newfontfamily\\ddlabelfont", ty$label, reg, dirs))
+  } else if (!is.null(ty$label)) {
     add("\\IfFontExistsTF{", ty$label, "}{\\newfontfamily\\ddlabelfont{", ty$label,
         "}}{\\providecommand{\\ddlabelfont}{}}")
   } else {
@@ -306,7 +323,8 @@ dd_preamble <- function(s) {
 
   # colortbl (pulled in by xcolor's [table] option) can disturb booktabs
   # rule spacing, so it is loaded only for a style that actually shades rows.
-  add(if (!is.null(s$table$zebra_color)) "\\usepackage[table]{xcolor}"
+  tstyle <- s$table$style %||% "booktabs"
+  add(if (!is.null(s$table$zebra_color) || tstyle %in% c("grid", "zebra")) "\\usepackage[table]{xcolor}"
       else "\\usepackage{xcolor}")
   for (role in dd_schema()$roles) {
     if (!is.null(col[[role]])) add("\\definecolor{", role, "}{HTML}{", dd_hex(col[[role]]), "}")
@@ -337,7 +355,23 @@ dd_preamble <- function(s) {
     label <- if (isTRUE(hd$number_sections) && !identical(shape, "runin")) {
       paste0("\\the", sub("^\\\\", "", cmd), "\\hspace{0.6em}")
     } else ""
-    fmt <- paste0(align_cmd(h$align), head_cmd, dd_size(size, lead), wt, it,
+    fam <- family_cmd(h$family)
+    # headings.<h>.bar.fill: the heading is set inside a filled bar across the
+    # measure. titlesec typesets the label and the title separately, so the
+    # number cannot sit inside a box drawn around the title alone. Instead the
+    # label argument only STORES the number (\ddhlabel), and the title argument
+    # draws the bar with the stored number inside. An unnumbered heading never
+    # runs the label code, so its bar carries no number; the store is cleared
+    # after each use.
+    if (!is.null(h$bar$fill) && identical(shape, "block")) {
+      fmt <- paste0(align_cmd(h$align), fam, dd_size(size, lead), wt, it)
+      body <- paste0("\\colorbox{", h$bar$fill, "}{\\parbox{\\dimexpr\\linewidth-2\\fboxsep\\relax}{",
+                     "\\strut\\color{", h$bar$text %||% "knockout", "}\\ddhlabel ", txt,
+                     "\\strut}}\\gdef\\ddhlabel{}")
+      return(paste0("\\titleformat{", cmd, "}[block]{", fmt, "}{\\gdef\\ddhlabel{", label,
+                    "}}{0pt}{", body, "}"))
+    }
+    fmt <- paste0(align_cmd(h$align), fam, dd_size(size, lead), wt, it,
                   "\\color{", h$color %||% "accent", "}")
     line <- paste0("\\titleformat{", cmd, "}[", shape, "]{", fmt, "}{", label, "}{0pt}{", txt, "}")
     rule <- dd_rule_tex(h$rule, "medium")
@@ -352,6 +386,21 @@ dd_preamble <- function(s) {
   # in front of a run-in heading is never what a journal wants.
   run_in <- as.character(hd$run_in %||% character())
   shape_of <- function(lvl) if (lvl %in% run_in) "runin" else "block"
+  add("\\gdef\\ddhlabel{}")
+  # headings.numbering: how the h1 number is written (1, I or A). Lower levels
+  # build on it ("A.1").
+  num <- hd$numbering %||% "arabic"
+  if (!identical(num, "arabic")) {
+    add("\\renewcommand{\\thesection}{\\", c(roman = "Roman", alpha = "Alph")[[num]], "{section}}")
+  }
+  # headings.<h>.new_page: every heading of that level opens a page -- thesis
+  # chapters. titlesec's \<name>break hooks run before the heading.
+  for (lvl in c("h1", "h2", "h3")) {
+    if (isTRUE(hd[[lvl]]$new_page)) {
+      add("\\newcommand{\\", c(h1 = "section", h2 = "subsection", h3 = "subsubsection")[[lvl]],
+          "break}{\\clearpage}")
+    }
+  }
   add(hspec("h1", "\\section"))
   add(hspec("h2", "\\subsection",    shape = shape_of("h2")))
   add(hspec("h3", "\\subsubsection", shape = shape_of("h3")))
@@ -387,6 +436,10 @@ dd_preamble <- function(s) {
   # Capture the clean title BEFORE the subtitle is appended, so running heads
   # (\thetitle would otherwise carry the appended subtitle markup and render as
   # garbage/"0" wherever runningtitle is used).
+  # The running title is \ddrtitle, captured when \title is set. titling's
+  # \thetitle cannot serve: titlesec defines its own \thetitle (the current
+  # section number), so a document without a subtitle ran "1" as its title.
+  add("\\let\\dd@settitlebase\\title\\renewcommand{\\title}[1]{\\gdef\\ddrtitle{#1}\\dd@settitlebase{#1}}")
   add("\\newcommand{\\subtitle}[1]{\\global\\let\\ddrtitle\\@title\\apptocmd{\\@title}{\\par\\vspace{0.3em}",
       "{\\normalfont\\mdseries", head_cmd, dd_size(ssize, round(ssize * 1.35, 1)), sit, "\\color{",
       sub$color %||% "muted", "}#1\\par}}{}{}}")
@@ -408,7 +461,7 @@ dd_preamble <- function(s) {
     kicker_tex <- paste0("{", kfont, dd_size(ksize, round(ksize * 1.2, 1)),
       "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
   }
-  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, head_cmd,
+  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, family_cmd(ti$family),
       dd_size(tsize, round(tsize * 1.18, 1)),
       if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries",
       "\\color{", ti$color %||% "text", "}}")
@@ -441,6 +494,11 @@ dd_preamble <- function(s) {
   } else {
     asize <- round(base * as.numeric(ab$size %||% 0.95), 1)
     aind <- dd_len("indent", ab$indent, "none")
+    # title.abstract.width narrows the block to a width, centred: the same
+    # list margins, computed from the measure instead of an indent step.
+    if (!is.null(ab$width)) {
+      aind <- paste0("\\dimexpr(\\linewidth-", dd_len("width", ab$width, "text"), ")/2\\relax")
+    }
     awt <- if (identical(ab$weight %||% "regular", "bold")) "\\bfseries" else ""
     lab <- ab$label %||% "Abstract"
     lstyle <- ab$label_style %||% "heading"
@@ -482,6 +540,22 @@ dd_preamble <- function(s) {
     }
   }
 
+  # Keywords: the template passes the document's keywords: field to
+  # \ddkeywords under the abstract. title.keywords.show: false prints nothing.
+  kw <- ti$keywords
+  if (identical(kw$show, FALSE)) {
+    add("\\newcommand{\\ddkeywords}[1]{}")
+  } else {
+    ksz <- round(base * as.numeric(ab$size %||% 0.95), 1)
+    # Inset to match the abstract above it.
+    kind <- if (!is.null(ab$width)) {
+      paste0("\\dimexpr(\\linewidth-", dd_len("width", ab$width, "text"), ")/2\\relax")
+    } else dd_len("indent", ab$indent, "none")
+    add("\\newcommand{\\ddkeywords}[1]{\\par\\vspace{0.4em}{\\list{}{\\leftmargin=", kind,
+        "\\rightmargin=", kind, "}\\item\\relax", dd_size(ksz, round(ksz * 1.4, 1)),
+        "\\color{text}{\\itshape ", kw$label %||% "Keywords", ":}\\enspace #1\\endlist}\\par}")
+  }
+
   # Byline and date are title furniture too: \linespread{1} so a loosely
   # leaded body does not prise the author's name from their affiliation.
   #
@@ -496,6 +570,15 @@ dd_preamble <- function(s) {
   add("\\preauthor{\\begin{", align_env, "}\\linespread{1}\\large\\color{",
       ti$byline$color %||% "muted", "}", bsc, "\\renewcommand{\\and}{\\\\[0.4em]}}")
   add("\\postauthor{\\end{", align_env, "}}")
+  # title.byline.position: above. titling sets title, byline, date in that
+  # order, with hooks between them. The byline is captured as styled above and
+  # set in \maketitlehooka, ahead of the title; its usual slot then swallows
+  # it into a discarded box, the same lever the hidden date uses.
+  if (identical(ti$byline$position, "above")) {
+    add("\\makeatletter\\let\\dd@bspreauthor\\@bspreauthor\\let\\dd@bspostauthor\\@bspostauthor")
+    add("\\renewcommand{\\maketitlehooka}{{\\dd@bspreauthor\\@author\\dd@bspostauthor}\\vskip0.5em}")
+    add("\\preauthor{\\setbox0\\vbox\\bgroup}\\postauthor{\\egroup}\\makeatother")
+  }
   add("\\predate{\\begin{", align_env, "}\\linespread{1}\\selectfont\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
 
@@ -537,6 +620,40 @@ dd_preamble <- function(s) {
   # Ragged right: justified in a narrow column, an email address with no break
   # points was letter-spaced across the whole line.
   add("\\newcommand{\\ddtitlenote}[1]{{\\let\\thefootnote\\relax\\footnotetext{\\raggedright #1}}}")
+
+  # Thesis title page and front matter (title.layout: thesis). The template
+  # owns the order; these macros own the look, from the title tokens. The
+  # title page is single-spaced whatever the body's spacing, as graduate
+  # offices expect. Empty arguments print nothing.
+  tcase <- switch(ti$case %||% "none",
+    upper = "\\MakeUppercase{#1}", smallcaps = "\\textsc{#1}", "#1")
+  twt <- if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries"
+  bsize <- round(base * 1.2, 1)
+  add("\\newcommand{\\ddifempty}[3]{\\if\\relax\\detokenize{#1}\\relax#2\\else#3\\fi}")
+  add("\\newcommand{\\ddthesistitlepagestart}{\\linespread{1}\\selectfont\\thispagestyle{empty}",
+      "\\vspace*{", round(as.numeric(ti$page$offset %||% 0.25) * 0.5, 3), "\\textheight}}")
+  add("\\newcommand{\\ddthesistitle}[1]{{", family_cmd(ti$family), dd_size(tsize, round(tsize * 1.25, 1)),
+      twt, "\\color{", ti$color %||% "text", "}", tcase, "\\par}}")
+  add("\\newcommand{\\ddthesissubtitle}[1]{\\vspace{0.6em}{\\normalfont", dd_size(ssize, round(ssize * 1.3, 1)),
+      sit, "\\color{", sub$color %||% "muted", "}#1\\par}}")
+  add("\\newcommand{\\ddthesisby}[1]{\\vspace{3em}{", dd_size(bsize, round(bsize * 1.3, 1)), " by\\par}",
+      "\\vspace{1.2em}{", dd_size(bsize, round(bsize * 1.4, 1)), "\\bfseries #1\\par}}")
+  add("\\newcommand{\\ddthesisstatement}[4]{{\\linespread{1}\\selectfont",
+      "\\ddifempty{#1}{}{#1\\par\\vspace{0.8em}}",
+      "\\ddifempty{#2}{}{#2\\par\\vspace{1.6em}}",
+      "\\ddifempty{#3}{}{#3\\par\\vspace{0.8em}}",
+      "\\ddifempty{#4}{}{#4\\par}}}")
+  add("\\newcommand{\\ddsignatures}[1]{\\par\\vspace{2.5em}{\\linespread{1}\\selectfont",
+      "\\noindent{\\small Approved by}\\par #1}}")
+  add("\\newcommand{\\ddsignature}[2]{\\par\\vspace{2.6em}\\noindent\\hfill",
+      "\\begin{minipage}[t]{3.2in}\\rule{\\linewidth}{0.4pt}\\par\\vspace{0.15em}{\\small ",
+      "\\ddifempty{#1}{#2}{#1\\ddifempty{#2}{}{, #2}}}\\end{minipage}\\hspace{0.3in}",
+      "\\begin{minipage}[t]{1.3in}\\rule{\\linewidth}{0.4pt}\\par\\vspace{0.15em}{\\small Date}",
+      "\\end{minipage}\\par}")
+  add("\\newcommand{\\ddcopyrightpage}[1]{\\clearpage\\thispagestyle{empty}\\null\\vfill",
+      "\\begin{center}\\linespread{1}\\selectfont #1\\end{center}\\vfill\\clearpage}")
+  # A front-matter section: its own page, unnumbered, listed in the contents.
+  add("\\newcommand{\\ddfrontsection}[2]{\\clearpage\\section*{#1}\\addcontentsline{toc}{section}{#1}#2\\par}")
 
   # title.case / title.byline.case.
   #
@@ -713,7 +830,52 @@ dd_preamble <- function(s) {
   # --- Body typography, tables, footnotes ------------------------------------
   # Small independent tokens the styles declared and the engine ignored.
   if (identical(ty$justification, "ragged-right")) {
-    add("\\usepackage{ragged2e}\\RaggedRight")
+    # ragged2e's \RaggedRight sets \parindent to its own \RaggedRightParindent,
+    # 0pt by default, which silently dropped paragraph.indent.
+    add("\\usepackage{ragged2e}\\setlength{\\RaggedRightParindent}{",
+        dd_len("indent", s$paragraph$indent, "none"), "}\\RaggedRight")
+  }
+  if (identical(ty$hyphenation, FALSE)) {
+    add("\\hyphenpenalty=10000\\exhyphenpenalty=10000")
+  }
+  # Two-column furniture: the gap between columns and a hairline in it.
+  if (!is.null(s$page$gutter)) add("\\setlength{\\columnsep}{", dd_len("gutter", s$page$gutter, "md"), "}")
+  if (isTRUE(s$page$column_rule)) {
+    # Recent LaTeX colours the column rule through \columnseprulecolor; older
+    # kernels have no such hook, so the rule is coloured by patching the
+    # two-column output routine instead.
+    add("\\setlength{\\columnseprule}{0.4pt}\\makeatletter\\ifdefined\\columnseprulecolor",
+        "\\renewcommand{\\columnseprulecolor}{\\color{rule}}\\else",
+        "\\patchcmd{\\@outputdblcol}{\\vrule\\@width\\columnseprule}",
+        "{{\\color{rule}\\vrule\\@width\\columnseprule}}{}{}\\fi\\makeatother")
+  }
+
+  # --- Figures --------------------------------------------------------------
+  # figure.placement: the default float position for figures. pandoc's template
+  # sets htbp; a style may prefer one.
+  fg <- s$figure
+  if (!is.null(fg$placement)) {
+    add("\\makeatletter\\def\\fps@figure{",
+        c(here = "!htbp", top = "tbp", bottom = "btp", page = "p")[[fg$placement]], "}\\makeatother")
+  }
+  # figure.width: the default image width. The template's own default is the
+  # natural width capped at the measure; a width the document sets wins.
+  if (!is.null(fg$width)) {
+    add("\\AtBeginDocument{\\setkeys{Gin}{width=", dd_len("width", fg$width, "full"), "}}")
+  }
+  # figure.style: ruled sets a rule above and below the image; inset sets it
+  # in a light frame. inst/engine/figure.lua wraps each figure's CONTENTS in
+  # \ddfigstart ... \ddfigend: a hook on the figure environment would wrap the
+  # float itself, and a float inside a box is a LaTeX error. The caption stays
+  # outside the frame.
+  if (identical(fg$style, "ruled")) {
+    add("\\newcommand{\\ddfigstart}{{\\color{rule}\\hrule height0.4pt}\\vskip0.6em}")
+    add("\\newcommand{\\ddfigend}{\\par\\vskip0.4em{\\color{rule}\\hrule height0.4pt}}")
+  } else if (identical(fg$style, "inset")) {
+    add("\\usepackage{tcolorbox}\\tcbuselibrary{skins}")
+    add("\\newenvironment{ddfigframe}{\\begin{tcolorbox}[enhanced,colback=white,colframe=rule,",
+        "boxrule=0.4pt,arc=0pt,left=6pt,right=6pt,top=6pt,bottom=6pt,halign=center]}{\\end{tcolorbox}}")
+    add("\\newcommand{\\ddfigstart}{\\begin{ddfigframe}}\\newcommand{\\ddfigend}{\\end{ddfigframe}}")
   }
   # Oldstyle figures are a font FEATURE, not a face. Applying it at
   # begin-document re-selects the current family with the feature added,
@@ -732,11 +894,18 @@ dd_preamble <- function(s) {
     tsz <- round(base * as.numeric(tb$size), 1)
     tsetup <- c(tsetup, dd_size(tsz, round(tsz * 1.2, 1)))
   }
-  if (!is.null(tb$zebra_color)) {
+  # table.style: zebra shades alternate body rows, in table.zebra_color or a
+  # light wash of the rule colour; grid draws its rules in the rule colour.
+  zebra <- tb$zebra_color %||% (if (identical(tstyle, "zebra")) "rule!15" else NULL)
+  if (!is.null(zebra)) {
     # rowcolors starts shading at the first BODY row: the header sits between
     # \toprule and \midrule and must not be tinted.
-    tsetup <- c(tsetup, paste0("\\rowcolors{2}{}{", tb$zebra_color, "}"))
+    tsetup <- c(tsetup, paste0("\\rowcolors{2}{}{", zebra, "}"))
   }
+  if (identical(tstyle, "grid")) tsetup <- c(tsetup, "\\arrayrulecolor{rule}")
+  # The table filter writes its own longtables for styles with their own
+  # rules, after pandoc has decided the document has no tables of its own.
+  add("\\usepackage{longtable,array,calc}")
   add("\\newcommand{\\ddtablesetup}{", paste(tsetup, collapse = ""), "}")
   add("\\AtBeginEnvironment{longtable}{\\ddtablesetup}")
   fn <- s$footnotes
@@ -1008,8 +1177,8 @@ dd_geometry <- function(s) {
 # rather than failing.
 dd_title_layout <- function(s, override = NULL) {
   if (!is.null(override)) {
-    if (!override %in% c("header", "page")) {
-      stop("title_layout must be \"header\" or \"page\".", call. = FALSE)
+    if (!override %in% c("header", "page", "thesis")) {
+      stop("title_layout must be \"header\", \"page\" or \"thesis\".", call. = FALSE)
     }
     return(override)
   }
@@ -1027,9 +1196,10 @@ dd_title_layout <- function(s, override = NULL) {
 #'   manuscript under review. Titles, headings, tables, captions, footnotes
 #'   and code stay single-spaced. Overrides the style's
 #'   `typography.line_height` for body text only.
-#' @param title_layout `"header"` (title block at the top of the first page) or
-#'   `"page"` (title and abstract on a page of their own). `NULL`, the default,
-#'   uses the style's `title.layout` token.
+#' @param title_layout `"header"` (title block at the top of the first page),
+#'   `"page"` (title and abstract on a page of their own) or `"thesis"` (a
+#'   thesis title page and front matter). `NULL`, the default, uses the
+#'   style's `title.layout` token.
 #' @return An R Markdown output format.
 #' @export
 pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL) {
@@ -1117,6 +1287,11 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   # dd_preamble() defines for every style.
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "callout.lua"))
 
+  # Figure frames, for a style that rules or frames its figures.
+  if (isTRUE(s$figure$style %in% c("ruled", "inset"))) {
+    pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "figure.lua"))
+  }
+
   cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
   if (cols == 2L) pargs <- c(pargs, "-V", "classoption=twocolumn")
   # Tables: under two columns longtable is illegal, so every table becomes a
@@ -1124,7 +1299,27 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   # across a page break after a single row; tables.lua turns short, simple
   # tables into floats that stay whole and leaves long ones as longtable.
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "tables.lua"),
-             "--metadata", paste0("dd-columns=", cols))
+             "--metadata", paste0("dd-columns=", cols),
+             "--metadata", paste0("dd-table-style=", s$table$style %||% "booktabs"),
+             "--metadata", paste0("dd-table-rule-below=",
+                                  if (identical(s$table$header$rule_below, FALSE)) "false" else "true"))
+
+  # Thesis layout: the style's title-page defaults go in as metadata under
+  # their own key, and thesis.lua merges them with the document's own fields
+  # (degree, institution, committee, signatures, copyright), which win.
+  if (identical(layout, "thesis")) {
+    th <- s$thesis
+    inst <- th$institution
+    meta <- list(statement = th$statement %||% "",
+                 degree = th$degree %||% "",
+                 institution = if (is.null(inst)) list() else as.list(strsplit(trimws(inst), "\n")[[1]]),
+                 signatures = isTRUE(th$signatures),
+                 roman = identical(s$header_footer$page_number$format, "roman"))
+    mfile <- tempfile(fileext = ".yaml")
+    yaml::write_yaml(list(`dd-thesis-defaults` = meta), mfile)
+    pargs <- c(pargs, "-V", "dd-title-thesis=true", "--metadata-file", mfile,
+               "--lua-filter", dd_pkg_file("engine", "thesis.lua"))
+  }
 
   rmarkdown::pdf_document(...,
     template = dd_pkg_file("templates", "docdesigner.tex"),

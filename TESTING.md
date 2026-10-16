@@ -29,7 +29,7 @@ remotes::install_github("jncohen/docdesigner")
 
 library(docdesigner)
 designer_check()      # reports anything missing from the toolchain
-designer_styles()     # the thirteen styles, with their sets
+designer_styles()     # the sixteen styles, with their sets
 ```
 
 Fix anything `designer_check()` flags before going further. Please tell us how
@@ -49,22 +49,18 @@ lose a new user, and the one we can least easily test ourselves.
    most.
 3. **Install a style set**: `designer_install_set("academic")`.
 
-## What we are not asking about
+## What we already know about
 
-Known, deliberate, already scheduled — reporting these costs you time and tells
-us nothing new:
+Please do comment on how the styles look. These are known and do not need
+reporting:
 
-1. Every style renders a plain title block; no style has a real title *page* yet.
-2. `economist` and `government` do not look like their models — they need page
-   furniture the engine cannot yet express.
-3. `policy` is being redesigned from scratch.
-4. Validation reports "not yet implemented" tokens. That is a roadmap, not a
-   fault.
-5. Fonts substitute (XITS for Times, EB Garamond for oldstyle, Source Serif 4
+1. Tables in `nature`, `economist` and `bulletin` move: in a two-column style
+   every table is placed by LaTeX, and one wider than a column goes to the top
+   of the next page.
+2. `minimal` changed in 0.10.0. It is now the plain look of an unstyled R
+   Markdown PDF; the clean preprint style it used to be is `modern`.
+3. Fonts substitute (XITS for Times, EB Garamond for oldstyle, Source Serif 4
    for various). Intentional.
-
-Do tell us a style looks **broken**. Don't tell us it looks **unfinished** — we
-know, and that's a later round.
 
 ## How to report
 

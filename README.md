@@ -5,7 +5,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
 > **Status: 0.10.0, alpha.** `R CMD check` passes on Linux and Windows, all
-> thirteen styles render, and 90 checks that each style's tokens reach the page
+> sixteen styles render, and 108 checks that each style's tokens reach the page
 > pass. See [Known limitations](#known-limitations). Testers can start with
 > [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or
 > [TESTING.md](TESTING.md) for the short version.
@@ -115,9 +115,47 @@ docdesigner::designer_use(template = "pdf")       # or "html"
 
 RStudio users can also pick the package templates from **File > New File > R Markdown > From Template**.
 
+## Writing a thesis
+
+Two styles set a thesis: `thesis`, plain and conservative, and `qc-thesis`,
+the same with the Queens College title page for the MA in Data Analytics and
+Applied Social Research. Both use the thesis title layout: a title page with
+the degree statement, an optional copyright page, then contents,
+acknowledgements and abstract numbered i, ii, iii, with chapters starting on
+new pages from page 1.
+
+```yaml
+---
+title: "Thesis Title"
+author: "Student Name"
+date: "May 2027"
+degree: "Master of Arts in Sociology"     # qc-thesis fills this in
+institution: "Queens College"             # one line, or a list of lines
+committee:
+  - name: "Faculty Member"
+    role: "Committee Chair"
+  - name: "Second Reader"
+    role: "Committee Member"
+signatures: true      # signature lines on the title page; qc-thesis default
+copyright: true       # adds a copyright page
+toc: true
+acknowledgements: |
+  ...
+abstract: |
+  ...
+output:
+  docdesigner::pdf:
+    style: qc-thesis
+---
+```
+
+Each level-one heading (`#`) is a chapter. `signatures: false` removes the
+signature block. Any style can use the thesis layout with
+`title_layout: thesis` under `docdesigner::pdf:`.
+
 ## Styles and style sets
 
-A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Thirteen styles ship in two sets:
+A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Sixteen styles ship in two sets:
 
 ```text
 inst/sets/
@@ -125,10 +163,11 @@ inst/sets/
     set.yml
     styles/
       minimal/ modern/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
+      thesis/ qc-thesis/
   public/
     set.yml
     styles/
-      policy/ government/ economist/ atlantic/ humanities/
+      policy/ government/ economist/ atlantic/ humanities/ bulletin/
 ```
 
 ```r
@@ -236,12 +275,9 @@ Reports whether the template, fonts, citation style, styles, Pandoc and a LaTeX 
 1. **Tables in two-column styles** (`nature`, `economist`) are floats: they
    move, never split across pages, and lose their column widths. See the
    warning above.
-2. **Some tokens validate but do nothing yet.** `designer_validate_style()`
-   lists them as "not yet implemented". The main ones: `table.style` (only
-   `booktabs` renders, so government's grid tables are plain rules),
-   `figure.placement`, `links.underline` and `title.keywords.show`.
-3. **Not printed:** `keywords` (they go into the PDF's metadata only) and the
-   author `orcid`.
+2. **The author `orcid` is not printed.**
+3. **`bulletin` uses TeX Gyre Heros**, which full TeX installations include.
+   With TinyTeX, add it once: `tinytex::tlmgr_install("tex-gyre")`.
 4. **The last page of a two-column document is not balanced**, so the right
    column can end well above the left.
 5. **The bundled fonts take 3.4 MB.** That is too large for CRAN, which is on

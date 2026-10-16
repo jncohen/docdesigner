@@ -9,6 +9,7 @@
 # (dev/run.R does). Output, under dev/out/specimens/ (not tracked):
 #   <style>-header.pdf   title block at the head of page 1
 #   <style>-page.pdf     title page of its own
+#   <style>-thesis.pdf   a thesis style, in the thesis layout
 #   <style>-<layout>.png page 1 at 110 dpi
 #   index.csv            style, set, layout, pages, status
 
@@ -36,12 +37,19 @@ res <- callr::r(function(repo, outdir, wanted) {
   unlink(work, recursive = TRUE); dir.create(work)
   file.copy(file.path(repo, "examples", c("specimen-short.Rmd", "gallery-document.bib")), work)
   rows <- list()
-  for (i in seq_len(nrow(styles))) for (lay in c("header", "page")) {
+  # A thesis style is shown in its own layout (title page, front matter,
+  # chapters); every other style with the title on page 1 and on a page
+  # of its own.
+  layouts_of <- function(st) {
+    if (identical(docdesigner:::dd_title_layout(docdesigner::designer_style(st)), "thesis")) "thesis"
+    else c("header", "page")
+  }
+  for (i in seq_len(nrow(styles))) for (lay in layouts_of(styles$style[i])) {
     st <- styles$style[i]
     out <- sprintf("%s-%s.pdf", st, lay)
     r <- tryCatch({
       pdf <- rmarkdown::render(file.path(work, "specimen-short.Rmd"),
-        output_format = docdesigner::pdf(style = st, title_layout = lay),
+        output_format = docdesigner::pdf(style = st, title_layout = lay, toc = identical(lay, "thesis")),
         params = list(style = st), output_file = out, output_dir = outdir,
         quiet = TRUE, envir = new.env(parent = globalenv()))
       pdftools::pdf_convert(pdf, pages = 1, dpi = 110, verbose = FALSE,
