@@ -28,7 +28,7 @@
 #' This produces a starting point, not a finished style. Tokens with no CSS
 #' analogue -- above all `title.layout`, the print-page architecture; also
 #' `page.columns`, `page.margin`, `page.twoside`, `header_footer.*`,
-#' `title.page_break_after`, and heading/table rule and role choices -- are
+#' and heading/table rule and role choices -- are
 #' left at the seed style's value and named in the printed report. Set those
 #' by hand, informed by looking at the design itself.
 #' They are print-page architecture with no analogue in a screen layout, so
@@ -164,7 +164,7 @@ designer_import_html <- function(html, id, from = "minimal", path = ".", label =
     "# canvas and is never guessed. Set these by hand after reviewing the",
     "# design itself (designer_tokens() lists the values):",
     "#   title.layout, page.columns, page.margin, page.twoside,",
-    "#   header_footer.*, title.page_break_after, headings.<h>.color,",
+    "#   header_footer.*, headings.<h>.color,",
     "#   headings.<h>.rule.*, title.rule.*, table.style, paragraph.indent",
     "#   vs paragraph.spacing",
     "",
@@ -187,7 +187,7 @@ designer_import_html <- function(html, id, from = "minimal", path = ".", label =
   cat("\nNot extracted -- structural tokens with no CSS analogue, left at '",
       from, "'s value:\n", sep = "")
   cat("  title.layout, page.columns, page.margin, page.twoside, header_footer.*,\n",
-      "  title.page_break_after, headings.<h>.color, headings.<h>.rule.*,\n",
+      "  headings.<h>.color, headings.<h>.rule.*,\n",
       "  title.rule.*, table.style, paragraph.indent vs paragraph.spacing\n", sep = "")
   cat("\nRun designer_validate_style('", id, "') next.\n", sep = "")
 

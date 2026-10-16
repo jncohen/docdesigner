@@ -76,7 +76,7 @@ headings.h1.rule.weight: hairline      # round 2
 headings.h1.rule.color: rule           # round 2
 
 # ---- title (centred caps head, centred small-caps byline, run-in abstract) -
-title.layout: journal
+title.layout: header
 title.align: left                      # round 2
 title.scale: 2                         # round 2
 title.byline.color: text               # byline in text ink, not muted
@@ -122,3 +122,7 @@ header_footer.first_page: plain        # round 2
 header_footer.footer.center: none
 header_footer.footer.right: none
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: ruled
+callout.rule: thick

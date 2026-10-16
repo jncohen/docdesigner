@@ -70,7 +70,7 @@ headings.h4.color: text              # else falls through to the accent default
 
 # ---- title (journal opener: CENTRED title, unlabelled indented abstract) ----
 # FOLLOW the opener (firstpage), not the centred standalone title page.
-title.layout: journal
+title.layout: header
 title.align: center                  # the article opener title is centred
 title.scale: 1.5                     # 22px opener title / 15px body
 title.byline.case: smallcaps         # "Joseph N. Cohen" in small caps
@@ -121,5 +121,12 @@ header_footer.first_page: plain        # round 2
 header_footer.footer.center: page      # 2026-10 review
 header_footer.footer.right: none
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: boxed
+callout.color: text
+callout.rule: hairline
+callout.tint: 0
+callout.title.case: smallcaps
 header_footer.header.center: runningtitle # 2026-10 review
 figure.caption.color: text             # 2026-10 review

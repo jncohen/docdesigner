@@ -84,7 +84,7 @@ color.rule: "005EA8"
 headings.number_sections: true
 headings.h1.scale: 1.30
 
-title.layout: plain
+title.layout: header
 code.highlight: tango
 ```
 
@@ -95,7 +95,7 @@ what differs:
 docdesigner::designer_new_style("my-style", from = "minimal")
 ```
 
-`designer_tokens()` lists every available token, and `STYLE-SPEC.md` documents
+`designer_tokens()` lists every available token, and the *Creating a style* article documents
 them in full. Validate a style against the schema before rendering:
 
 ```r

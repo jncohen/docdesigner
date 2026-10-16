@@ -133,11 +133,11 @@ instructions asked you not to; that is out of date.
 Three things are genuinely still unfinished. Reporting them costs you time and
 tells us nothing new:
 
-**1. No shipped style puts the title on its own page.** The engine can do it —
-set `title.page_break_after: true` in a style — but every style we ship opens
-with a title block at the head of the body. The richer title-page furniture
-(institution, series and report numbers, a formal author block) is the next
-piece of engine work.
+**1. No shipped style puts the title on its own page by default.** Any style
+can: set `title_layout: page` under `docdesigner::pdf:` in a document, or
+`title.layout: page` in a style. Every style we ship defaults to a title block
+at the head of the body. The richer title-page furniture (institution, series
+and report numbers, a formal author block) is still to come.
 
 **2. `policy` is being redesigned** from scratch, so judge it lightly.
 

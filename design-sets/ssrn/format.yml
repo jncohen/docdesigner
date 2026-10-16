@@ -65,10 +65,9 @@ headings.h4.color: text             # else falls through to the accent default
 
 # ---- title — targets the compact LEFT opener (ssrn-firstpage model) ---------
 # Flush-left title, run-in abstract, body on the same page. The models ALSO
-# ship a centred standalone title page (ssrn-title); that returns once
-# title.layout / title.page_break_after land (both port/new today), at which
-# point this could switch to a centred `title.layout: report`-style page.
-title.layout: plain
+# ship a centred standalone title page (ssrn-title); `title.layout: page`
+# renders one, or pdf(title_layout = "page") per document.
+title.layout: header
 title.align: center                    # round 2
 title.scale: 1.6                       # round 2
 title.byline.color: text            # author name in text ink, not muted
@@ -99,6 +98,14 @@ code.highlight: none                # working papers set code plain
 header_footer.footer.center: page
 header_footer.footer.right: none
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: boxed
+callout.color: rule
+callout.rule: hairline
+callout.tint: 0
+callout.title.color: text
+callout.title.case: none
 quote.rule: true                       # 2026-10 review
 quote.style: italic                    # 2026-10 review
 quote.indent: lg                       # 2026-10 review

@@ -499,45 +499,44 @@ dd_preamble <- function(s) {
   add("\\predate{\\begin{", align_env, "}\\linespread{1}\\selectfont\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
 
-  # title.page_break_after: give the title block a page to itself and start
-  # the body on the next one.
+  # title.layout: page. The template (inst/templates/docdesigner.tex) owns the
+  # structure -- a titlepage holding \maketitle and the abstract, the body on
+  # the next page. The spacing around the block is look, so it is set here and
+  # the template only calls these two macros. This replaces the old
+  # title.page_break_after machinery (a look-ahead patched onto \maketitle and
+  # an \AfterEndEnvironment{abstract} break), which existed only because the
+  # preamble could not reorder the document body.
   #
-  # The break must land AFTER the abstract, not after \\maketitle: pandoc
-  # emits the abstract as a separate environment following \\maketitle, so
-  # breaking earlier would strand the abstract at the top of the body page
-  # rather than keeping it with the title. When a style suppresses the
-  # abstract there is no such environment, so the break goes on the title
-  # block itself.
-  #
-  # This is a title PAGE, not the full title-page ARCHITECTURE: the
-  # institution/series/author-block furniture still needs the template port.
-  #
-  # Two earlier attempts were wrong in instructive ways. \\AtEndEnvironment
-  # fires BEFORE the environment's own end code, so the break landed inside
-  # the abstract -- ahead of title.abstract.rule's hairline, and inside
-  # methods' tcolorbox panel. And patching \\postdate patched titling's SETTER
-  # (\\def\\@bspostdate{#1}), not anything \\maketitle runs, so with the
-  # abstract hidden the break never happened at all.
-  #
-  # Now: \\AfterEndEnvironment breaks once the abstract has fully closed, which
-  # also covers a suppressed abstract (it is still an environment, typeset into
-  # a discarded box). A document with no abstract at all has nothing to hook,
-  # so \\maketitle looks ahead past blank lines: if what follows is not a
-  # \\begin (the abstract pandoc emits there), it breaks itself.
-  #
-  # The patch must be the LAST thing appended to \\maketitle. hyperref appends
-  # its own footnote-restoring code at \\begin{document}, after this preamble
-  # runs; patched here, the look-ahead saw hyperref's macro instead of
-  # \\begin{abstract} and broke the page before the abstract. begindocument/end
-  # runs after every \\AtBeginDocument hook, hyperref's included.
-  if (isTRUE(ti$page_break_after)) {
-    add("\\makeatletter")
-    add("\\def\\dd@titlebreak{\\@ifnextchar\\par{\\dd@titlebreak@par}{\\@ifnextchar\\begin{}{\\clearpage}}}")
-    add("\\def\\dd@titlebreak@par\\par{\\dd@titlebreak}")
-    add("\\AddToHook{begindocument/end}{\\apptocmd{\\maketitle}{\\dd@titlebreak}{}{}}")
-    add("\\makeatother")
-    add("\\AfterEndEnvironment{abstract}{\\clearpage}")
-  }
+  # The drop is applied through titling's \\droptitle, not a \\vspace before
+  # \\maketitle: \\maketitle opens with \\newpage, so any material set ahead
+  # of it lands on a page of its own and leaves a blank page in front of the
+  # title. The title page takes the ddtitlepage style defined with the running
+  # heads below: no folio (titlepage restarts the count at 1 for the body).
+  off <- as.numeric(ti$page$offset %||% 0.25)
+  add("\\newcommand{\\ddtitlepagetop}{\\addtolength{\\droptitle}{", off, "\\textheight}}")
+  add("\\newcommand{\\ddtitlepagebottom}{\\vfill\\thispagestyle{ddtitlepage}}")
+
+  # Title-page furniture, filled by the template from the document's YAML:
+  # the corresponding author's contact block (author.lua builds it), a warning
+  # line ("DRAFT: DO NOT CIRCULATE") between hairlines, and acknowledgements.
+  # On a title page they stack at the foot, under \ddtitlepagebottom's \vfill.
+  # In the header layout the warning sits above the title and the contact
+  # details and acknowledgements become \ddtitlenote, an unnumbered note at the
+  # foot of page 1.
+  fsize <- round(base * 0.9, 1); flead <- round(fsize * 1.35, 1)
+  add("\\newcommand{\\ddcontact}[1]{\\par\\begin{", align_env, "}", dd_size(fsize, flead),
+      "\\color{text}#1\\end{", align_env, "}\\par}")
+  add("\\newcommand{\\ddwarning}[1]{\\par\\vspace{0.6em}\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par",
+      "\\vspace{0.35em}{\\centering\\ddlabelfont", dd_size(fsize, flead),
+      "\\bfseries\\color{accent}#1\\par}\\vspace{0.1em}",
+      "\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par\\vspace{0.6em}}")
+  add("\\newcommand{\\ddacklabel}{{\\bfseries Acknowledgements.}\\enspace}")
+  add("\\newcommand{\\ddacknowledgements}[1]{\\par{", dd_size(fsize, flead),
+      "\\color{text}\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{0.3em}",
+      "\\ddacklabel #1\\par}}")
+  # Ragged right: justified in a narrow column, an email address with no break
+  # points was letter-spaced across the whole line.
+  add("\\newcommand{\\ddtitlenote}[1]{{\\let\\thefootnote\\relax\\footnotetext{\\raggedright #1}}}")
 
   # title.case / title.byline.case.
   #
@@ -783,6 +782,39 @@ dd_preamble <- function(s) {
     }
   }
 
+  # --- Callout --------------------------------------------------------------
+  # An emphasis block, written as a fenced div (::: {.callout title="..."}).
+  # inst/engine/callout.lua turns the div into \begin{ddcallout}{<title>}, so
+  # the environment is always defined, whatever the style declares: a document
+  # carrying a callout must render in every style. The fill is a tint of
+  # callout.color into white, so it follows the style's palette.
+  co <- s$callout %||% list()
+  ccol <- co$color %||% "accent"
+  ctint <- as.numeric(co$tint %||% 8)
+  cfill <- if (ctint > 0) paste0(ccol, "!", ctint, "!white") else "white"
+  cw <- dd_len("rule_weight", co$rule, "thick")
+  csize <- round(base * as.numeric(co$size %||% 0.95), 1)
+  cpad <- "left=10pt,right=10pt,top=7pt,bottom=7pt"
+  cbox <- switch(co$style %||% "filled",
+    ruled = paste0("blanker,breakable,left=11pt,right=0pt,top=2pt,bottom=2pt,",
+                   "borderline west={", cw, "}{0pt}{", ccol, "}"),
+    boxed = paste0("enhanced,breakable,colback=", cfill, ",colframe=", ccol,
+                   ",boxrule=", cw, ",arc=1pt,", cpad),
+    plain = "blanker,breakable,left=1.2em,right=1.2em,top=2pt,bottom=2pt",
+    paste0("enhanced,breakable,frame hidden,colback=", cfill, ",arc=0pt,", cpad))
+  # Small caps are set at regular weight: few faces ship bold small caps, and
+  # without them LaTeX falls back to plain lowercase, silently.
+  ctwt <- if (identical(co$title$case, "smallcaps")) "" else "\\bfseries"
+  ctcase <- switch(co$title$case %||% "upper",
+    upper = "\\MakeUppercase{#1}", smallcaps = "\\textsc{\\MakeLowercase{#1}}", "#1")
+  add("\\usepackage{tcolorbox}\\tcbuselibrary{skins,breakable}")
+  add("\\newenvironment{ddcallout}[1]{%")
+  add("  \\par\\addvspace{0.8em}\\begin{tcolorbox}[", cbox, ",before skip=0pt,after skip=0pt]%")
+  add("  ", dd_size(csize, round(csize * 1.4, 1)), "\\setlength{\\parskip}{0.4em}%")
+  add("  \\ifx\\relax#1\\relax\\else{\\ddlabelfont", ctwt, "\\small\\color{",
+      co$title$color %||% ccol, "}", ctcase, "\\par}\\vspace{0.3em}\\fi\\noindent\\ignorespaces")
+  add("}{\\end{tcolorbox}\\par\\addvspace{0.8em}}")
+
   # Drop cap. The package only defines \\lettrine; choosing WHICH paragraph
   # gets it is done by inst/engine/drop-cap.lua, because a preamble has no
   # hook for "the first paragraph of the body".
@@ -928,6 +960,10 @@ dd_preamble <- function(s) {
         "\\renewcommand{\\headrulewidth}{", if (fp == "header") hrule_w else "0pt", "}",
         "\\renewcommand{\\footrulewidth}{", if (fp == "header") frule_w else "0pt", "}}")
   }
+  # The standalone title page (title.layout: page) is clean: no running head,
+  # no masthead band, no footer and no folio. The body restarts at page 1.
+  add("\\fancypagestyle{ddtitlepage}{\\fancyhf{}",
+      "\\renewcommand{\\headrulewidth}{0pt}\\renewcommand{\\footrulewidth}{0pt}}")
   paste(unlist(L), collapse = "\n")
 }
 
@@ -965,6 +1001,23 @@ dd_geometry <- function(s) {
   args
 }
 
+# The title layout for a render: the pdf() argument wins, then the style's
+# title.layout. The retired title.page_break_after still means "page", and the
+# pre-port archetype names (plain, essay, journal, report) mean "header", so an
+# unmigrated user style renders as it did before rather than failing.
+dd_title_layout <- function(s, override = NULL) {
+  if (!is.null(override)) {
+    if (!override %in% c("header", "page", "masthead")) {
+      stop("title_layout must be \"header\", \"page\" or \"masthead\".", call. = FALSE)
+    }
+    return(override)
+  }
+  lay <- s$title$layout %||% "header"
+  if (isTRUE(s$title$page_break_after)) lay <- "page"
+  if (lay %in% c("plain", "essay", "journal", "report")) lay <- "header"
+  lay
+}
+
 #' Designed PDF output format
 #'
 #' @param ... Passed to [rmarkdown::pdf_document()].
@@ -973,11 +1026,26 @@ dd_geometry <- function(s) {
 #'   manuscript under review. Titles, headings, tables, captions, footnotes
 #'   and code stay single-spaced. Overrides the style's
 #'   `typography.line_height` for body text only.
+#' @param title_layout `"header"` (title block at the top of the first page) or
+#'   `"page"` (title and abstract on a page of their own). `NULL`, the default,
+#'   uses the style's `title.layout` token.
 #' @return An R Markdown output format.
 #' @export
-pdf <- function(..., style = "minimal", doublespace = FALSE) {
+pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL) {
   if (!requireNamespace("rmarkdown", quietly = TRUE)) stop("rmarkdown is required.", call. = FALSE)
   if (!requireNamespace("yaml", quietly = TRUE)) stop("The 'yaml' package is required.", call. = FALSE)
+  # The structural template is pandoc 3.8's. Pandoc 3.1.7 and older write
+  # bibliographies in an earlier form that its CSLReferences environment
+  # rejects, so any document with references fails to compile. Say so here,
+  # rather than through a LaTeX "missing \\item" error. With no pandoc at all
+  # the format still builds (render fails later with rmarkdown's own message),
+  # so the format object can be made and inspected anywhere.
+  if (rmarkdown::pandoc_available() && !rmarkdown::pandoc_available("3.1.8")) {
+    stop("docdesigner::pdf() needs pandoc 3.1.8 or newer; found ",
+         as.character(rmarkdown::pandoc_version()),
+         ". Update RStudio, or install pandoc from https://pandoc.org/installing.html.",
+         call. = FALSE)
+  }
   s <- dd_resolve_style(style)
   preamble <- dd_preamble(s)
   # Double spacing is a property of the DOCUMENT (a manuscript for review),
@@ -989,11 +1057,18 @@ pdf <- function(..., style = "minimal", doublespace = FALSE) {
     preamble <- paste(preamble, "\\usepackage{setspace}", "\\doublespacing", sep = "\n")
   }
   header <- tempfile(fileext = ".tex"); writeLines(preamble, header)
+  layout <- dd_title_layout(s, title_layout)
 
   base <- dd_pt(s$typography$base_size)
   fontsize <- if (base >= 11.5) "12pt" else if (base >= 10.5) "11pt" else "10pt"
 
+  # A custom template means rmarkdown no longer adds -V graphics itself, and
+  # without it graphicx is never loaded and every figure fails.
   pargs <- c(dd_geometry(s),
+             "-V", "graphics",
+             if (identical(layout, "page")) c("-V", "dd-title-page=true"),
+             if (identical(layout, "page") && identical(s$title$page$abstract, "next"))
+               c("-V", "dd-abstract-next=true"),
              "-V", paste0("papersize=", s$page$papersize),
              "-V", paste0("fontsize=", fontsize),
              "-V", "colorlinks=true",
@@ -1037,6 +1112,10 @@ pdf <- function(..., style = "minimal", doublespace = FALSE) {
                "--metadata", paste0("dd-dropcap-color=", dc$color %||% "accent"))
   }
 
+  # Callouts: ::: {.callout} divs become the ddcallout environment that
+  # dd_preamble() defines for every style.
+  pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "callout.lua"))
+
   cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
   if (cols == 2L) pargs <- c(pargs, "-V", "classoption=twocolumn")
   # Tables: under two columns longtable is illegal, so every table becomes a
@@ -1047,6 +1126,7 @@ pdf <- function(..., style = "minimal", doublespace = FALSE) {
              "--metadata", paste0("dd-columns=", cols))
 
   rmarkdown::pdf_document(...,
+    template = dd_pkg_file("templates", "docdesigner.tex"),
     latex_engine = "xelatex",
     number_sections = isTRUE(s$headings$number_sections),
     includes = rmarkdown::includes(in_header = header),

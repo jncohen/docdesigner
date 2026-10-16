@@ -66,7 +66,7 @@ headings.h3.color: text
 headings.h4.color: text             # else falls through to the accent default
 
 # ---- title (journal opener: flush-left title, indented run-in abstract) ----
-title.layout: journal
+title.layout: header
 title.align: left                   # the article opener is flush-left
 title.scale: 1.9                    # 28px opener title ÷ 15px body
 title.subtitle.style: italic
@@ -105,5 +105,10 @@ header_footer.first_page: plain        # 2026-10 review
 header_footer.footer.center: page      # 2026-10 review
 header_footer.footer.right: none
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: boxed
+callout.rule: hairline
+callout.tint: 4
 header_footer.header.center: surname   # 2026-10 review
 header_footer.header.color: text       # 2026-10 review

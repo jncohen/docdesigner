@@ -1,5 +1,51 @@
 # docdesigner (development version)
 
+- **Title-page furniture.** A document can carry a contact block, a warning
+  line and acknowledgements. The corresponding author's `dept`, `inst`,
+  `address`, `email` and `web` (author fields; mark one author
+  `corresponding: true`, or the first with contact details is used) make the
+  contact block; `warning:` ("DRAFT IN PROGRESS: DO NOT CIRCULATE") is set
+  between two rules; `acknowledgements:` (or `acknowledgments:`) follows. On a
+  title page (`title_layout: page`) the three stack at the foot of the page.
+  In the header layout the warning sits above the title, and the contact
+  details and acknowledgements become an unnumbered note at the foot of
+  page 1. Every style.
+- **Title pages.** `title.layout` is now a structural choice with three
+  values: `header` (the title block at the head of page 1, as before),
+  `page` (title and abstract on a page of their own) and `masthead`
+  (reserved; renders as `header` for now). Any style can use either layout,
+  and `docdesigner::pdf(title_layout = "page")` chooses it per document.
+  A title page sets the title about a third of the way down
+  (`title.page.offset`), carries no running head, band or folio, and keeps
+  the abstract or moves it to the first body page (`title.page.abstract`).
+  All twelve styles default to `header`, so no existing document changes.
+  The old archetype names (`plain`, `essay`, `journal`, `report`) are read as
+  `header`, and `title.page_break_after: true` as `page`; the validator flags
+  both. Two-column styles get a full-width title page.
+- **`pdf()` renders through the package's own LaTeX template**
+  (`inst/templates/docdesigner.tex`) instead of pandoc's default. Pages set in
+  the `header` layout are unchanged: every style was compared against the
+  previous renders page by page.
+- **New: callouts.** A fenced div, `::: {.callout title="Key finding"}`,
+  sets an emphasis block in every style. `callout.style` is `filled`,
+  `ruled`, `boxed` or `plain`; `callout.color`, `callout.tint`,
+  `callout.rule`, `callout.size` and `callout.title.*` tune it. Eight
+  styles set their own treatment so that callouts stay distinct from their
+  quotes; the rest use a tinted panel in their accent colour.
+- **Pandoc 3.1.8 or newer is required.** Older versions write bibliographies
+  in a form the template cannot typeset; `pdf()` now says so plainly instead
+  of failing in LaTeX. `DESCRIPTION` records the requirement.
+- **New article: *Creating a style*.** The workflow, the rules for setting
+  tokens, principles of good document design (measure, leading, hierarchy,
+  colour and contrast, tables), and a full token reference generated from the
+  schema. It replaces `STYLE-SPEC.md`, which had drifted from the engine.
+- **New specimen gallery.** `examples/gallery-document.Rmd` is a short real
+  analysis of R's `airquality` data with three figures, three tables, a
+  quotation, code, a callout and a bibliography. `render-gallery.R` renders
+  it in every style and both title layouts and combines the results into one
+  PDF with a contents page; it also accepts a draft style folder.
+- The design brief (`designer_design_brief()`) describes the title layouts,
+  the callout, and the CSS conventions `designer_import_html()` needs.
 - **`minimal` is now LaTeX's own look; the old `minimal` is `modern`.** The
   new `minimal`, still the default for `pdf()`, looks like an unstyled R
   Markdown PDF: Latin Modern, 1-inch margins, a centred unbolded title, bold
@@ -32,7 +78,6 @@
   running head, which stays muted when it is unset.
 - **Latin Modern** and **Latin Modern Mono** are available as font families.
   They come with every TeX distribution, so they are not bundled.
-
 - **Titles, headings and other display text keep their own line spacing.** A
   style's body line spacing (`typography.line_height`) was multiplying the
   spacing of everything set at an explicit size. In loosely leaded styles a
@@ -50,8 +95,7 @@
   ...`, with `dept`, `inst`, etc.) printed "true" in the title block in every
   style, and two or more authors of either form failed to compile. Names now
   reach the title block and PDF metadata; several authors are stacked, and
-  joined by commas in running heads. The other author fields are not shown
-  yet: the title-page contact block arrives with the template port.
+  joined by commas in running heads.
 - **New: `doublespace` option for `pdf()`.** `docdesigner::pdf: {style: ...,
   doublespace: true}` double-spaces the body text, as for a manuscript under
   review, in any style. Titles, headings, tables, captions, footnotes and code
@@ -135,7 +179,7 @@ The design layer, as far as it can go without the template port.
   across the full paper width, not just the text block -- the Economist red
   flag and the government navy masthead. These are the two styles that did not
   resemble their models, and this is the furniture they were missing.
-- **Unhighlighted code no longer escapes its column.** `vset` governs
+- **Unhighlighted code no longer escapes its column.** `\fvset` governs
   fancyvrb environments only, and `code.highlight: none` makes pandoc emit
   LaTeX's built-in `verbatim`, which ignored line breaking entirely. Ten of the
   twelve styles set `highlight: none`; it was visible only in economist, whose

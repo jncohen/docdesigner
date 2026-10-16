@@ -1,112 +1,241 @@
 ---
-title: "Household Wealth Inequality in a Synthetic Sample"
-subtitle: "A compact gallery document for testing publication-inspired styles"
-author:
-  - name: "Ada Template"
-    dept: "Department of Sociology"
-    inst: "Queens College, City University of New York"
-    email: "ada.template@example.edu"
+title: "Hot Days, High Ozone"
+subtitle: "Temperature, wind and ozone in New York, summer 1973"
+author: |
+  Joseph N. Cohen\
+  *Queens College, City University of New York*
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-
-institution: "Research Design Gallery"
-series: "Style Test"
-surname: "Template"
-runningtitle: "Style Gallery"
-
 abstract: |
-  This short document tests title treatment, headings, ordinary prose,
-  tables, figures, code, mathematical notation, and closing matter across
-  each document type and visual style.
-
-keywords:
-  - scholarly design
-  - R Markdown
-  - research communication
-
-acknowledgements: |
-  This synthetic acknowledgement is included to check title-page spacing and
-  secondary metadata.
-
-fontpath: "../inst/fonts/"
-numbersections: true
-doublespace: false
-linenumbers: false
-maincolumns: 1
-
-output: html_document
+  Using the daily air-quality readings that ship with R, this note asks how
+  much of the day-to-day variation in New York's summer ozone tracks the
+  weather. Ozone climbs from May into a July and August peak, and the
+  readings above 70 parts per billion cluster in those two months. Hotter,
+  calmer days carry markedly more ozone: temperature and wind together
+  account for well over half of the variance. The document doubles as the
+  docdesigner style specimen, so it carries one of each element a research
+  paper uses.
+bibliography: gallery-document.bib
+params:
+  style: minimal
+  title_layout: header
+output:
+  docdesigner::pdf:
+    style: minimal
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message = FALSE,
-  warning = FALSE,
-  fig.width = 5.5,
-  fig.height = 3.2
-)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.width = 6, fig.height = 3.1, out.width = "100%",
+                      fig.align = "center")
+
+# Figures take the style's own colours, so a chart belongs to its page.
+pal <- docdesigner::designer_style(params$style)$color
+accent <- pal$accent
+muted  <- if (is.null(pal$muted)) "#666666" else pal$muted
+grid   <- if (is.null(pal$rule)) "#CCCCCC" else pal$rule
+par_style <- function() {
+  par(mar = c(3.6, 3.8, 0.8, 0.8), mgp = c(2.4, 0.6, 0), tcl = -0.25,
+      las = 1, bty = "n", col.axis = muted, col.lab = muted, cex.axis = 0.85)
+}
+
+aq <- airquality
+aq$month <- factor(month.name[aq$Month], levels = month.name[5:9])
+aq$date  <- as.Date(sprintf("1973-%02d-%02d", aq$Month, aq$Day))
+std <- 70                                    # ppb, reference line only
+aq$high <- aq$Ozone > std
+
+n_days   <- nrow(aq)
+n_ozone  <- sum(!is.na(aq$Ozone))
+n_high   <- sum(aq$high, na.rm = TRUE)
+by_month <- tapply(aq$Ozone, aq$month, mean, na.rm = TRUE)
+peak     <- names(which.max(by_month))
+
+m1 <- lm(Ozone ~ Temp, data = aq)
+m2 <- lm(Ozone ~ Temp + Wind + Solar.R, data = aq)
+b_temp <- coef(m2)[["Temp"]]
+b_wind <- coef(m2)[["Wind"]]
+r2_1 <- summary(m1)$r.squared
+r2_2 <- summary(m2)$r.squared
+
+f1 <- function(x) formatC(x, format = "f", digits = 1)
+f2 <- function(x) formatC(x, format = "f", digits = 2)
 ```
 
 # Introduction
 
-This gallery document is deliberately ordinary. It includes a short empirical
-argument, a table, a chart, inline code such as `median_wealth`, and a small
-amount of mathematical notation. The goal is to reveal whether a style can
-handle common research material without requiring the author to redesign the
-document by hand.
+Ground-level ozone is not emitted directly. It forms when nitrogen oxides and
+volatile organic compounds react in sunlight, so its concentration should
+follow the weather as much as it follows traffic and industry. Hot, still,
+bright afternoons are the textbook recipe. This note checks that recipe
+against a small and famous dataset: the `r n_days` daily readings taken in New
+York between May and September 1973 and published by @chambers1983, which
+have shipped with R ever since [@rcore2025].
 
-## Data and Measures
+The analysis is deliberately simple. It describes the season, counts the days
+with high readings, and fits two linear models. Its second purpose is to give
+each docdesigner style the same realistic material to set: prose with
+citations, figures, three kinds of table, a quotation, code, a highlighted
+finding and a reference list [@xie2018].
 
-The example uses a synthetic table of household wealth by educational
-attainment. A production document would describe the sample, weights,
-measurement period, and missing-data rules in more detail.
+> The greatest value of a picture is when it forces us to notice what we
+> never expected to see.
+>
+> --- John W. Tukey [-@tukey1977]
 
-```{r table-example}
-summary_table <- data.frame(
-  group = c("No degree", "BA", "Graduate"),
-  median_wealth = c(42000, 180000, 325000),
-  share = c(0.52, 0.31, 0.17)
-)
-knitr::kable(summary_table, caption = "Synthetic household wealth by education")
+# Data
+
+Each row is a day. Ozone is the mean concentration in parts per billion (ppb)
+from 1 to 3 pm on Roosevelt Island; solar radiation is measured in Langleys
+in Central Park; wind is the average speed in miles per hour at LaGuardia
+Airport; and temperature is the daily maximum in degrees Fahrenheit, also at
+LaGuardia. Ozone is missing on `r n_days - n_ozone` of the `r n_days` days and
+solar radiation on `r sum(is.na(aq$Solar.R))`; the models below drop those
+days. Table 1 summarises the four measures.
+
+```{r stats}
+vars <- c(Ozone = "Ozone (ppb)", Solar.R = "Solar radiation (Ly)",
+          Wind = "Wind (mph)", Temp = "Maximum temperature (°F)")
+stats <- do.call(rbind, lapply(names(vars), function(v) {
+  x <- aq[[v]]
+  data.frame(Measure = vars[[v]], N = sum(!is.na(x)),
+             Mean = f1(mean(x, na.rm = TRUE)), SD = f1(sd(x, na.rm = TRUE)),
+             Min = f1(min(x, na.rm = TRUE)), Median = f1(median(x, na.rm = TRUE)),
+             Max = f1(max(x, na.rm = TRUE)))
+}))
+knitr::kable(stats, format = "pipe", row.names = FALSE, align = "lrrrrrr",
+             caption = "Daily measures, New York, May to September 1973")
 ```
 
-## Model Sketch
+As a reference point the figures and tables use 70 ppb, the level of the
+current federal ozone standard [@epa2015]. That standard applies to an
+eight-hour average, not a two-hour afternoon mean, so the line marks unusually
+high readings; it is not a test of compliance.
 
-Inline math should sit comfortably in the line, as in
-$y_i = \alpha + \beta x_i + \epsilon_i$.
+# Results
 
-$$
-\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i
-$$
+## The season
 
-# Findings
+Ozone builds through the summer. Figure 1 traces the daily
+readings; the gaps are missing days. The highest values arrive in late July
+and August, and May and September are comparatively clean.
 
-The main pattern is intentionally simple: median wealth rises with educational
-attainment. The figure is not meant to be analytically interesting; it is a
-stress test for caption placement, plot sizing, and the relationship between
-figures and body text.
-
-```{r figure-example}
-barplot(
-  summary_table$median_wealth,
-  names.arg = summary_table$group,
-  col = c("#D9E2EC", "#8FB3D9", "#2E6FA3"),
-  border = NA,
-  ylab = "Median wealth",
-  las = 1,
-  cex.axis = 0.75,
-  cex.lab = 0.85,
-  cex.names = 0.8
-)
+```{r line, fig.cap = "Daily afternoon ozone, May to September 1973. The dashed line marks 70 ppb."}
+par_style()
+plot(aq$date, aq$Ozone, type = "n", xlab = "", ylab = "Ozone (ppb)",
+     ylim = c(0, max(aq$Ozone, na.rm = TRUE)))
+abline(h = pretty(c(0, 170)), col = grid, lwd = 0.5)
+abline(h = std, col = muted, lty = 2, lwd = 1)
+lines(aq$date, aq$Ozone, col = accent, lwd = 1.4)
+points(aq$date, aq$Ozone, col = accent, pch = 16, cex = 0.35)
 ```
 
-# Implications
+Averaged by month (Figure 2), the pattern is plainer. Mean ozone
+in `r peak` is `r f1(max(by_month))` ppb, roughly
+`r f1(max(by_month) / by_month[["May"]])` times the May mean of
+`r f1(by_month[["May"]])` ppb.
 
-Different audiences need different visual signals. A journal reviewer may want
-conventional restraint, a policy reader may need clear signposting, and a
-public audience may need a stronger editorial entry point. The package styles
-are designed to let the author choose that communication setting directly.
+```{r bar, fig.cap = "Mean afternoon ozone by month."}
+par_style()
+mids <- barplot(by_month, col = accent, border = NA, ylab = "Mean ozone (ppb)",
+                ylim = c(0, max(by_month) * 1.18), names.arg = month.abb[5:9],
+                space = 0.45)
+text(mids, by_month, f1(by_month), pos = 3, cex = 0.8, col = muted)
+```
 
-# References
+Means hide spread. The box plots in Figure 3 show that July and
+August are not just higher on average but far more variable, with a long
+upper tail: the summer's worst days are much worse than its typical ones.
 
-No bibliography is required for this synthetic gallery document.
+```{r box, fig.cap = "Distribution of daily ozone by month. Boxes span the middle half of days; the line inside is the median."}
+par_style()
+boxplot(Ozone ~ month, data = aq, names = month.abb[5:9], xlab = "",
+        ylab = "Ozone (ppb)", col = adjustcolor(accent, alpha.f = 0.25),
+        border = accent, medcol = accent, whiskcol = accent, staplecol = accent,
+        outcol = accent, outpch = 16, outcex = 0.5, boxwex = 0.55, frame = FALSE)
+abline(h = std, col = muted, lty = 2, lwd = 1)
+```
 
+## High-ozone days
+
+Table 2 cross-tabulates month against whether the day's reading
+exceeded 70 ppb. Of the `r n_ozone` days with a reading, `r n_high`
+(`r round(100 * n_high / n_ozone)`%) were above the line, and July and August
+supply most of them.
+
+```{r xtab}
+tab <- table(aq$month, factor(aq$high, c(FALSE, TRUE), c("No", "Yes")))
+pct <- 100 * tab[, "Yes"] / rowSums(tab)
+xt <- data.frame(Month = rownames(tab),
+                 `70 ppb or below` = as.integer(tab[, "No"]),
+                 `Above 70 ppb` = as.integer(tab[, "Yes"]),
+                 `Share above` = paste0(round(pct), "%"),
+                 check.names = FALSE)
+xt <- rbind(xt, data.frame(Month = "All months",
+                           `70 ppb or below` = sum(tab[, "No"]),
+                           `Above 70 ppb` = sum(tab[, "Yes"]),
+                           `Share above` = paste0(round(100 * n_high / n_ozone), "%"),
+                           check.names = FALSE))
+knitr::kable(xt, format = "pipe", row.names = FALSE, align = "lrrr",
+             caption = "Days above 70 ppb by month (days with an ozone reading)")
+```
+
+## Weather and ozone
+
+The models are ordinary least squares, fitted in R as below. Model 1 uses
+temperature alone; Model 2 adds wind speed and solar radiation.
+
+```{r models, echo = TRUE, eval = FALSE}
+m1 <- lm(Ozone ~ Temp, data = airquality)
+m2 <- lm(Ozone ~ Temp + Wind + Solar.R, data = airquality)
+summary(m2)
+```
+
+```{r reg}
+stars <- function(p) ifelse(p < .001, "***", ifelse(p < .01, "**", ifelse(p < .05, "*", "")))
+cell <- function(m, term) {
+  co <- summary(m)$coefficients
+  if (!term %in% rownames(co)) return(c("", ""))
+  c(paste0(f2(co[term, 1]), stars(co[term, 4])), paste0("(", f2(co[term, 2]), ")"))
+}
+terms <- c(Temp = "Maximum temperature (°F)", Wind = "Wind (mph)",
+           Solar.R = "Solar radiation (Ly)", `(Intercept)` = "Constant")
+rows <- do.call(rbind, lapply(names(terms), function(t) {
+  a <- cell(m1, t); b <- cell(m2, t)
+  data.frame(Term = c(terms[[t]], ""), `Model 1` = a, `Model 2` = b, check.names = FALSE)
+}))
+rows <- rbind(rows,
+  data.frame(Term = c("Observations", "R²"),
+             `Model 1` = c(nobs(m1), f2(r2_1)),
+             `Model 2` = c(nobs(m2), f2(r2_2)), check.names = FALSE))
+knitr::kable(rows, format = "pipe", row.names = FALSE, align = "lrr",
+             caption = "OLS models of daily ozone (ppb). Standard errors in parentheses; \\* p < .05, \\*\\* p < .01, \\*\\*\\* p < .001")
+```
+
+Temperature alone accounts for `r round(100 * r2_1)`% of the variance in daily
+ozone (Table 3). Adding wind and sunlight raises that to
+`r round(100 * r2_2)`%. Holding the other two constant, each additional degree
+of maximum temperature goes with `r f2(b_temp)` ppb more ozone, and each
+additional mile per hour of wind with `r f2(abs(b_wind))` ppb less: wind
+disperses what heat and sunlight produce.
+
+::: {.callout title="Key finding"}
+On the hottest, calmest days of 1973 New York's afternoon ozone ran far above
+its seasonal norm. Each extra degree of maximum temperature added about
+`r f1(b_temp)` ppb and each extra mile per hour of wind removed about
+`r f1(abs(b_wind))` ppb; together with sunlight, the weather explains
+`r round(100 * r2_2)`% of the day-to-day variation.
+:::
+
+The relationship is not linear at the extremes, and a model of the logarithm
+of ozone fits the upper tail better. For a single season of readings from one
+site, though, the simple model makes the point.
+
+# Conclusion
+
+Summer ozone in New York in 1973 tracked the weather closely. The season
+peaked in July and August, high readings clustered there, and hot, still days
+carried the most ozone. None of this is surprising to an atmospheric chemist,
+which is the point of a specimen: the reader can attend to how the page sets
+the argument rather than to the argument itself.
+
+# References {-}

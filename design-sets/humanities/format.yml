@@ -71,7 +71,7 @@ headings.h3.color: text
 headings.h4.color: text               # else falls through to the accent default
 
 # ---- title (ESSAY archetype: centred small-caps display, short rule) ------
-title.layout: essay                   # no abstract, no journal furniture
+title.layout: header
 title.align: center
 title.case: smallcaps
 title.scale: 1.9                      # stylesheet spec (opener renders ~1.74)
@@ -110,6 +110,10 @@ header_footer.header.rule: false
 header_footer.footer.center: page
 header_footer.footer.right: none
 header_footer.footer.rule: false
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: plain
+callout.title.case: smallcaps
 header_footer.first_page: none         # 2026-10 review
 title.abstract.label: Abstract         # 2026-10 review
 title.abstract.label_style: heading    # 2026-10 review

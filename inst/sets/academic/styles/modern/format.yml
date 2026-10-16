@@ -49,7 +49,7 @@ headings.h3.scale: 0.95              # sub-subsection: 13px
 # weight bold and colour accent are the schema defaults — inherited.
 
 # ---- title (flush-left accent title over a heavy accent rule) ---------------
-title.layout: report                 # flush-left, heavy rule, institution line (port)
+title.layout: header
 title.scale: 2.2                     # style sheet
 title.color: accent                  # every minimal model draws the title in accent
 title.rule.position: below           # accent rule under the title

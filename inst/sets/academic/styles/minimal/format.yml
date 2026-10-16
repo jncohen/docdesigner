@@ -45,7 +45,7 @@ headings.h4.weight: bold
 headings.h4.color: text
 
 # Title block: article's centred \LARGE title, not bold; \large byline and date.
-title.layout: plain
+title.layout: header
 title.align: center
 title.scale: 1.728
 title.weight: regular

@@ -17,7 +17,7 @@ Character vector of Markdown lines, invisibly if \code{path} is given.
 Generates a Markdown document that states docdesigner's token vocabulary
 as hard design constraints: the colour roles, the bundled fonts, the named
 scale steps (space, rule weight, margin, width), the bounded type scale,
-and the five \code{title.layout} archetypes. Give this to whoever designs a new
+and the \code{title.layout} structures. Give this to whoever designs a new
 style, before they start, so the result is something
 \code{\link[=designer_import_html]{designer_import_html()}} can actually translate rather than a design that
 merely resembles one.

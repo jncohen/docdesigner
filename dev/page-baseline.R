@@ -10,7 +10,7 @@
 #
 # capture_baseline() renders, into <dir>:
 #   drafts/<style>.pdf      each design-sets draft, title as a header block
-#   titlepage/<style>.pdf   the same with title.page_break_after: true
+#   titlepage/<style>.pdf   the same with title.layout: page
 #   installed/<style>.pdf   designer_specimens() from the INSTALLED package
 #   snapshot.pdf            snapshot() on the bundled example
 #   preamble/<style>.tex    dd_preamble() for each installed style
@@ -58,7 +58,12 @@ capture_baseline <- function(dir, root = .pb_root) {
         file.copy(file.path(ds, s, f), w)
       }
       if (variant == "titlepage") {
-        cat("\ntitle.page_break_after: true\n", file = file.path(w, "format.yml"), append = TRUE)
+        # Baselines captured before port step 2 used title.page_break_after:
+        # true here; from step 2 the same variant is title.layout: page.
+        fy <- file.path(w, "format.yml")
+        y <- readLines(fy)
+        y <- y[!grepl("^title\\.(layout|page_break_after):", y)]
+        writeLines(c(y, "title.layout: page"), fy)
       }
       ok <- tryCatch({
         pdf <- rmarkdown::render(file.path(w, "specimen.Rmd"), quiet = TRUE)

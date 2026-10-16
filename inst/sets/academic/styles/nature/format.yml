@@ -67,7 +67,7 @@ headings.h3.color: text
 headings.h4.color: text            # else falls through to the accent default
 
 # ---- title (opens on page 1, spans both columns; heavy black rule) --------
-title.layout: plain               # no title page; body begins immediately
+title.layout: header
 title.align: left
 title.scale: 2.2                  # spec-sheet title scale; firstpage h1 27/12.6
 title.color: text                 # black headline, not accent

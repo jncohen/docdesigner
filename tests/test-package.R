@@ -141,7 +141,7 @@ unlink(scratch, recursive = TRUE)
 # --- Schema and validation ---------------------------------------------------
 tok <- designer_tokens()
 stopifnot(all(c("key", "type", "allowed", "default", "status") %in% names(tok)))
-stopifnot(all(tok$status %in% c("impl", "port", "new", "risk")))
+stopifnot(all(tok$status %in% c("impl", "port", "new", "risk", "deprecated")))
 stopifnot("headings.h3.scale" %in% tok$key)             # <h> expanded
 stopifnot(identical(tok$default[tok$key == "headings.h1.scale"], "1.35"))
 
@@ -212,6 +212,10 @@ stopifnot(nzchar(fonts))
 minimal_format <- pdf(style = "minimal")
 stopifnot(inherits(minimal_format, "rmarkdown_output_format"))
 stopifnot(identical(minimal_format$pandoc$latex_engine, "xelatex"))
+# pdf() renders through the package's structural template, not pandoc's.
+stopifnot(any(grepl("docdesigner.tex", minimal_format$pandoc$args, fixed = TRUE)))
+page_format <- pdf(style = "minimal", title_layout = "page")
+stopifnot(any(page_format$pandoc$args == "dd-title-page=true"))
 
 html_format <- html()
 stopifnot(inherits(html_format, "rmarkdown_output_format"))
@@ -344,6 +348,29 @@ stopifnot(grepl("not found", ghost))
 unlink(sandbox, recursive = TRUE)
 if (is.na(old_data_dir)) Sys.unsetenv("R_USER_DATA_DIR") else Sys.setenv(R_USER_DATA_DIR = old_data_dir)
 
+# ---- Title layouts and callouts (port step 2) ------------------------------
+# Resolution only: which layout a render gets. The pages themselves are
+# checked by dev/page-baseline.R, which needs xelatex.
+lay <- docdesigner:::dd_title_layout
+stopifnot(identical(lay(designer_style("minimal")), "header"))
+stopifnot(identical(lay(designer_style("minimal"), "page"), "page"))
+stopifnot(identical(lay(list(title = list(layout = "journal"))), "header"))
+stopifnot(identical(lay(list(title = list(page_break_after = TRUE))), "page"))
+stopifnot(inherits(tryCatch(lay(designer_style("minimal"), "cover"), error = identity), "error"))
+
+# Every style defines the callout environment and the title-page macros, so a
+# document carrying a callout, or rendered with title_layout = "page", sets in
+# any style.
+for (st in designer_styles()$style) {
+  pre <- docdesigner:::dd_preamble(designer_style(st))
+  stopifnot(grepl("\\newenvironment{ddcallout}", pre, fixed = TRUE),
+            grepl("\\newcommand{\\ddtitlepagetop}", pre, fixed = TRUE),
+            grepl("\\fancypagestyle{ddtitlepage}", pre, fixed = TRUE))
+}
+# A callout tint comes from the style's own palette role.
+pre <- docdesigner:::dd_preamble(designer_style("minimal"))
+stopifnot(grepl("colback=accent!8!white", pre, fixed = TRUE))
+
 # --- pdf(): document-level double spacing ------------------------------------
 # The option must reach the generated preamble, and only when asked for. No
 # pandoc or xelatex needed: pdf() builds the format object and writes the
@@ -384,6 +411,35 @@ if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available
             grepl("Alan Turing", two_object, fixed = TRUE),
             grepl("\\and", two_object, fixed = TRUE),
             !grepl("true", two_object, ignore.case = TRUE))
+
+  # Title-page furniture: contact block, warning and acknowledgements reach
+  # the package template, on a title page and in the header layout.
+  furniture_tex <- function(extra = character()) {
+    md <- tempfile(fileext = ".md")
+    writeLines(c("---", "title: T",
+                 "author:", '  - name: "Ada Lovelace"', '    inst: "X"',
+                 '    email: "ada@example.org"', '    web: "example.org"',
+                 '  - name: "Alan Turing"',
+                 'warning: "DRAFT: DO NOT CIRCULATE"',
+                 'acknowledgments: "Thanks to Y."', "---", "", "Hello."), md)
+    tex <- tempfile(fileext = ".tex")
+    rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+      options = c("--standalone", "--template",
+                  docdesigner:::dd_pkg_file("templates", "docdesigner.tex"),
+                  "--lua-filter", docdesigner:::dd_pkg_file("engine", "author.lua"), extra))
+    paste(readLines(tex, warn = FALSE), collapse = "\n")
+  }
+  page_tex <- furniture_tex(c("-V", "dd-title-page=true"))
+  stopifnot(grepl("\\ddcontact{Ada Lovelace", page_tex, fixed = TRUE),
+            grepl("mailto:ada@example.org", page_tex, fixed = TRUE),
+            grepl("https://example.org", page_tex, fixed = TRUE),
+            grepl("\\ddwarning{DRAFT: DO NOT CIRCULATE}", page_tex, fixed = TRUE),
+            grepl("\\ddacknowledgements{", page_tex, fixed = TRUE))
+  header_tex <- furniture_tex()
+  stopifnot(grepl("\\renewcommand{\\maketitlehooka}{\\ddwarning{", header_tex, fixed = TRUE),
+            grepl("\\ddtitlenote{Correspondence: Ada Lovelace", header_tex, fixed = TRUE),
+            grepl("\\ddtitlenote{\\ddacklabel", header_tex, fixed = TRUE),
+            !grepl("\\ddcontact{", header_tex, fixed = TRUE))
 }
 
 # --- Page furniture and title tokens added in the 2026-10 style review --------

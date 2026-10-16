@@ -31,7 +31,7 @@ cannot answer.
 This produces a starting point, not a finished style. Tokens with no CSS
 analogue -- above all \code{title.layout}, the print-page architecture; also
 \code{page.columns}, \code{page.margin}, \code{page.twoside}, \verb{header_footer.*},
-\code{title.page_break_after}, and heading/table rule and role choices -- are
+and heading/table rule and role choices -- are
 left at the seed style's value and named in the printed report. Set those
 by hand, informed by looking at the design itself.
 They are print-page architecture with no analogue in a screen layout, so

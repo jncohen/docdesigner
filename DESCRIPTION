@@ -18,6 +18,7 @@ Suggests:
     pkgdown,
     xml2
 VignetteBuilder: knitr
+SystemRequirements: pandoc (>= 3.1.8), XeLaTeX
 Encoding: UTF-8
 Config/Needs/website: pkgdown
 Roxygen: list(markdown = TRUE)

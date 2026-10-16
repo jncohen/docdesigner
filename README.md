@@ -32,10 +32,18 @@ title: "Document Title"
 author:
   - name: "First Author"
     dept: "Department of Sociology"
+    inst: "Queens College, CUNY"
+    address: "65-30 Kissena Blvd, Queens, NY 11367"
+    email: "first.author@example.edu"
+    web: "example.edu/~first"
   - name: "Second Author"
+warning: "DRAFT IN PROGRESS: DO NOT CIRCULATE"
+acknowledgements: |
+  I thank the department's workshop for comments.
 output:
   docdesigner::pdf:
     style: methods
+    title_layout: page
     doublespace: true
 ---
 ```
@@ -43,9 +51,20 @@ output:
 - `doublespace: true` double-spaces the body text, as for a manuscript under
   review. Titles, headings, tables, captions, footnotes and code stay
   single-spaced.
+- `title_layout: page` gives the title, byline and abstract a page of their
+  own; `header` (the default in every style) sets them at the top of page 1.
 - `author` is a plain string or a list of people. Each person's `name` appears
-  in the byline, with several authors stacked. Other fields (`dept`, `inst`,
-  `email`, `web`, `orcid`) are accepted but not printed yet.
+  in the byline, with several authors stacked. The corresponding author
+  (marked `corresponding: true`, otherwise the first author with an `address`,
+  `email` or `web`) gets a contact block: name, `dept` and `inst`, `address`,
+  and linked `email` and `web`. `orcid` is accepted but not printed yet.
+- `warning` is a line such as "DRAFT IN PROGRESS: DO NOT CIRCULATE", set
+  between two rules. `acknowledgements` (or `acknowledgments`) is a paragraph
+  or more of thanks.
+- On a title page the contact block, the warning and the acknowledgements
+  stack at the foot of the page, in that order. In the header layout the
+  warning sits above the title, and the contact details and acknowledgements
+  become an unnumbered note at the foot of page 1.
 
 > **Warning: tables in two-column styles (`nature`, `economist`).** A
 > two-column page cannot hold a table that breaks across pages, so in these
@@ -116,7 +135,7 @@ designer_specimens()          # render a PDF specimen per style + gallery index
 
 ### A style file
 
-`format.yml` is a flat list of dotted-key tokens — one `key: value` per line. It declares only its identity (`id`, `label`, `description`) and the tokens that differ from the engine defaults; anything omitted falls back to the schema (`inst/engine/schema.yml`). Run `designer_tokens()` or read [STYLE-SPEC.md](STYLE-SPEC.md) for the full vocabulary.
+`format.yml` is a flat list of dotted-key tokens — one `key: value` per line. It declares only its identity (`id`, `label`, `description`) and the tokens that differ from the engine defaults; anything omitted falls back to the schema (`inst/engine/schema.yml`). Run `designer_tokens()` for the full vocabulary, and see [Creating a style](https://jncohen.github.io/docdesigner/articles/creating-styles.html) for how to write a style and what makes a good one.
 
 ```yaml
 id: methods
@@ -138,7 +157,7 @@ headings.h1.rule.position: below
 headings.h1.rule.weight: medium
 headings.h2.scale: 1.12
 
-title.layout: journal
+title.layout: header
 title.rule.position: below
 title.rule.weight: thick
 title.rule.color: rule

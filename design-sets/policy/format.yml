@@ -62,7 +62,7 @@ headings.h3.color: text
 headings.h4.color: text      # else h4 falls through to the accent default
 
 # ---- title (REPORT layout: flush-left brand + kicker + deck + accent rule) --
-title.layout: report         # flush left, heavy rule, institution line (status: port)
+title.layout: header
 title.align: left            # the opener (firstpage) is flush-left
 title.scale: 2.6                       # round 2
 title.subtitle.style: normal           # round 2
@@ -114,3 +114,7 @@ header_footer.footer.rule: false       # round 2
 header_footer.header.left: runningtitle # round 2
 header_footer.header.right: page       # round 2
 header_footer.first_page: plain        # round 2
+
+# ---- callout (::: callout div) -------------------------------------------
+callout.style: filled
+callout.tint: 12
