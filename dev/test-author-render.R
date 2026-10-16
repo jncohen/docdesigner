@@ -2,7 +2,7 @@
 # name reaches both the .tex \author{} line and the PDF text. Needs xelatex,
 # so it lives in dev/ rather than tests/ (which must stay CRAN-safe).
 #
-#   Rscript repo/dev/test-author-render.R
+#   Rscript dev/test-author-render.R
 #
 # Regression for: a list of author objects printed "TRUE" in the title block.
 

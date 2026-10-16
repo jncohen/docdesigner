@@ -18,9 +18,9 @@ output:
 
 <!--
 Standalone rendering check for the "STYLE_ID" design-sets draft.
-Knit this file directly, or via ../../render-design-sets.R, to confirm the
+Knit this file directly, or via dev/render-design-sets.R, to confirm the
 draft format.yml in this same folder still compiles cleanly before you
-promote it to repo/inst/sets/. `style: "."` points at this folder's own
+promote it to inst/sets/. `style: "."` points at this folder's own
 format.yml, not the installed package version of this style id.
 -->
 

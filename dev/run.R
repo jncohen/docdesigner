@@ -1,8 +1,8 @@
 # One command: install, render, verify, and write a report to disk.
 #
-#   setwd("D:/Dropbox/Software/docdesigner"); source("run.R")
+#   setwd(<the repository>); source("dev/run.R")
 #
-# (that root run.R is a two-line shim onto this file, which is the real one)
+# The report is written to dev/out/run-report.txt (dev/out/ is not tracked).
 #
 # Why this exists:
 #
@@ -23,10 +23,8 @@
 #    1in for years. A truncated schema.yml at least fails loudly. Both are
 #    checked first so a broken file is never mistaken for a design problem.
 
-# Locate the project root from this script's own path, rather than hardcoding
-# it: repo/dev/run.R -> repo/ -> the project root. The script moved inside the
-# repo on 2026-08-26 to be version-controlled, and deriving the root is what
-# lets it travel with the checkout.
+# Locate the repository from this script's own path (dev/run.R -> the repo),
+# rather than hardcoding it, so it works from any checkout.
 #
 # ofile is consulted BEFORE --file= on purpose. When this file is source()d
 # from a callr subprocess, --file= names callr's own script, not this one.
@@ -40,38 +38,38 @@
   if (length(f)) return(f[[1]])
   NULL
 })
-root <- if (!is.null(.dd_script)) {
-  dirname(dirname(dirname(normalizePath(.dd_script, winslash = "/"))))
+repo <- if (!is.null(.dd_script)) {
+  dirname(dirname(normalizePath(.dd_script, winslash = "/")))
 } else normalizePath(getwd(), winslash = "/")
-.dd_anchor <- function(r) file.exists(file.path(r, "repo/inst/engine/schema.yml"))
-if (!.dd_anchor(root)) root <- normalizePath(getwd(), winslash = "/")
-if (!.dd_anchor(root)) {
-  stop("Cannot find the project root: no repo/inst/engine/schema.yml under '",
-       root, "'. Run it as source(\"repo/dev/run.R\") from the project root.",
+.dd_anchor <- function(r) file.exists(file.path(r, "inst/engine/schema.yml"))
+if (!.dd_anchor(repo)) repo <- normalizePath(getwd(), winslash = "/")
+if (!.dd_anchor(repo)) {
+  stop("Cannot find the repository: no inst/engine/schema.yml under '",
+       repo, "'. Run it as source(\"dev/run.R\") from the repository.",
        call. = FALSE)
 }
-repo <- file.path(root, "repo")
-# The style workshop moved inside the repo (2026-08-25) so the 12 rebuilt
-# format.yml files are version-controlled. It is .Rbuildignore'd, so it is
-# tracked by git but never ships in the package tarball.
+# The style workshop. It is .Rbuildignore'd, so it is tracked by git but never
+# ships in the package tarball.
 workshop <- file.path(repo, "design-sets")
-setwd(root)
+outdir <- file.path(repo, "dev", "out")
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+setwd(repo)
 
 for (p in c("devtools", "callr", "yaml")) {
   if (!requireNamespace(p, quietly = TRUE)) stop("Package '", p, "' is required.", call. = FALSE)
 }
 
-report <- file.path(root, "run-report.txt")
+report <- file.path(outdir, "run-report.txt")
 lines <- c(paste("docdesigner run report —", format(Sys.time())), "")
 
 # ---- 1. parse every YAML source before building anything -------------------
 lines <- c(lines, "== YAML parse check ==")
 bad <- 0L
-for (f in c(file.path(repo, "inst/engine/schema.yml"), Sys.glob("repo/design-sets/*/format.yml"))) {
+for (f in c(file.path(repo, "inst/engine/schema.yml"), Sys.glob("design-sets/*/format.yml"))) {
   n <- tryCatch(length(unlist(yaml::read_yaml(f))),
                 error = function(e) paste("ERROR:", conditionMessage(e)))
   if (is.character(n)) bad <- bad + 1L
-  lines <- c(lines, sprintf("  %-42s %s", sub(paste0(root, "/"), "", f, fixed = TRUE), n))
+  lines <- c(lines, sprintf("  %-42s %s", sub(paste0(repo, "/"), "", f, fixed = TRUE), n))
 }
 if (bad > 0L) {
   lines <- c(lines, "", sprintf("%d file(s) failed to parse — stopping before install.", bad))
@@ -93,17 +91,17 @@ devtools::install(repo, quiet = TRUE, upgrade = FALSE)
 # most of the current ones are unimplemented vocabulary rather than mistakes;
 # the point is that they can no longer be invisible.
 cat("Validating styles...\n")
-vres <- callr::r(function(root) {
-  setwd(root)
+vres <- callr::r(function(repo) {
+  setwd(repo)
   out <- list()
-  for (d in Sys.glob("repo/design-sets/*/format.yml")) {
+  for (d in Sys.glob("design-sets/*/format.yml")) {
     s <- dirname(d)
     r <- tryCatch(docdesigner::designer_validate_style(s), error = function(e) NULL)
     n <- if (is.null(r)) NA_integer_ else sum(r$severity == "error", na.rm = TRUE)
     out[[basename(s)]] <- n
   }
   out
-}, args = list(root = root), show = FALSE)
+}, args = list(repo = repo), show = FALSE)
 
 lines <- c(lines, "== schema validation (errors per style) ==")
 for (nm in names(vres)) {
@@ -111,18 +109,18 @@ for (nm in names(vres)) {
   lines <- c(lines, sprintf("  %-12s %s", nm,
                             if (is.na(n)) "could not validate" else paste(n, "error(s)")))
 }
-lines <- c(lines, "  (designer_validate_style(\"repo/design-sets/<style>\") for detail)", "")
+lines <- c(lines, "  (designer_validate_style(\"design-sets/<style>\") for detail)", "")
 
 # ---- 3. render + verify in a clean subprocess ------------------------------
 cat("Rendering in a fresh R subprocess (no restart needed)...\n")
 out <- callr::r(
-  function(root) {
-    setwd(root)
-    r <- capture.output(source(file.path(root, "repo/dev/render-design-sets.R")))
-    v <- capture.output({ source(file.path(root, "repo/dev/verify-tokens.R")); verify_tokens() })
+  function(repo) {
+    setwd(repo)
+    r <- capture.output(source(file.path(repo, "dev/render-design-sets.R")))
+    v <- capture.output({ source(file.path(repo, "dev/verify-tokens.R")); verify_tokens(root = repo) })
     list(render = r, verify = v)
   },
-  args = list(root = root),
+  args = list(repo = repo),
   show = FALSE
 )
 

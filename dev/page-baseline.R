@@ -2,7 +2,8 @@
 # section 3). The port must change nothing on the page except what each step
 # intends, and "nothing changed" needs evidence, not a run report.
 #
-#   source("repo/dev/page-baseline.R")
+#   source("dev/page-baseline.R")          # from the repository
+#   (relative <dir> names live under dev/out/, which git does not track)
 #   capture_baseline("port-baseline")             # once, before the port
 #   capture_baseline("port-current")              # after each port step
 #   compare_baseline("port-baseline", "port-current")
@@ -29,15 +30,20 @@
     if (!is.null(of)) break
   }
   if (is.null(of)) normalizePath(getwd(), winslash = "/")
-  else dirname(dirname(dirname(normalizePath(of, winslash = "/"))))
+  else dirname(dirname(normalizePath(of, winslash = "/")))   # dev/ -> repository
 })
 
+# A relative capture name lives under dev/out/; an absolute path is used as is.
+.pb_dir <- function(dir, root) {
+  if (grepl("^([A-Za-z]:|/)", dir)) dir else file.path(root, "dev", "out", dir)
+}
+
 capture_baseline <- function(dir, root = .pb_root) {
-  dir <- normalizePath(file.path(root, dir), winslash = "/", mustWork = FALSE)
+  dir <- normalizePath(.pb_dir(dir, root), winslash = "/", mustWork = FALSE)
   for (sub in c("drafts", "titlepage", "installed", "preamble")) {
     dir.create(file.path(dir, sub), recursive = TRUE, showWarnings = FALSE)
   }
-  ds <- file.path(root, "repo", "design-sets")
+  ds <- file.path(root, "design-sets")
   styles <- setdiff(basename(list.dirs(ds, recursive = FALSE)), "_template")
   styles <- styles[file.exists(file.path(ds, styles, "format.yml"))]
 
@@ -78,7 +84,7 @@ capture_baseline <- function(dir, root = .pb_root) {
       writeLines(docdesigner:::dd_preamble(docdesigner:::dd_resolve_style(r$style[i])),
                  file.path(dir, "preamble", paste0(r$style[i], ".tex")))
     }
-    ex <- file.path(root, "repo", "examples")
+    ex <- file.path(root, "examples")
     w <- file.path(tempdir(), "pb-snapshot")
     unlink(w, recursive = TRUE); dir.create(w)
     file.copy(list.files(ex, pattern = "^intro-to-docdesigner-snapshot", full.names = TRUE), w)
@@ -92,7 +98,7 @@ capture_baseline <- function(dir, root = .pb_root) {
 
   pdfs <- list.files(dir, pattern = "\\.pdf$", recursive = TRUE)
   pages <- vapply(file.path(dir, pdfs), function(f) pdftools::pdf_info(f)$pages, integer(1))
-  sha <- tryCatch(system2("git", c("-C", file.path(root, "repo"), "rev-parse", "--short", "HEAD"),
+  sha <- tryCatch(system2("git", c("-C", root, "rev-parse", "--short", "HEAD"),
                           stdout = TRUE), error = function(e) "unknown")
   ver <- callr::r(function() as.character(utils::packageVersion("docdesigner")))
   pan <- callr::r(function() as.character(rmarkdown::pandoc_version()))
@@ -118,7 +124,7 @@ capture_baseline <- function(dir, root = .pb_root) {
 }
 
 compare_baseline <- function(base, new, root = .pb_root, dpi = 40, threshold = 0.001) {
-  base <- file.path(root, base); new <- file.path(root, new)
+  base <- .pb_dir(base, root); new <- .pb_dir(new, root)
   pdfs <- intersect(list.files(base, pattern = "\\.pdf$", recursive = TRUE),
                     list.files(new, pattern = "\\.pdf$", recursive = TRUE))
   diffs <- file.path(new, "diffs"); dir.create(diffs, showWarnings = FALSE)

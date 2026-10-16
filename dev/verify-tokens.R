@@ -18,8 +18,8 @@
 # no check, because it looks like coverage.
 #
 # Usage (RStudio console):
-#   setwd("D:/Dropbox/Software/docdesigner")
-#   source("repo/dev/verify-tokens.R")
+#   setwd(<the repository>)
+#   source("dev/verify-tokens.R")
 #   v <- verify_tokens()            # all styles
 #   v <- verify_tokens("humanities")
 #   subset(v, status != "PASS")     # just the failures
@@ -35,10 +35,8 @@ verify_tokens <- function(styles = NULL, root = getwd(), tol = 0.03,
     stop("docdesigner must be installed.", call. = FALSE)
   }
 
-  # Workshop moved to repo/design-sets on 2026-08-25; fall back to the old
-  # sibling location for older checkouts.
-  sets <- file.path(root, "repo", "design-sets")
-  if (!dir.exists(sets)) sets <- file.path(root, "design-sets")
+  # `root` is the repository; the drafts live in its design-sets/.
+  sets <- file.path(root, "design-sets")
   dirs <- list.dirs(sets, recursive = FALSE, full.names = TRUE)
   dirs <- dirs[basename(dirs) != "_template"]
   if (!is.null(styles)) dirs <- dirs[basename(dirs) %in% styles]
