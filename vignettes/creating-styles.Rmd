@@ -151,7 +151,7 @@ distinguishable at a glance.
 `boxed` (a border round a tint) or `plain` (indented text under a title). If
 the style's quotes already carry a left bar, do not give callouts one too:
 readers will take the two for the same thing. The shipped styles show the
-pattern. atlantic, economist, minimal and nature rule their quotes and fill
+pattern. atlantic, economist, modern and nature rule their quotes and fill
 their callouts; methods, which boxes its abstract, boxes its callouts to
 match.
 
@@ -173,7 +173,7 @@ Estimate it before you render. For a typical book serif, a line holds about
 $$\text{characters} \approx \frac{\text{text width in points}}{0.47 \times \text{body size in points}}$$
 
 An 8.5-inch page with 1.85-inch side margins leaves 4.8 inches (346 pt); at
-10.5 pt that is about 70 characters, which is what `minimal` sets. Then count
+10.5 pt that is about 70 characters. Then count
 a few full lines on the rendered page.
 
 Wide margins look generous on screen and wasteful in print. If a comfortable
@@ -225,7 +225,7 @@ contrast <- function(fg, bg = "#FFFFFF") {
   l <- sort(c(lum(fg), lum(bg)), decreasing = TRUE)
   round((l[1] + 0.05) / (l[2] + 0.05), 1)
 }
-pal <- designer_style("minimal")$color
+pal <- designer_style("modern")$color
 sapply(pal[c("text", "accent", "muted")], contrast)
 ```
 
