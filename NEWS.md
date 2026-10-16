@@ -13,6 +13,12 @@
   range that reads comfortably. Their side margins (and, for six of them,
   the body size) now give 66–71 characters per line. The two-column styles
   (economist, nature) were already in range and are unchanged.
+- **Fixed: structured authors.** An author written as an object (`- name:
+  ...`, with `dept`, `inst`, etc.) printed "true" in the title block in every
+  style, and two or more authors of either form failed to compile. Names now
+  reach the title block and PDF metadata; several authors are stacked, and
+  joined by commas in running heads. The other author fields are not shown
+  yet: the title-page contact block arrives with the template port.
 - **New: `doublespace` option for `pdf()`.** `docdesigner::pdf: {style: ...,
   doublespace: true}` double-spaces the body text, as for a manuscript under
   review, in any style. Titles, headings, tables, captions, footnotes and code

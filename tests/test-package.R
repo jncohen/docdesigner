@@ -357,3 +357,31 @@ if (requireNamespace("rmarkdown", quietly = TRUE)) {
   stopifnot(!any(grepl("doublespacing", header_of(pdf(style = "minimal")), fixed = TRUE)))
   stopifnot(any(grepl("doublespacing", header_of(pdf(style = "minimal", doublespace = TRUE)), fixed = TRUE)))
 }
+
+# --- Structured authors reach \author{} as names, not "true" -----------------
+# Regression: a list of author objects (name/dept/...) printed "TRUE" in the
+# title block, because the template rendered the object as a boolean. Checked
+# at the pandoc -> LaTeX stage only (no xelatex, so CRAN-safe); the rendered
+# PDF text is checked across every style by dev/test-author-render.R.
+author_tex <- function(yaml_author) {
+  md <- tempfile(fileext = ".md")
+  writeLines(c("---", "title: T", yaml_author, "---", "", "Hello."), md)
+  tex <- tempfile(fileext = ".tex")
+  rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+    options = c("--standalone", "--lua-filter",
+                docdesigner:::dd_pkg_file("engine", "author.lua")))
+  grep("^\\\\author\\{", readLines(tex, warn = FALSE), value = TRUE)
+}
+if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available()) {
+  one_string <- author_tex('author: "Joseph N. Cohen"')
+  one_object <- author_tex(c("author:", '  - name: "Joseph N. Cohen"', '    dept: "Sociology"'))
+  two_object <- author_tex(c("author:", '  - name: "Ada Lovelace"', '    inst: "X"',
+                             '  - name: "Alan Turing"'))
+  stopifnot(length(one_string) == 1L, grepl("Joseph N. Cohen", one_string, fixed = TRUE))
+  stopifnot(length(one_object) == 1L, grepl("Joseph N. Cohen", one_object, fixed = TRUE),
+            !grepl("true", one_object, ignore.case = TRUE))
+  stopifnot(grepl("Ada Lovelace", two_object, fixed = TRUE),
+            grepl("Alan Turing", two_object, fixed = TRUE),
+            grepl("\\and", two_object, fixed = TRUE),
+            !grepl("true", two_object, ignore.case = TRUE))
+}

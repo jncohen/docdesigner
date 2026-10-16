@@ -471,7 +471,17 @@ dd_preamble <- function(s) {
 
   # Byline and date are title furniture too: \linespread{1} so a loosely
   # leaded body does not prise the author's name from their affiliation.
-  add("\\preauthor{\\begin{", align_env, "}\\linespread{1}\\large\\color{", ti$byline$color %||% "muted", "}}")
+  #
+  # Several authors: titling defines \and as "close this tabular, open
+  # another", but this \preauthor has no tabular, so every multi-author
+  # document failed to compile ("Misplaced \crcr"). Inside the byline \and
+  # becomes a line break with a little space, stacking the authors. A line
+  # break rather than \par so it also survives an uppercase wrapper
+  # (title.byline.case: upper). A single author is set exactly as before.
+  # Small caps is a declaration here so it reaches every author.
+  bsc <- if (identical(ti$byline$case, "smallcaps")) "\\scshape" else ""
+  add("\\preauthor{\\begin{", align_env, "}\\linespread{1}\\large\\color{",
+      ti$byline$color %||% "muted", "}", bsc, "\\renewcommand{\\and}{\\\\[0.4em]}}")
   add("\\postauthor{\\end{", align_env, "}}")
   add("\\predate{\\begin{", align_env, "}\\linespread{1}\\selectfont\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
@@ -548,7 +558,8 @@ dd_preamble <- function(s) {
         "\\renewcommand{\\", target, "}[1]{", saved, "{", inner, "}}\\makeatother")
   }
   case_patch("title",  ti$case)
-  case_patch("author", ti$byline$case)
+  # Small caps is applied in \preauthor (above), so it survives an \and.
+  if (!identical(ti$byline$case, "smallcaps")) case_patch("author", ti$byline$case)
 
   # title.date.show: false swallows the date block into a discarded vbox, the
   # same lever the abstract uses. Clearing \\date{} instead would also empty
@@ -790,8 +801,10 @@ dd_preamble <- function(s) {
     page = "\\thepage",
     title = ,
     runningtitle = "\\ifcsname ddrtitle\\endcsname\\ddrtitle\\else\\thetitle\\fi",
+    # \and only means something inside titling's byline tabular; in a running
+    # head several authors become a comma-separated list instead.
     author = ,
-    surname = "\\theauthor",
+    surname = "{\\def\\and{, }\\theauthor}",
     section = "\\rightmark",
     "\\thepage")
   hfill <- s$header_footer$header$fill
@@ -952,6 +965,10 @@ pdf <- function(..., style = "minimal", doublespace = FALSE) {
   } else {
     pargs <- c(pargs, if (identical(hl, "none")) "--no-highlight" else c("--highlight-style", hl))
   }
+
+  # Structured authors (name/dept/inst/...) reduced to their names, or the
+  # template prints the object as "true" in the title block. Every style.
+  pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "author.lua"))
 
   # Table header treatment. Pandoc gives the header row no macro to hook from
   # the preamble, so it is done on the document tree. This must be added BEFORE
