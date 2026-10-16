@@ -16,9 +16,9 @@ id: sociology
 label: Sociology
 description: >
   A modern ASA-tradition journal look. A flush-left title under a sans
-  "Research Article" kicker with a burgundy rule, Source Serif 4 text, burgundy
-  capital section heads under a hairline, bold-italic subheads, a small-caps
-  run-in abstract, and ASA table conventions.
+  "Research Article" kicker with a heavy rule, Source Serif 4 text, capital
+  section heads under a hairline, bold-italic subheads, a small-caps
+  run-in abstract, and ASA table conventions. Monochrome.
 
 # ---- page (asymmetric margins measured from the models) --------------------
 # firstpage padding 92/108/84 px; body 84/108/84; title 128/108/84 (px/96 = in).
@@ -26,8 +26,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1                    # round 2
 page.margins.bottom: 1.1               # round 2
-page.margins.inner: 1.95   # measure: ~70 chars/line
-page.margins.outer: 1.95   # measure: ~70 chars/line
+page.margins.inner: 1.25               # 2026-10 review
+page.margins.outer: 1.25               # 2026-10 review
 page.columns: 1
 
 # ---- typography (Times-metrics XITS, loose ASA leading) -------------------
@@ -42,9 +42,9 @@ typography.label: Arial                # round 2
 
 # ---- colour (essentially monochrome; accent = links/rules only) -----------
 color.text: "#1C1A19"                  # round 2
-color.accent: "#7A2232"                # round 2
+color.accent: "#1C1A19"                # 2026-10 review
 color.muted: "#5E5A58"                 # round 2
-color.rule: "#C9C2C0"                  # round 2
+color.rule: "#BDBDBD"                  # 2026-10 review
 links.color: accent
 
 # ---- headings (three ASA levels) ------------------------------------------

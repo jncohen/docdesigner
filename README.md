@@ -4,7 +4,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 0.9.10, alpha.** The engine and the style-set format are working and tested: `R CMD check` is clean, all twelve styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or [TESTING.md](TESTING.md) for the short version.
+> **Status: 0.9.10, alpha.** The engine and the style-set format are working and tested: `R CMD check` is clean, all thirteen styles validate and render, and 84 token-to-page checks pass. The design layer is not finished — see [Known limitations](#known-limitations) before judging output quality. If you are evaluating this for us, start with [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or [TESTING.md](TESTING.md) for the short version.
 
 ## Outputs
 
@@ -23,6 +23,45 @@ output:
     style: policy
 ---
 ```
+
+PDF options:
+
+```yaml
+---
+title: "Document Title"
+author:
+  - name: "First Author"
+    dept: "Department of Sociology"
+  - name: "Second Author"
+output:
+  docdesigner::pdf:
+    style: methods
+    doublespace: true
+---
+```
+
+- `doublespace: true` double-spaces the body text, as for a manuscript under
+  review. Titles, headings, tables, captions, footnotes and code stay
+  single-spaced.
+- `author` is a plain string or a list of people. Each person's `name` appears
+  in the byline, with several authors stacked. Other fields (`dept`, `inst`,
+  `email`, `web`, `orcid`) are accepted but not printed yet.
+
+> **Warning: tables in two-column styles (`nature`, `economist`).** A
+> two-column page cannot hold a table that breaks across pages, so in these
+> styles every table becomes a float, placed by LaTeX:
+>
+> - **A table may not appear where you put it.** It moves to the top of a
+>   column or page, often after the paragraph that follows it. Refer to
+>   tables by number ("Table 2"), never as "the table below".
+> - **A table that fits one column stays in the column; a wider one spans
+>   both columns** and moves to the top of the next page that has room.
+> - **A table is never split.** One taller than a page runs off the bottom.
+>   Keep tables short, or split them yourself.
+> - **Column widths are not kept.** Text in cells does not wrap, so a long
+>   cell widens the whole table. Keep cell text short.
+>
+> For long or wide tables, use a single-column style.
 
 ```yaml
 ---
@@ -60,7 +99,7 @@ inst/sets/
   academic/
     set.yml
     styles/
-      minimal/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
+      minimal/ modern/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
   public/
     set.yml
     styles/

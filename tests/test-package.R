@@ -4,7 +4,7 @@ library(docdesigner)
 styles <- designer_styles()
 stopifnot(is.data.frame(styles))
 stopifnot(all(c("style", "label", "description", "set") %in% names(styles)))
-stopifnot(all(c("minimal", "demography", "policy", "nature") %in% styles$style))
+stopifnot(all(c("minimal", "modern", "demography", "policy", "nature") %in% styles$style))
 
 # --- Engine: sets ------------------------------------------------------------
 sets <- designer_sets()
@@ -12,11 +12,11 @@ stopifnot(is.data.frame(sets))
 stopifnot(all(c("academic", "public") %in% sets$set))
 
 # --- Engine: resolved tokens (defaults + style, inheritance applied) ---------
-minimal_tokens <- designer_style("minimal")
-stopifnot(is.list(minimal_tokens))
-stopifnot(identical(minimal_tokens$id, "minimal"))
-stopifnot(!is.null(minimal_tokens$color$accent))
-stopifnot(!is.null(minimal_tokens$typography$body))
+modern_tokens <- designer_style("modern")
+stopifnot(is.list(modern_tokens))
+stopifnot(identical(modern_tokens$id, "modern"))
+stopifnot(!is.null(modern_tokens$color$accent))
+stopifnot(!is.null(modern_tokens$typography$body))
 
 # An unknown style fails with a clear message.
 unknown <- tryCatch(designer_style("does-not-exist"),
@@ -24,26 +24,26 @@ unknown <- tryCatch(designer_style("does-not-exist"),
 stopifnot(grepl("Unknown docdesigner style", unknown))
 
 # `inherits` is a resolution instruction, not a token: it must not survive.
-stopifnot(is.null(minimal_tokens$inherits))
+stopifnot(is.null(modern_tokens$inherits))
 
 # Flat files expand: a dotted key never survives as a literal name.
-stopifnot(!any(grepl("\\.", names(minimal_tokens))))
+stopifnot(!any(grepl("\\.", names(modern_tokens))))
 # Schema defaults reach the resolved spec even when the style is silent.
-# These must name tokens `minimal` does NOT declare. That is a live hazard: the
+# These must name tokens `modern` does NOT declare. That is a live hazard: the
 # moment a style starts declaring one, the assertion keeps passing but stops
 # testing defaults at all. h3.scale was exactly that case -- the thin v1
-# minimal left it unset, the rebuilt one sets 0.95, and this line failed when
+# minimal (now modern) left it unset, the rebuilt one sets 0.95, and this line failed when
 # the rebuilt styles were promoted on 2026-08-26. h4.scale (still unset,
 # schema default 1) replaces it; h3.scale moves below to test precedence.
-stopifnot(identical(minimal_tokens$typography$mono, "Fira Code"))
-stopifnot(identical(minimal_tokens$headings$h4$scale, 1.00))
-stopifnot(identical(minimal_tokens$table$style, "booktabs"))
+stopifnot(identical(modern_tokens$typography$mono, "Fira Code"))
+stopifnot(identical(modern_tokens$headings$h4$scale, 1.00))
+stopifnot(identical(modern_tokens$table$style, "booktabs"))
 
 # ...and a value the style DOES declare overrides the schema default. h3.scale
 # is declared 0.95 against a default of 1.00, so this fails if declaration
 # ever stops winning.
-stopifnot(identical(minimal_tokens$headings$h3$scale, 0.95))
-stopifnot(identical(minimal_tokens$page$margin, "normal"))
+stopifnot(identical(modern_tokens$headings$h3$scale, 0.95))
+stopifnot(identical(modern_tokens$page$margin, "normal"))
 
 # Every shipped style resolves, and its fonts are all findable.
 for (s in designer_styles()$style) {
@@ -90,30 +90,30 @@ scratch <- tempfile("docdesigner-scaffold-")
 dir.create(scratch)
 
 # complete = FALSE: only the source style's declared tokens.
-lean_dir <- designer_new_style("leanstyle", from = "minimal", path = scratch,
+lean_dir <- designer_new_style("leanstyle", from = "modern", path = scratch,
                                complete = FALSE)
 lean <- yaml::read_yaml(file.path(lean_dir, "format.yml"))
 stopifnot(identical(lean$id, "leanstyle"))
 
 # The invariant is a set equality: lean holds exactly the tokens the seed
 # style declares, no more. Stating it that way is deliberate. This test used
-# to name individual tokens minimal happened NOT to declare -- first
+# to name individual tokens modern happened NOT to declare -- first
 # typography.line_height, then "no page.* at all" -- and each such assertion
-# silently stopped testing anything the moment minimal started declaring it.
+# silently stopped testing anything the moment modern started declaring it.
 # Three of them failed together when the rebuilt styles were promoted on
 # 2026-08-26. Compared against the seed's own file, this cannot rot.
-minimal_raw <- yaml::read_yaml(
-  file.path(docdesigner:::dd_style_dir("minimal"), "format.yml"))
-stopifnot(setequal(names(lean), names(minimal_raw)))
+modern_raw <- yaml::read_yaml(
+  file.path(docdesigner:::dd_style_dir("modern"), "format.yml"))
+stopifnot(setequal(names(lean), names(modern_raw)))
 
 # ...and the scaffold copies RAW declared tokens rather than freezing the
-# resolved spec: minimal declares no typography.mono, so the engine's
+# resolved spec: modern declares no typography.mono, so the engine's
 # "Fira Code" default must not have leaked into the file.
 stopifnot(is.null(lean[["typography.mono"]]))
-stopifnot(is.null(minimal_raw[["typography.mono"]]))
+stopifnot(is.null(modern_raw[["typography.mono"]]))
 
 # complete = TRUE: every token, flat, one per line, at column zero.
-full_dir <- designer_new_style("fullstyle", from = "minimal", path = scratch)
+full_dir <- designer_new_style("fullstyle", from = "modern", path = scratch)
 full_lines <- readLines(file.path(full_dir, "format.yml"))
 keyed <- grep("^[a-z]", full_lines, value = TRUE)
 stopifnot(length(keyed) > 40)
@@ -124,15 +124,15 @@ stopifnot(identical(full$id, "fullstyle"))
 stopifnot(is.null(full$inherits))                       # never scaffolded
 # Types survive the round-trip, and a value the seed declares is carried
 # through rather than overwritten by the schema default. Written against
-# minimal's own file for the reason given above: hardcoding 1.3 and "333333"
-# here meant "the schema default", which held only while minimal declared
-# neither token. The rebuilt minimal declares both.
+# modern's own file for the reason given above: hardcoding 1.3 and "333333"
+# here meant "the schema default", which held only while modern declared
+# neither token. The rebuilt modern declares both.
 stopifnot(is.numeric(full[["typography.line_height"]]))
 stopifnot(identical(full[["typography.line_height"]],
-                    minimal_raw[["typography.line_height"]]))
+                    modern_raw[["typography.line_height"]]))
 stopifnot(isTRUE(full[["headings.number_sections"]]))   # bools stay bools
 stopifnot(is.character(full[["color.accent"]]))         # hex stays a string
-stopifnot(identical(full[["color.accent"]], minimal_raw[["color.accent"]]))
+stopifnot(identical(full[["color.accent"]], modern_raw[["color.accent"]]))
 # The scaffold must itself validate.
 v <- suppressWarnings(designer_validate_style(file.path(full_dir, "format.yml")))
 stopifnot(!any(v$severity == "error"))
@@ -384,3 +384,65 @@ if (requireNamespace("rmarkdown", quietly = TRUE)) {
   stopifnot(!any(grepl("doublespacing", header_of(pdf(style = "minimal")), fixed = TRUE)))
   stopifnot(any(grepl("doublespacing", header_of(pdf(style = "minimal", doublespace = TRUE)), fixed = TRUE)))
 }
+
+# --- Structured authors reach \author{} as names, not "true" -----------------
+# Regression: a list of author objects (name/dept/...) printed "TRUE" in the
+# title block, because the template rendered the object as a boolean. Checked
+# at the pandoc -> LaTeX stage only (no xelatex, so CRAN-safe); the rendered
+# PDF text is checked across every style by dev/test-author-render.R.
+author_tex <- function(yaml_author) {
+  md <- tempfile(fileext = ".md")
+  writeLines(c("---", "title: T", yaml_author, "---", "", "Hello."), md)
+  tex <- tempfile(fileext = ".tex")
+  rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+    options = c("--standalone", "--lua-filter",
+                docdesigner:::dd_pkg_file("engine", "author.lua")))
+  grep("^\\\\author\\{", readLines(tex, warn = FALSE), value = TRUE)
+}
+if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available()) {
+  one_string <- author_tex('author: "Joseph N. Cohen"')
+  one_object <- author_tex(c("author:", '  - name: "Joseph N. Cohen"', '    dept: "Sociology"'))
+  two_object <- author_tex(c("author:", '  - name: "Ada Lovelace"', '    inst: "X"',
+                             '  - name: "Alan Turing"'))
+  stopifnot(length(one_string) == 1L, grepl("Joseph N. Cohen", one_string, fixed = TRUE))
+  stopifnot(length(one_object) == 1L, grepl("Joseph N. Cohen", one_object, fixed = TRUE),
+            !grepl("true", one_object, ignore.case = TRUE))
+  stopifnot(grepl("Ada Lovelace", two_object, fixed = TRUE),
+            grepl("Alan Turing", two_object, fixed = TRUE),
+            grepl("\\and", two_object, fixed = TRUE),
+            !grepl("true", two_object, ignore.case = TRUE))
+}
+
+# --- Page furniture and title tokens added in the 2026-10 style review --------
+# Checked on the generated preamble; the rendered pages are checked by eye.
+pre_with <- function(...) {
+  s <- designer_style("modern")
+  over <- docdesigner:::dd_expand_dotted(list(...))
+  docdesigner:::dd_preamble(docdesigner:::dd_deep_merge(s, over))
+}
+has <- function(x, pat) any(grepl(pat, x, fixed = TRUE))
+# first_page: none empties page 1; folio keeps the folio but not the title.
+stopifnot(has(pre_with(header_footer.first_page = "none"),
+              "\\fancypagestyle{plain}{\\fancyhf{}\\renewcommand{\\headrulewidth}{0pt}"))
+folio <- pre_with(header_footer.first_page = "folio",
+                  header_footer.header.left = "runningtitle",
+                  header_footer.header.right = "page")
+folio <- strsplit(folio, "\n", fixed = TRUE)[[1]]
+plain_style <- grep("\\fancypagestyle{plain}", folio, fixed = TRUE, value = TRUE)
+stopifnot(length(plain_style) == 1L, grepl("thepage", plain_style, fixed = TRUE),
+          !grepl("ddrtitle", plain_style, fixed = TRUE))
+# Running-head ink is muted unless named.
+stopifnot(has(pre_with(header_footer.header.left = "page"), "\\fancyhead[L]{\\small\\color{muted}"))
+stopifnot(has(pre_with(header_footer.header.left = "page", header_footer.header.color = "text"),
+              "\\fancyhead[L]{\\small\\color{text}"))
+# A band bleeds to the paper edge unless bleed is false.
+band <- list(header_footer.header.fill = "accent", header_footer.header.left = "page")
+stopifnot(has(do.call(pre_with, band), "\\paperwidth"))
+nobleed <- do.call(pre_with, c(band, header_footer.header.bleed = FALSE))
+stopifnot(!has(nobleed, "\\paperwidth"), has(nobleed, "\\headwidth"))
+# title.weight: regular unbolds the title.
+stopifnot(has(pre_with(title.weight = "regular"), "\\mdseries\\color{"))
+# minimal is LaTeX's own look: Latin Modern from the TeX tree, no bundled path.
+mpre <- docdesigner:::dd_preamble(designer_style("minimal"))
+stopifnot(has(mpre, "\\setmainfont{lmroman10-regular.otf}[BoldFont="),
+          has(mpre, "\\setmonofont{lmmono10-regular.otf}[BoldFont="))

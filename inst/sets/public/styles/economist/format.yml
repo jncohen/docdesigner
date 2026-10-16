@@ -128,13 +128,13 @@ quote.rule: true                     # vertical red accent rule at the left
 # The red flag band: white-on-red, full paper width, the style's signature
 # furniture. header.fill suppresses header.rule -- a filled band carries its
 # own edge.
-header_footer.header.left: page
-header_footer.header.center: runningtitle
-header_footer.header.right: none        # the model flag carries no byline
+header_footer.header.left: runningtitle # 2026-10 review
+header_footer.header.center: none      # 2026-10 review
+header_footer.header.right: page       # 2026-10 review
 header_footer.header.fill: accent      # the Economist red
 header_footer.header.color: knockout   # white out of the band
 header_footer.header.rule: false
-header_footer.first_page: header       # the flag runs on page 1 too
-header_footer.footer.center: page
+header_footer.first_page: folio        # 2026-10 review
+header_footer.footer.center: none      # 2026-10 review
 header_footer.footer.right: none
 header_footer.footer.rule: false

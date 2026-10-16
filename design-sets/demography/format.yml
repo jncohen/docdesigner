@@ -22,8 +22,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1.0
 page.margins.bottom: 0.875
-page.margins.inner: 2      # measure: ~70 chars/line
-page.margins.outer: 2      # measure: ~70 chars/line
+page.margins.inner: 1.25               # 2026-10 review
+page.margins.outer: 1.25               # 2026-10 review
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
@@ -99,11 +99,10 @@ code.highlight: none
 
 # ---- running head + folio --------------------------------------------------
 # Continuation-page drop-folio: page (outer-left) · surname (outer-right).
-header_footer.header.left: page
-header_footer.header.right: surname
+header_footer.header.right: none       # 2026-10 review
 header_footer.header.rule: false
-header_footer.first_page: header    # carry the running head onto the opener too
-header_footer.footer.center: none   # folio lives in the header; no duplicate
+header_footer.first_page: plain        # 2026-10 review
+header_footer.footer.center: page      # 2026-10 review
 header_footer.footer.right: none
 header_footer.footer.rule: false
 
@@ -111,3 +110,5 @@ header_footer.footer.rule: false
 callout.style: boxed
 callout.rule: hairline
 callout.tint: 4
+header_footer.header.center: surname   # 2026-10 review
+header_footer.header.color: text       # 2026-10 review

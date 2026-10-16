@@ -2,15 +2,15 @@
 # DRAFT format.yml — not whatever the installed package currently ships under
 # that style id. This is the regression check for styles still being designed
 # (see design-sets/README.md for the per-style layout and the promotion
-# workflow once a draft is validated and ready to move into repo/inst/sets/).
+# workflow once a draft is validated and ready to move into inst/sets/).
 #
 # Usage (Windows PowerShell):
 #   $env:Path = 'C:\Program Files\R\R-4.5.1\bin;' + $env:Path
 #   $env:Path += ';C:\Program Files\RStudio\resources\app\bin\quarto\bin\tools'
-#   cd "D:\Dropbox\Software\docdesigner"
-#   Rscript repo/dev/render-design-sets.R
+#   cd <the repository>
+#   Rscript dev/render-design-sets.R
 #
-# Requires docdesigner to be installed (devtools::install() from repo/) and a
+# Requires docdesigner to be installed (devtools::install() from the repo) and a
 # working xelatex (TinyTeX). Run docdesigner::designer_check() first if unsure.
 #
 # A style folder is picked up automatically if it has both format.yml and
@@ -24,21 +24,20 @@ if (!requireNamespace("rmarkdown", quietly = TRUE)) {
 }
 if (!requireNamespace("docdesigner", quietly = TRUE)) {
   stop("The docdesigner package must be installed first: ",
-       "devtools::install() from repo/.", call. = FALSE)
+       "devtools::install() from the repository.", call. = FALSE)
 }
 # Fail fast with a clear message if the installed package predates the
-# current repo/ source, rather than failing 11 times with a cryptic
+# current source, rather than failing 11 times with a cryptic
 # "'pdf' is not an exported object" per style.
 if (!"pdf" %in% getNamespaceExports("docdesigner")) {
   stop("The installed docdesigner package is out of date (no exported ",
-       "pdf() found) and doesn't match repo/NAMESPACE. Reinstall from the ",
+       "pdf() found) and doesn't match NAMESPACE. Reinstall from the ",
        "current source first: Rscript -e \"devtools::install()\" from ",
-       "repo/, then re-run this script.", call. = FALSE)
+       "the repository, then re-run this script.", call. = FALSE)
 }
 
-# Resolve this script's own directory so it can be run from anywhere, then the
-# project root above it. This file moved to repo/dev/ on 2026-08-26, so the
-# root is two levels up; a copy sitting loose at the project root still works.
+# Resolve this script's own directory so it can be run from anywhere; the
+# repository root is the folder above dev/.
 #
 # ofile is consulted BEFORE --file= on purpose. When run.R source()s this file
 # inside a callr subprocess, --file= names callr's own script, not this one.
@@ -54,19 +53,15 @@ if (!"pdf" %in% getNamespaceExports("docdesigner")) {
 })
 here <- if (!is.null(.dd_script)) {
   d <- dirname(normalizePath(.dd_script, winslash = "/"))
-  if (basename(d) == "dev") dirname(dirname(d)) else d
+  if (basename(d) == "dev") dirname(d) else d
 } else {
   normalizePath(getwd(), winslash = "/")
 }
 
-# The workshop moved to repo/design-sets on 2026-08-25 so it is version-
-# controlled. Fall back to the old sibling location so an older checkout,
-# or a copy of this script sitting beside a loose design-sets/, still works.
-workshop_dir <- file.path(here, "repo", "design-sets")
-if (!dir.exists(workshop_dir)) workshop_dir <- file.path(here, "design-sets")
+workshop_dir <- file.path(here, "design-sets")
 if (!dir.exists(workshop_dir)) {
-  stop("No design-sets/ folder found at ", file.path(here, "repo", "design-sets"),
-       " or ", file.path(here, "design-sets"), call. = FALSE)
+  stop("No design-sets/ folder found at ", workshop_dir,
+       ". Run this from the repository, or as dev/render-design-sets.R.", call. = FALSE)
 }
 
 candidates <- list.dirs(workshop_dir, recursive = FALSE, full.names = TRUE)

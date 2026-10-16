@@ -1,7 +1,7 @@
 # design-sets
 
 The non-shipped **style workshop**: where each style is designed and proven
-before its `format.yml` is promoted into `repo/inst/sets/`. Nothing here installs
+before its `format.yml` is promoted into `inst/sets/`. Nothing here installs
 via `designer_install_set()`.
 
 Each per-style folder holds the draft `format.yml`, its `fidelity.md` report,

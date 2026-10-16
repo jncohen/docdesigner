@@ -29,7 +29,7 @@ remotes::install_github("jncohen/docdesigner")
 
 library(docdesigner)
 designer_check()      # reports anything missing from the toolchain
-designer_styles()     # the twelve styles, with their sets
+designer_styles()     # the thirteen styles, with their sets
 ```
 
 Fix anything `designer_check()` flags before going further. Please tell us how

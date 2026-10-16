@@ -103,7 +103,7 @@ table.caption.position: above        # TABLE 1 label above; source note below
 code.highlight: tango                # clean light theme, legible on code_bg
 code.background: code_bg             # role -> the #F4F6F8 tint
 code.border: true
-code.line_numbers: true
+code.line_numbers: false               # 2026-10 review
 
 # ---- quotes / methodological notes -----------------------------------------
 quote.style: italic                  # "Note. …" set italic

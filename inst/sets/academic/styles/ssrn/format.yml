@@ -106,3 +106,6 @@ callout.rule: hairline
 callout.tint: 0
 callout.title.color: text
 callout.title.case: none
+quote.rule: true                       # 2026-10 review
+quote.style: italic                    # 2026-10 review
+quote.indent: lg                       # 2026-10 review

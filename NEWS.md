@@ -36,6 +36,38 @@
   PDF with a contents page; it also accepts a draft style folder.
 - The design brief (`designer_design_brief()`) describes the title layouts,
   the callout, and the CSS conventions `designer_import_html()` needs.
+- **`minimal` is now LaTeX's own look; the old `minimal` is `modern`.** The
+  new `minimal`, still the default for `pdf()`, looks like an unstyled R
+  Markdown PDF: Latin Modern, 1-inch margins, a centred unbolded title, bold
+  unnumbered headings, black ink, and no page number on page 1. The previous
+  default, a clean modern preprint, is unchanged apart from its margins and
+  is now called `modern`. Documents that named `style: minimal` for that look
+  should name `style: modern`.
+- **Style review.** Wider text blocks: ajs, demography, modern, sociology and
+  policy now have 1.25-inch side margins; atlantic, government and humanities
+  are slightly narrower than before. ajs and demography put the folio at the
+  centre of the foot; demography's running head is set in text ink and ajs's
+  captions are no longer grey. sociology is monochrome. ssrn's block
+  quotations are italic with a left rule. methods no longer numbers code
+  lines. economist carries the running title top left and the folio top
+  right, with no running title on page 1. government's masthead bar now
+  aligns with the text block. humanities shows no folio on page 1. atlantic
+  (as a standfirst) and humanities now show the abstract, so every style
+  does.
+- **Tables stay in their column in two-column styles.** A table narrow
+  enough for one column is now a float within it; only a wider table spans
+  both columns. The README, user manual and getting-started
+  vignette now warn what floating tables mean in these styles: tables move,
+  never split across pages, and lose their column widths.
+- **New tokens:** `header_footer.header.bleed` (a band to the paper edge or
+  to the text measure), `header_footer.footer.color`, `title.weight`
+  (`regular` for an unbolded title), `figure.caption.label_style: plain`, and
+  `header_footer.first_page: folio` (page 1 keeps the folio but not the
+  running title). `header_footer.first_page: none` now works; it had no
+  effect. `header_footer.header.color` now also sets the ink of a plain
+  running head, which stays muted when it is unset.
+- **Latin Modern** and **Latin Modern Mono** are available as font families.
+  They come with every TeX distribution, so they are not bundled.
 - **Titles, headings and other display text keep their own line spacing.** A
   style's body line spacing (`typography.line_height`) was multiplying the
   spacing of everything set at an explicit size. In loosely leaded styles a
@@ -49,6 +81,12 @@
   range that reads comfortably. Their side margins (and, for six of them,
   the body size) now give 66–71 characters per line. The two-column styles
   (economist, nature) were already in range and are unchanged.
+- **Fixed: structured authors.** An author written as an object (`- name:
+  ...`, with `dept`, `inst`, etc.) printed "true" in the title block in every
+  style, and two or more authors of either form failed to compile. Names now
+  reach the title block and PDF metadata; several authors are stacked, and
+  joined by commas in running heads. The other author fields are not shown
+  yet: the title-page contact block arrives with the template port.
 - **New: `doublespace` option for `pdf()`.** `docdesigner::pdf: {style: ...,
   doublespace: true}` double-spaces the body text, as for a manuscript under
   review, in any style. Titles, headings, tables, captions, footnotes and code

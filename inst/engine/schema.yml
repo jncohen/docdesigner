@@ -61,6 +61,10 @@ roles: [accent, accent2, text, muted, rule, background, code_bg, knockout]
 # `fonts:` and ship the files in assets/fonts/.
 bundled_fonts: ["Source Serif 4", "EB Garamond", "XITS", "Fira Code"]
 
+# Font families every TeX distribution provides, so they need no bundling:
+# LaTeX's own faces. The engine registry knows their file names.
+tex_fonts: ["Latin Modern", "Latin Modern Mono"]
+
 # Font families a style may name WITHOUT bundling. `typography.label` (and any
 # other font token) may point at one of these: dd_preamble() loads them by name
 # behind \IfFontExistsTF, so an absent face degrades to the body font rather
@@ -181,6 +185,7 @@ tokens:
   title.color:  {type: role, default: text, status: impl, doc: "Near-black is what every design-sets mockup specifies; accent titles are the exception, not the rule."}
   title.family: {type: enum, values: [body, heading, display], default: heading, status: new}
   title.case:   {type: enum, values: [none, upper, smallcaps], default: none, status: impl}
+  title.weight: {type: enum, values: [bold, regular], default: bold, status: impl, doc: "regular is LaTeX's own unbolded title."}
   title.rule.position: {type: enum, values: [above, below, both, none], default: none, status: impl,
                         doc: "Only `below` and `none` are rendered today; `above`/`both` behave as `below`."}
   title.rule.weight:   {type: "scale:rule_weight", default: thick, status: impl}
@@ -245,7 +250,8 @@ tokens:
   figure.caption.size:        {type: num, min: 0.6, max: 1.0, default: 0.85, status: impl}
   figure.caption.align:       {type: enum, values: [left, center], default: left, status: impl}
   figure.caption.color:       {type: role, default: muted, status: impl}
-  figure.caption.label_style: {type: enum, values: [bold, italic, smallcaps, none], default: bold, status: impl}
+  figure.caption.label_style: {type: enum, values: [bold, italic, smallcaps, plain, none], default: bold, status: impl,
+                               doc: "plain: an unstyled \"Figure 1:\" label, as LaTeX sets it. none: no label."}
 
   # -- table -----------------------------------------------------------------
   table.style:       {type: enum, values: [booktabs, grid, zebra, minimal], default: booktabs, status: new,
@@ -300,15 +306,19 @@ tokens:
   header_footer.header.rule:   {type: bool, default: false, status: impl}
   header_footer.header.fill:   {type: role, nullable: true, status: impl,
                                 doc: "Fill the running head with a full-bleed colour band spanning the whole paper width, not just the text block. The Economist flag and a government masthead. Suppresses header.rule, which a filled band does not want."}
-  header_footer.header.color:  {type: role, default: text, status: impl,
-                                doc: "Ink used inside the running head. With header.fill set this is the knockout colour -- white-on-red is fill: accent, color: knockout."}
+  header_footer.header.bleed:  {type: bool, default: true, status: impl,
+                                doc: "With header.fill: true runs the band to the paper edges; false keeps it to the text measure, aligned with the body."}
+  header_footer.header.color:  {type: role, nullable: true, status: impl,
+                                doc: "Ink used inside the running head. Unset: muted for a plain head, text inside a band. With header.fill set this is the knockout colour -- white-on-red is fill: accent, color: knockout."}
+  header_footer.footer.color:  {type: role, nullable: true, status: impl,
+                                doc: "Ink used in the running foot. Unset: muted."}
   header_footer.footer.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
   header_footer.footer.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: page, status: impl}
   header_footer.footer.rule:   {type: bool, default: true, status: impl}
   header_footer.page_number.format: {type: enum, values: [arabic, roman], default: arabic, status: new}
-  header_footer.first_page:    {type: enum, values: [plain, none, header], default: plain, status: impl,
-                                doc: "plain: LaTeX default (footer folio, no running head on page 1). none: nothing. header: carry the running head onto page 1 too."}
+  header_footer.first_page:    {type: enum, values: [plain, none, header, folio], default: plain, status: impl,
+                                doc: "plain: LaTeX default (centred footer folio, no running head on page 1). none: nothing on page 1. header: carry the running head onto page 1 too. folio: page 1 keeps the band and the folio slots, but drops the running title."}
 
   # -- links and citations ---------------------------------------------------
   links.color:     {type: role, default: accent, status: impl}

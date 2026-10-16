@@ -26,8 +26,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1        # measure: ~70 chars/line
 page.margins.bottom: 1.1               # round 2
-page.margins.inner: 1.9    # measure: ~70 chars/line
-page.margins.outer: 1.9    # measure: ~70 chars/line
+page.margins.inner: 1.25               # 2026-10 review
+page.margins.outer: 1.25               # 2026-10 review
 page.columns: 1              # the two-column opener (stat rail) is mockup-only
 
 # ---- typography ------------------------------------------------------------

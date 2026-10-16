@@ -25,8 +25,8 @@ description: >
 page.papersize: letter
 page.margins.top: 1                    # round 2
 page.margins.bottom: 1.15              # round 2
-page.margins.inner: 1.95   # measure: ~70 chars/line
-page.margins.outer: 1.95   # measure: ~70 chars/line
+page.margins.inner: 1.25               # 2026-10 review
+page.margins.outer: 1.25               # 2026-10 review
 page.columns: 1
 
 # ---- typography (Times-metrics XITS) --------------------------------------
@@ -115,11 +115,10 @@ code.highlight: none                 # AJS sets no highlighted code
 # Running head: page number + article running-title (small caps). The opener
 # carries a running head too. Folio lives in the head; suppress the default
 # footer folio to avoid a duplicate.
-header_footer.header.left: page
-header_footer.header.right: runningtitle
+header_footer.header.right: none       # 2026-10 review
 header_footer.header.rule: false
 header_footer.first_page: plain        # round 2
-header_footer.footer.center: none
+header_footer.footer.center: page      # 2026-10 review
 header_footer.footer.right: none
 header_footer.footer.rule: false
 
@@ -129,3 +128,5 @@ callout.color: text
 callout.rule: hairline
 callout.tint: 0
 callout.title.case: smallcaps
+header_footer.header.center: runningtitle # 2026-10 review
+figure.caption.color: text             # 2026-10 review

@@ -50,3 +50,6 @@ design-sets/**/.fuse_hidden*
 
 # pkgdown site: built artefact, published to the gh-pages branch
 docs/
+
+# Dev tool outputs (run report, page baselines)
+dev/out/

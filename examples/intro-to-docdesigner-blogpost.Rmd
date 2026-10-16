@@ -97,7 +97,8 @@ A style is a preset visual system for `docdesigner::pdf`. It changes typography,
 | `methods` | Technical reports with code and compact spacing |
 | `demography` | Social-science journal-style papers |
 | `humanities` | Essays or chapter-like writing |
-| `minimal` | Plain preprint style |
+| `minimal` | The plain look of an unstyled R Markdown PDF |
+| `modern` | Clean modern preprint style |
 
 For most Lab documents, start with:
 
