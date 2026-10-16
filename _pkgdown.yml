@@ -15,6 +15,7 @@ articles:
       - user-manual
   - title: Styles
     contents:
+      - articles/gallery
       - style-gallery
       - creating-styles
   - title: Publishing

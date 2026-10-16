@@ -45,3 +45,4 @@
 ^alpha-testing-instructions\.pdf$
 ^alpha-testing-instructions\.Rmd$
 ^.*\.local\.md$
+^vignettes/articles$

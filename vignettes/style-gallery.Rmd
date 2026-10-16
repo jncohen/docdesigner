@@ -7,6 +7,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+To see every style as a PDF, with YAML to copy, open the
+[Style gallery](https://jncohen.github.io/docdesigner/articles/gallery.html).
+
 Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`, and Snapshot uses its official house style.
 
 You can inspect styles from R:

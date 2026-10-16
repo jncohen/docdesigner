@@ -1,0 +1,134 @@
+---
+title: "Style gallery"
+description: "Every docdesigner style, as a PDF with the title on page 1 and with a title page of its own."
+---
+
+Every style below sets the same short document: an analysis of R's
+`airquality` data with a figure, a summary table, a regression table, a
+quotation and references, plus the title-page furniture (contact block,
+warning line and acknowledgements). Each style is shown twice: with the
+title block at the head of page 1, and with a title page of its own. Click a
+page to open the PDF; copy the YAML to use the style.
+
+```{r gallery, echo = FALSE, results = "asis"}
+# Built from the INSTALLED styles at site-build time, so a style that ships is
+# never missing here and a retired one never lingers. The PDFs and thumbnails
+# are committed under pkgdown/assets/specimens/ (dev/render-specimens.R, then
+# dev/publish-specimens.R); a style without them is listed without pictures.
+assets <- "../../pkgdown/assets/specimens"
+`%||%` <- function(a, b) if (is.null(a)) b else a
+esc <- function(x) {
+  x <- gsub("&", "&amp;", x, fixed = TRUE)
+  x <- gsub("<", "&lt;", x, fixed = TRUE)
+  gsub(">", "&gt;", x, fixed = TRUE)
+}
+first_sentence <- function(x) {
+  x <- trimws(gsub("[[:space:]]+", " ", x))
+  cut <- regexpr("\\. ", x)
+  if (cut > 0) substr(x, 1, cut) else x
+}
+styles <- docdesigner::designer_styles()
+styles <- styles[order(styles$set, styles$style), ]
+
+thumb <- function(id, layout, label) {
+  png <- sprintf("%s-%s.png", id, layout)
+  if (!file.exists(file.path(assets, png))) return("")
+  sprintf(paste0('<a class="dd-thumb" href="../specimens/%s-%s.pdf" title="Open the %s PDF">',
+                 '<img src="../specimens/%s" alt="%s, %s: page 1" loading="lazy">',
+                 '<span>%s</span></a>'),
+          id, layout, label, png, id, label, label)
+}
+
+cards <- vapply(seq_len(nrow(styles)), function(i) {
+  id <- styles$style[i]
+  s <- docdesigner::designer_style(id)
+  cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
+  yaml <- sprintf("output:\n  docdesigner::pdf:\n    style: %s\n    title_layout: header   # or page", id)
+  paste0(
+    '<div class="dd-card" data-set="', styles$set[i], '" data-cols="', cols, '">',
+    '<div class="dd-thumbs">', thumb(id, "header", "title on page 1"),
+    thumb(id, "page", "title page"), '</div>',
+    '<h3>', esc(styles$label[i]), ' <code>', id, '</code></h3>',
+    '<p class="dd-meta">', styles$set[i], ' set &middot; ',
+    if (cols == 2L) "two columns" else "one column", ' &middot; ',
+    esc(s$typography$body), '</p>',
+    '<p>', esc(first_sentence(styles$description[i])), '</p>',
+    '<div class="dd-yaml"><button type="button" class="btn btn-sm btn-outline-secondary dd-copy">Copy YAML</button>',
+    '<pre><code>', esc(yaml), '</code></pre></div>',
+    '</div>')
+}, character(1))
+
+
+cat("```{=html}\n")
+cat('<div class="dd-filters" role="group" aria-label="Filter styles">',
+    '<button type="button" class="btn btn-sm btn-secondary" data-filter="all">All</button>',
+    '<button type="button" class="btn btn-sm btn-outline-secondary" data-filter="set:academic">Academic</button>',
+    '<button type="button" class="btn btn-sm btn-outline-secondary" data-filter="set:public">Public</button>',
+    '<button type="button" class="btn btn-sm btn-outline-secondary" data-filter="cols:1">One column</button>',
+    '<button type="button" class="btn btn-sm btn-outline-secondary" data-filter="cols:2">Two columns</button>',
+    '</div>\n', sep = "")
+cat('<div class="dd-gallery">', paste(cards, collapse = "\n"), '</div>\n', sep = "\n")
+cat("```\n")
+```
+
+```{=html}
+<style>
+.dd-filters { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.2rem 0; }
+.dd-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.4rem; }
+.dd-card { border: 1px solid var(--bs-border-color, #dee2e6); border-radius: .4rem; padding: .9rem; }
+.dd-card[hidden] { display: none; }
+.dd-card h3 { font-size: 1.1rem; margin: .7rem 0 .2rem; }
+.dd-card h3 code { font-size: .85rem; }
+.dd-card p { font-size: .9rem; margin-bottom: .5rem; }
+.dd-meta { color: var(--bs-secondary-color, #6c757d); }
+.dd-thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.dd-thumb { display: block; text-decoration: none; text-align: center; font-size: .75rem; }
+.dd-thumb img { width: 100%; border: 1px solid #d0d0d0; box-shadow: 0 1px 3px rgba(0,0,0,.12); background: #fff; }
+.dd-thumb:hover img { box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.dd-yaml { position: relative; }
+.dd-yaml pre { font-size: .78rem; margin: 0; padding: .6rem; }
+.dd-copy { position: absolute; top: .3rem; right: .3rem; padding: .05rem .4rem; font-size: .7rem; }
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var buttons = document.querySelectorAll(".dd-filters button");
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var f = b.dataset.filter.split(":");
+      document.querySelectorAll(".dd-card").forEach(function (c) {
+        c.hidden = f[0] !== "all" && c.dataset[f[0]] !== f[1];
+      });
+      buttons.forEach(function (x) {
+        x.classList.toggle("btn-secondary", x === b);
+        x.classList.toggle("btn-outline-secondary", x !== b);
+      });
+    });
+  });
+  document.querySelectorAll(".dd-copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var code = b.parentElement.querySelector("code");
+      var done = function () {
+        b.textContent = "Copied";
+        setTimeout(function () { b.textContent = "Copy YAML"; }, 1500);
+      };
+      // The Clipboard API needs a secure page; otherwise select the text and
+      // use the older copy command.
+      var fallback = function () {
+        var r = document.createRange(); r.selectNodeContents(code);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        if (document.execCommand("copy")) done();
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code.innerText).then(done, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+});
+</script>
+```
+
+To render the specimens yourself, or a draft style of your own, see
+`dev/render-specimens.R` in the
+[repository](https://github.com/jncohen/docdesigner).
