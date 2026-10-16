@@ -1,0 +1,148 @@
+---
+title: "Hot Days, High Ozone"
+subtitle: "Temperature, wind and ozone in New York, summer 1973"
+author:
+  - name: "Joseph N. Cohen"
+    dept: "Department of Sociology"
+    inst: "Queens College, City University of New York"
+    address: "65-30 Kissena Blvd, Queens, NY 11367"
+    email: "author@example.edu"
+    web: "jncohen.commons.gc.cuny.edu"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+warning: "SPECIMEN DOCUMENT: NOT FOR CITATION"
+acknowledgements: |
+  The data are R's `airquality` set. This document exists to show a
+  docdesigner style; its analysis is deliberately simple.
+abstract: |
+  Using the daily air-quality readings that ship with R, this note asks how
+  much of the day-to-day variation in New York's summer ozone tracks the
+  weather. Ozone peaks in July and August, and hotter, calmer days carry
+  markedly more of it: temperature and wind together account for well over
+  half of the variance.
+keywords: "air quality, ozone, weather, specimen"
+bibliography: gallery-document.bib
+params:
+  style: minimal
+output:
+  docdesigner::pdf:
+    style: minimal
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.width = 6, fig.height = 2.8, out.width = "100%",
+                      fig.align = "center")
+
+# The figure takes the style's own colours, so the chart belongs to its page.
+pal <- docdesigner::designer_style(params$style)$color
+accent <- pal$accent
+muted  <- if (is.null(pal$muted)) "#666666" else pal$muted
+# Grid lines are a faint wash of the rule colour: in a black-ink style the
+# rule is black, and a full-strength grid competes with the data.
+grid   <- grDevices::adjustcolor(if (is.null(pal$rule)) "#CCCCCC" else pal$rule, alpha.f = 0.3)
+
+aq <- airquality
+aq$month <- factor(month.name[aq$Month], levels = month.name[5:9])
+aq$date  <- as.Date(sprintf("1973-%02d-%02d", aq$Month, aq$Day))
+by_month <- tapply(aq$Ozone, aq$month, mean, na.rm = TRUE)
+peak     <- names(which.max(by_month))
+
+m1 <- lm(Ozone ~ Temp, data = aq)
+m2 <- lm(Ozone ~ Temp + Wind + Solar.R, data = aq)
+r2_1 <- summary(m1)$r.squared
+r2_2 <- summary(m2)$r.squared
+f1 <- function(x) formatC(x, format = "f", digits = 1)
+f2 <- function(x) formatC(x, format = "f", digits = 2)
+```
+
+# Introduction
+
+Ground-level ozone is not emitted directly. It forms when nitrogen oxides and
+volatile organic compounds react in sunlight, so its concentration should
+follow the weather as much as it follows traffic and industry. This note
+checks that idea against the `r nrow(aq)` daily readings taken in New York
+between May and September 1973 and published by @chambers1983, which have
+shipped with R ever since [@rcore2025].
+
+> The greatest value of a picture is when it forces us to notice what we
+> never expected to see.
+>
+> --- John W. Tukey [-@tukey1977]
+
+# Data
+
+Each row is a day. Ozone is the mean concentration in parts per billion (ppb)
+from 1 to 3 pm on Roosevelt Island; solar radiation is measured in Langleys in
+Central Park; wind speed and the daily maximum temperature come from LaGuardia
+Airport. Table 1 summarises the four measures; the models below drop days
+with a missing reading.
+
+```{r stats}
+vars <- c(Ozone = "Ozone (ppb)", Solar.R = "Solar radiation (Ly)",
+          Wind = "Wind (mph)", Temp = "Maximum temperature (°F)")
+stats <- do.call(rbind, lapply(names(vars), function(v) {
+  x <- aq[[v]]
+  data.frame(Measure = vars[[v]], N = sum(!is.na(x)),
+             Mean = f1(mean(x, na.rm = TRUE)), SD = f1(sd(x, na.rm = TRUE)),
+             Min = f1(min(x, na.rm = TRUE)), Max = f1(max(x, na.rm = TRUE)))
+}))
+knitr::kable(stats, format = "pipe", row.names = FALSE, align = "lrrrrr",
+             caption = "Daily measures, New York, May to September 1973")
+```
+
+# Results
+
+Ozone builds through the summer (Figure 1). Mean ozone in `r peak` is
+`r f1(max(by_month))` ppb, roughly `r f1(max(by_month) / by_month[["May"]])`
+times the May mean, and the highest single readings arrive in late July and
+August.
+
+```{r line, fig.cap = "Daily afternoon ozone, May to September 1973. The dashed line marks 70 ppb."}
+par(mar = c(2.6, 3.8, 0.6, 0.6), mgp = c(2.4, 0.6, 0), tcl = -0.25,
+    las = 1, bty = "n", col.axis = muted, col.lab = muted, cex.axis = 0.85)
+plot(aq$date, aq$Ozone, type = "n", xlab = "", ylab = "Ozone (ppb)",
+     ylim = c(0, max(aq$Ozone, na.rm = TRUE)))
+abline(h = pretty(c(0, 170)), col = grid, lwd = 0.5)
+abline(h = 70, col = muted, lty = 2, lwd = 1)
+lines(aq$date, aq$Ozone, col = accent, lwd = 1.4)
+points(aq$date, aq$Ozone, col = accent, pch = 16, cex = 0.35)
+```
+
+Table 2 reports two ordinary least squares models. Temperature alone accounts
+for `r round(100 * r2_1)`% of the variance in daily ozone; adding wind and
+sunlight raises that to `r round(100 * r2_2)`%. Holding the others constant,
+each degree of maximum temperature goes with `r f2(coef(m2)[["Temp"]])` ppb
+more ozone, and each mile per hour of wind with
+`r f2(abs(coef(m2)[["Wind"]]))` ppb less: wind disperses what heat and
+sunlight produce.
+
+```{r reg}
+stars <- function(p) ifelse(p < .001, "***", ifelse(p < .01, "**", ifelse(p < .05, "*", "")))
+cell <- function(m, term) {
+  co <- summary(m)$coefficients
+  if (!term %in% rownames(co)) return(c("", ""))
+  c(paste0(f2(co[term, 1]), stars(co[term, 4])), paste0("(", f2(co[term, 2]), ")"))
+}
+terms <- c(Temp = "Maximum temperature (°F)", Wind = "Wind (mph)",
+           Solar.R = "Solar radiation (Ly)", `(Intercept)` = "Constant")
+rows <- do.call(rbind, lapply(names(terms), function(t) {
+  a <- cell(m1, t); b <- cell(m2, t)
+  data.frame(Term = c(terms[[t]], ""), `Model 1` = a, `Model 2` = b, check.names = FALSE)
+}))
+rows <- rbind(rows,
+  data.frame(Term = c("Observations", "R²"),
+             `Model 1` = c(nobs(m1), f2(r2_1)),
+             `Model 2` = c(nobs(m2), f2(r2_2)), check.names = FALSE))
+knitr::kable(rows, format = "pipe", row.names = FALSE, align = "lrr",
+             caption = "OLS models of daily ozone (ppb). Standard errors in parentheses; \\* p < .05, \\*\\* p < .01, \\*\\*\\* p < .001")
+```
+
+# Conclusion
+
+Summer ozone in New York in 1973 tracked the weather closely: the season
+peaked in July and August, and hot, still days carried the most ozone. None
+of this would surprise an atmospheric chemist, which is the point of a
+specimen. The reader can attend to how the page sets the argument rather than
+to the argument itself.
+
+# References {-}
