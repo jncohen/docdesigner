@@ -18,11 +18,8 @@
 id: economist
 label: Economist
 description: >
-  The dense two-column look of The Economist, adapted to academic papers:
-  a flush-left black headline over a red kicker, a spot-red rule accent, bold
-  serif cross-heads and standfirst, tight leading and a first-line indent,
-  wired to numbered sections, a real abstract and references. Source Serif 4
-  substitutes Milo Serif; a grotesque sans sets the kicker and labels.
+  Modelled on The Economist: two columns, a red bar across the top of each
+  page, a red kicker and numbered sections.
 
 # ---- page (two-column; A4 per the spec sheet; 1in margins) ------------------
 # The style-sheet Page block declares papersize A4 and margin normal (1in);

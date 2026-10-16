@@ -14,9 +14,8 @@
 id: methods
 label: Methods
 description: >
-  Built for computational and methods journals, with code shown clearly.
-  Transitional serif body (Source Serif 4) with a Fira Code monospace for
-  listings and technical furniture; restrained teal accent; single column.
+  For methods and computational papers: Source Serif 4 with Fira Code for
+  code, a boxed abstract and teal headings.
 
 # ---- page -----------------------------------------------------------------
 # Stylesheet spec sheet declares "margin: normal — 1in"; the model paddings

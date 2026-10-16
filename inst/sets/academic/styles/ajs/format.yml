@@ -14,11 +14,8 @@
 id: ajs
 label: American Journal of Sociology
 description: >
-  The classic footnoted-journal look of the American Journal of Sociology
-  (Chicago house style). A centred capital title over a short hairline, a
-  small-caps byline, centred capital and italic section heads, indented
-  paragraphs, an unlabelled abstract, and bottom-of-page footnotes.
-  Monochrome and formal. XITS substitutes STIX.
+  Modelled on the American Journal of Sociology: a centred title and
+  headings, a small-caps byline, footnotes and no colour.
 
 # ---- page (symmetric margins measured from the models) ---------------------
 # firstpage/page padding 76/118/84 px; title 120/118/84 (px / 96 = inches).

@@ -14,10 +14,8 @@
 id: ssrn
 label: SSRN
 description: >
-  The austere working-paper look of the NBER / SSRN tradition. A centred title
-  under a "Working Paper" series line, a centred "Abstract" heading, numbered
-  sections, paragraphs separated by space rather than indents, no running
-  head, and no colour. XITS substitutes Times.
+  A working paper in the NBER and SSRN tradition: a centred title, numbered
+  sections, spaced paragraphs and no colour.
 
 # ---- page (asymmetric margins measured from the models) --------------------
 # body page padding 96/128/84 px; title 108/128/84; firstpage 92/128/84

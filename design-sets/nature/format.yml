@@ -16,10 +16,8 @@
 id: nature
 label: Nature
 description: >
-  The compact two-column look of Nature and Science research articles.
-  Dense small type, a heavy black title rule, a bold lead-paragraph abstract,
-  and superscript numeric citations. Source Serif 4 substitutes the
-  proprietary journal serif.
+  Modelled on Nature and Science articles: two columns of small type, a bold
+  abstract and a heavy rule above the title.
 
 # ---- page (A4, two-column; margins measured from the page models) ----------
 # firstpage / body padding 56/62/62 px on A4 794x1123 (÷96 = inches). The

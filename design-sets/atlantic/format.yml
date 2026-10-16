@@ -13,10 +13,8 @@
 id: atlantic
 label: Atlantic
 description: >
-  The Atlantic's long-form feature look: warm off-white paper, a large serif
-  display title over a red accent kicker, an italic deck, a centred byline, a
-  short accent rule, a standfirst, a drop-cap opening and spaced small-caps cross-heads.
-  Playfair Display / Libre Caslon Text substituted with EB Garamond.
+  Modelled on long features in The Atlantic: a large centred title, a drop
+  cap and red accents.
 
 # ---- page (symmetric wide measure; margins measured from the models) --------
 # firstpage & body padding 62 / 132 / 78 px (top / sides / bottom, div 96 = in).

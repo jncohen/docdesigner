@@ -17,9 +17,7 @@
 id: modern
 label: Modern
 description: >
-  A clean, modern preprint in the arXiv tradition. A single wide column of
-  Source Serif 4 with numbered accent section heads and a muted ink-blue
-  accent.
+  A clean preprint: Source Serif 4 with numbered blue section headings.
 
 # ---- page (stylesheet declares the symmetric shorthand: margin normal) ------
 page.papersize: letter

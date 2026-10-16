@@ -15,10 +15,8 @@
 id: humanities
 label: Humanities
 description: >
-  The unhurried look of a university-press humanities essay. Oldstyle
-  EB Garamond, generous leading, a centred small-caps title over a short rule,
-  an italic subtitle, footnotes, block quotations and a short abstract;
-  near-monochrome. Reflective and literary.
+  Modelled on university-press essays: EB Garamond with oldstyle figures, a
+  centred small-caps title and generous leading.
 
 # ---- page (asymmetric margins measured from the models) --------------------
 # firstpage padding 108/150/84 px; body 84/150/84; title 150/150/96 (÷96 = in).

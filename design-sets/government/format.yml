@@ -16,10 +16,8 @@
 id: government
 label: Government
 description: >
-  The official statistical-bulletin look of a federal statistics agency
-  (Census / Federal Reserve tradition). Navy agency masthead, boxed
-  Highlights, and gridded zebra data tables with navy header rows.
-  Institutional and data-forward. Bundled Source Serif 4 + Fira Code.
+  Modelled on federal statistical reports: a navy bar across the top of each
+  page, a Highlights summary and numbered sections.
 
 # ---- page -----------------------------------------------------------------
 # Body-page model padding 46 / 76 / 76 px (top/side/bottom) -> sides 0.79in,

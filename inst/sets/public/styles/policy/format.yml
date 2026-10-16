@@ -13,11 +13,8 @@
 id: policy
 label: Policy
 description: >
-  A think-tank policy brief that persuades with scale and one colour. A sans
-  "Policy Brief" kicker over a large flush-left headline, a summary deck and a
-  short heavy forest-green bar; a green "Summary" block in place of the
-  abstract; large green section heads; ragged-right text with space between
-  paragraphs. Source Serif 4.
+  A think-tank policy brief: a large flush-left headline, green accents, a
+  Summary block and ragged-right text.
 
 # ---- page ------------------------------------------------------------------
 # Stylesheet declares margin: normal (1in). The cover masthead runs full-bleed

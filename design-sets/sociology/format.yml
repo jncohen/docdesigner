@@ -15,10 +15,8 @@
 id: sociology
 label: Sociology
 description: >
-  A modern ASA-tradition journal look. A flush-left title under a sans
-  "Research Article" kicker with a heavy rule, Source Serif 4 text, capital
-  section heads under a hairline, bold-italic subheads, a small-caps
-  run-in abstract, and ASA table conventions. Monochrome.
+  Modelled on ASA journals: a flush-left title, capital section headings, a
+  small-caps abstract label and no colour.
 
 # ---- page (asymmetric margins measured from the models) --------------------
 # firstpage padding 92/108/84 px; body 84/108/84; title 128/108/84 (px/96 = in).

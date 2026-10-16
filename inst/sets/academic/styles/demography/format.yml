@@ -13,9 +13,8 @@
 id: demography
 label: Demography
 description: >
-  The classic oldstyle look of long-running social-demography journals.
-  A single wide-measure column of EB Garamond, small-caps section heads, and
-  a sober near-monochrome palette. Formal and unhurried.
+  Modelled on social-demography journals: EB Garamond with oldstyle figures,
+  small-caps section headings and near-black ink.
 
 # ---- page (asymmetric margins measured from the models) --------------------
 # firstpage padding 96/132/84 px; body 84/132/84; title 132/132/84 (÷96 = in).
