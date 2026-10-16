@@ -86,6 +86,7 @@ other `title.*` tokens; they apply to every layout.
 
 - **header** -- the title block sits at the top of the first body page.
 - **page** -- the title block and abstract take a page of their own and the body starts on the next.
+- **thesis** -- a thesis title page (degree statement, optional signature block), an optional copyright page, then front matter (contents, acknowledgements, abstract) before the body.
 
 On a title page (`page`), the title block sits about a third of the way
 down (`title.page.offset`, a fraction of the text height), and the

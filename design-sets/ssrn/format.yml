@@ -42,7 +42,6 @@ color.accent: "#000000"                # round 2
 color.muted: "#4A4A4A"                 # round 2
 color.rule: "#000000"                  # round 2
 links.color: accent
-links.underline: false
 
 # ---- headings (plain bold, numbered, near-black not accent) ----------------
 headings.number_sections: true

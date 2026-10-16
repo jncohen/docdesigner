@@ -45,7 +45,12 @@ if (length(wanted)) {
     style = normalizePath(wanted[is_draft], winslash = "/"), set = "draft") else NULL
   styles <- rbind(styles[styles$style %in% wanted[!is_draft], ], drafts)
 }
-layouts <- c(header = "Title block on page 1", page = "Title page")
+layouts <- c(header = "Title block on page 1", page = "Title page", thesis = "Thesis layout")
+# A thesis style is rendered once, in its own layout; every other style twice.
+layouts_of <- function(st) {
+  if (identical(docdesigner:::dd_title_layout(docdesigner::designer_style(st)), "thesis")) "thesis"
+  else c("header", "page")
+}
 
 # Render in a scratch copy so knitr's intermediate files never land in examples/.
 work <- file.path(tempdir(), "dd-gallery")
@@ -56,14 +61,14 @@ results <- data.frame(style = character(), set = character(), layout = character
                       file = character(), pages = integer(), status = character(),
                       message = character(), stringsAsFactors = FALSE)
 
-for (i in seq_len(nrow(styles))) for (lay in names(layouts)) {
+for (i in seq_len(nrow(styles))) for (lay in layouts_of(styles$style[i])) {
   st  <- styles$style[i]
   out <- file.path(render_dir, sprintf("%s-%s.pdf", basename(st), lay))
   cat(sprintf("Rendering %-11s %-6s ", st, lay))
   res <- tryCatch({
     pdf <- rmarkdown::render(
       file.path(work, "gallery-document.Rmd"),
-      output_format = docdesigner::pdf(style = st, title_layout = lay),
+      output_format = docdesigner::pdf(style = st, title_layout = lay, toc = identical(lay, "thesis")),
       params = list(style = st, title_layout = lay),
       output_file = basename(out), output_dir = render_dir,
       quiet = TRUE, envir = new.env(parent = globalenv()))
@@ -86,7 +91,7 @@ cover <- file.path(work, "contents.Rmd")
 writeLines(c(
   "---",
   "title: \"docdesigner specimens\"",
-  sprintf("subtitle: \"%d style%s, two title layouts each\"", length(unique(ok$style)),
+  sprintf("subtitle: \"%d style%s\"", length(unique(ok$style)),
           if (length(unique(ok$style)) == 1L) "" else "s"),
   sprintf("date: \"%s. docdesigner %s\"", format(Sys.Date(), "%B %d, %Y"),
           as.character(utils::packageVersion("docdesigner"))),
@@ -94,9 +99,10 @@ writeLines(c(
   "",
   "Every style below sets the same document: a short analysis of R's",
   "`airquality` data with three figures, three tables, a quotation, a code",
-  "block, a callout and a reference list. Each style appears twice. *Title",
-  "block on page 1* is `title.layout: header`; *Title page* is",
-  "`title.layout: page`. Page numbers refer to this combined file.",
+  "block, a callout and a reference list. Each style appears twice: with the",
+  "title block on page 1 (`title.layout: header`) and with a title page",
+  "(`title.layout: page`). The thesis styles appear once, in the thesis",
+  "layout. Page numbers refer to this combined file.",
   "",
   "| Style | Set | Title layout | Page |",
   "|:--|:--|:--|--:|",

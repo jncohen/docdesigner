@@ -1,0 +1,85 @@
+# docdesigner style — thesis
+# A plain, conservative thesis or dissertation: Times-like type at 12pt,
+# double-spaced, a 1.5in binding margin, numbered chapters that each start a
+# new page, page numbers at the foot, and the thesis title layout (title page,
+# optional signature block and copyright page, roman-numbered front matter).
+# The look graduate offices accept without comment.
+
+id: thesis
+label: Thesis
+description: >
+  A thesis or dissertation: double-spaced Times-like type, a 1.5-inch binding
+  margin, chapters on new pages, and a title page with an optional signature
+  block.
+
+# ---- page -----------------------------------------------------------------
+page.papersize: letter
+page.margins.top: 1
+page.margins.bottom: 1
+page.margins.inner: 1.5              # binding margin
+page.margins.outer: 1
+page.columns: 1
+
+# ---- type -----------------------------------------------------------------
+typography.body: XITS
+typography.heading: XITS
+typography.mono: Fira Code
+typography.base_size: "12pt"
+typography.line_height: 1.66         # double spacing, as setspace sets it at 12pt
+typography.justification: ragged-right
+typography.microtype: true
+
+color.text:   "#000000"
+color.accent: "#000000"
+color.muted:  "#333333"
+color.rule:   "#000000"
+links.color: text
+
+# ---- headings: h1 is a chapter -------------------------------------------
+headings.number_sections: true
+headings.h1.scale: 1.2
+headings.h1.weight: bold
+headings.h1.align: center
+headings.h1.color: text
+headings.h1.new_page: true
+headings.h1.space_after: md
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.color: text
+headings.h3.scale: 1.0
+headings.h3.weight: bold
+headings.h3.style: italic
+headings.h3.color: text
+headings.h4.color: text
+
+# ---- title page ----------------------------------------------------------
+title.layout: thesis
+title.align: center
+title.scale: 1.4
+title.color: text
+title.subtitle.style: normal
+title.subtitle.scale: 1.15
+title.subtitle.color: text
+thesis.signatures: false
+
+# ---- body -----------------------------------------------------------------
+paragraph.indent: lg
+paragraph.spacing: none
+paragraph.indent_after_heading: true
+footnotes.size: 0.83
+figure.caption.position: below
+figure.caption.color: text
+figure.caption.size: 0.9
+figure.caption.label_style: bold
+table.style: booktabs
+table.size: 0.9
+table.caption.position: above
+code.highlight: none
+quote.indent: lg
+
+# ---- page numbers: foot centre; front matter i, ii, ... --------------------
+header_footer.footer.center: page
+header_footer.footer.right: none
+header_footer.footer.rule: false
+header_footer.footer.color: text
+header_footer.page_number.format: roman

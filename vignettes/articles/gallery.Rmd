@@ -4,8 +4,9 @@ description: "Sample PDFs of every docdesigner style."
 ---
 
 Each style below sets the same short document. The left page shows the title
-at the top of page 1. The right page shows a separate title page. Click a
-page to open the PDF.
+at the top of page 1. The right page shows a separate title page. The two
+thesis styles show their title page and first chapter. Click a page to open
+the PDF.
 
 ```{r gallery, echo = FALSE, results = "asis"}
 # Built from the INSTALLED styles at site-build time, so a style that ships is
@@ -27,8 +28,8 @@ first_sentence <- function(x) {
 styles <- docdesigner::designer_styles()
 styles <- styles[order(styles$set, styles$style), ]
 
-thumb <- function(id, layout, label) {
-  png <- sprintf("%s-%s.png", id, layout)
+thumb <- function(id, layout, label, suffix = "") {
+  png <- sprintf("%s-%s%s.png", id, layout, suffix)
   if (!file.exists(file.path(assets, png))) return("")
   sprintf(paste0('<a class="dd-thumb" href="../specimens/%s-%s.pdf" title="Open the %s PDF">',
                  '<img src="../specimens/%s" alt="%s, %s: page 1" loading="lazy">',
@@ -40,15 +41,22 @@ cards <- vapply(seq_len(nrow(styles)), function(i) {
   id <- styles$style[i]
   s <- docdesigner::designer_style(id)
   cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
-  yaml <- sprintf("output:\n  docdesigner::pdf:\n    style: %s\n    title_layout: header   # or page", id)
+  thesis <- identical(docdesigner:::dd_title_layout(s), "thesis")
+  yaml <- if (thesis) {
+    sprintf("toc: true\noutput:\n  docdesigner::pdf:\n    style: %s", id)
+  } else {
+    sprintf("output:\n  docdesigner::pdf:\n    style: %s\n    title_layout: header   # or page", id)
+  }
   paste0(
     '<div class="dd-card" data-set="', styles$set[i], '" data-cols="', cols, '">',
     '<h3>', esc(styles$label[i]), ' <code>', id, '</code></h3>',
     '<p class="dd-meta">', styles$set[i], ' set &middot; ',
     if (cols == 2L) "two columns" else "one column", ' &middot; ',
     esc(s$typography$body), '</p>',
-    '<div class="dd-thumbs">', thumb(id, "header", "Title on page 1"),
-    thumb(id, "page", "Title page"), '</div>',
+    '<div class="dd-thumbs">',
+    if (thesis) paste0(thumb(id, "thesis", "Title page"), thumb(id, "thesis", "First chapter", "-body"))
+    else paste0(thumb(id, "header", "Title on page 1"), thumb(id, "page", "Title page")),
+    '</div>',
     '<p class="dd-desc">', esc(first_sentence(styles$description[i])), '</p>',
     '<div class="dd-yaml"><button type="button" class="btn btn-sm btn-outline-secondary dd-copy">Copy YAML</button>',
     '<pre><code>', esc(yaml), '</code></pre></div>',

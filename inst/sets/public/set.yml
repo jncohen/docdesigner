@@ -5,4 +5,4 @@ version: 2.1.0
 format_version: 2
 license: "MIT"
 description: "Report and public-scholarship styles for policy and general audiences."
-styles: [policy, government, economist, atlantic, humanities]
+styles: [policy, government, economist, atlantic, humanities, bulletin]

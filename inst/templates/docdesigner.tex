@@ -520,7 +520,61 @@ $if(has-frontmatter)$
 \frontmatter
 $endif$
 $if(title)$
-$if(dd-title-page)$
+$if(dd-title-thesis)$
+$-- title.layout: thesis. A title page with the degree statement and, if asked
+$-- for, committee signature lines; an optional copyright page; then front
+$-- matter -- contents, acknowledgements, abstract -- numbered i, ii, ... when
+$-- the style says so, before the body starts again at page 1. thesis.lua
+$-- merges the style's defaults with the document's fields into the dd-*
+$-- variables used here. The \ddthesis* macros come from dd_preamble().
+\begin{titlepage}
+\ddthesistitlepagestart
+$if(warning)$
+\ddwarning{$warning$}
+$endif$
+\begin{center}
+\ddthesistitle{$title$}
+$if(subtitle)$
+\ddthesissubtitle{$subtitle$}
+$endif$
+\ddthesisby{$for(author)$$author$$sep$\\ $endfor$}
+\vfill
+\ddthesisstatement{$dd-statement$}{$dd-degree$}{$for(dd-institution)$$dd-institution$$sep$\\ $endfor$}{$date$}
+\end{center}
+$if(dd-signatures)$
+\ddsignatures{$for(dd-committee)$\ddsignature{$dd-committee.name$}{$dd-committee.role$}$endfor$}
+$endif$
+\end{titlepage}
+$if(dd-copyright)$
+\ddcopyrightpage{$dd-copyright$}
+$endif$
+$if(dd-front-roman)$
+\pagenumbering{roman}
+$endif$
+$if(toc)$
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
+{
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$if(acknowledgements)$
+\ddfrontsection{Acknowledgements}{$acknowledgements$}
+$endif$
+$if(abstract)$
+\ddfrontsection{Abstract}{$abstract$
+$if(keywords)$
+\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
+}
+$endif$
+\clearpage
+$if(dd-front-roman)$
+\pagenumbering{arabic}
+$endif$
+$elseif(dd-title-page)$
 $-- title.layout: page. The title block and abstract take a page of their own;
 $-- the body starts on the next. titlepage drops to one column and restores
 $-- two afterwards, so two-column styles get a full-width title page.
@@ -537,6 +591,9 @@ $else$
 \begin{abstract}
 $abstract$
 \end{abstract}
+$if(keywords)$
+\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 $endif$
 $endif$
 \ddtitlepagebottom
@@ -558,6 +615,9 @@ $-- title.page.abstract: next. The abstract opens the first body page.
 \begin{abstract}
 $abstract$
 \end{abstract}
+$if(keywords)$
+\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 $endif$
 $endif$
 $else$
@@ -566,9 +626,10 @@ $-- sits at the top of the first body page. A warning line goes above it; the
 $-- contact details and acknowledgements become an unnumbered note at the foot
 $-- of the page, as journals print them. The warning goes in through titling's
 $-- \maketitlehooka: \maketitle opens with \newpage, so anything set before it
-$-- would take a page of its own.
+$-- would take a page of its own. \preto, because a byline set above the title
+$-- (title.byline.position) uses the same hook.
 $if(warning)$
-\renewcommand{\maketitlehooka}{\ddwarning{$warning$}}
+\preto{\maketitlehooka}{\ddwarning{$warning$}}
 $endif$
 \maketitle
 $if(dd-contact-note)$
@@ -581,6 +642,9 @@ $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
+$if(keywords)$
+\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 $endif$
 $endif$
 $endif$
@@ -589,6 +653,8 @@ $for(include-before)$
 $include-before$
 
 $endfor$
+$if(dd-title-thesis)$
+$else$
 $if(toc)$
 $if(toc-title)$
 \renewcommand*\contentsname{$toc-title$}
@@ -602,6 +668,7 @@ $endif$
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
+$endif$
 $endif$
 $if(lof)$
 \listoffigures

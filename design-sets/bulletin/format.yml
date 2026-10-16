@@ -1,0 +1,121 @@
+# docdesigner style — bulletin
+# A two-column statistical bulletin, after the Monthly Labor Review and
+# think-tank data briefs: a sans display face over a serif text, section
+# headings in steel-blue bars lettered A, B, C, shaded table rows, framed
+# figures kept where they are written, a hairline between the columns, and a
+# byline above the title.
+
+id: bulletin
+label: Bulletin
+description: >
+  A two-column statistical bulletin: sans headings in blue bars, shaded table
+  rows, framed figures and a rule between the columns.
+
+# ---- page -----------------------------------------------------------------
+page.papersize: letter
+page.margins.top: 0.85
+page.margins.bottom: 0.8
+page.margins.inner: 0.75
+page.margins.outer: 0.75
+page.columns: 2
+page.gutter: lg
+page.column_rule: true
+
+# ---- type -----------------------------------------------------------------
+typography.body: Source Serif 4
+typography.heading: TeX Gyre Heros
+typography.display: TeX Gyre Heros
+typography.label: TeX Gyre Heros
+typography.mono: Fira Code
+typography.mono_scale: 0.85
+typography.base_size: "9.5pt"
+typography.line_height: 1.25
+typography.justification: ragged-right
+typography.hyphenation: false
+typography.microtype: true
+
+color.text:     "#1A1A1A"
+color.accent:   "#1F5F8B"            # steel blue: bars, kicker, rule, links
+color.muted:    "#5E6A71"
+color.rule:     "#9AA5AB"
+color.code_bg:  "#EAF0F4"            # table shading and code panels
+color.knockout: "#FFFFFF"
+links.color: accent
+
+# ---- headings: lettered sections in bars ----------------------------------
+headings.number_sections: true
+headings.numbering: alpha
+headings.h1.family: display
+headings.h1.scale: 1.0
+headings.h1.weight: bold
+headings.h1.bar.fill: accent
+headings.h1.bar.text: knockout
+headings.h1.space_before: md
+headings.h2.family: display
+headings.h2.scale: 1.0
+headings.h2.weight: bold
+headings.h2.color: accent
+headings.h3.family: display
+headings.h3.scale: 0.95
+headings.h3.weight: bold
+headings.h3.color: text
+headings.h4.color: text
+
+# ---- title -----------------------------------------------------------------
+title.layout: header
+title.family: display
+title.align: left
+title.scale: 2.3
+title.weight: bold
+title.color: text
+title.kicker.text: "Data Brief"
+title.kicker.font: label
+title.kicker.color: accent
+title.kicker.scale: 0.85
+title.subtitle.style: normal
+title.subtitle.scale: 1.2
+title.subtitle.color: muted
+title.byline.position: above
+title.byline.case: upper
+title.byline.color: muted
+title.rule.position: below
+title.rule.weight: thick
+title.rule.color: accent
+title.abstract.label: Summary
+title.abstract.label_style: runin
+title.abstract.weight: bold
+title.abstract.size: 1.0
+title.abstract.width: text
+title.keywords.show: true
+title.keywords.label: Keywords
+
+# ---- body -----------------------------------------------------------------
+paragraph.indent: none
+paragraph.spacing: sm
+figure.style: inset
+figure.placement: here
+figure.width: full
+figure.caption.position: below
+figure.caption.color: muted
+figure.caption.label_style: bold
+table.style: zebra
+table.zebra_color: code_bg
+table.header.rule_below: true
+table.header.weight: bold
+table.size: 0.85
+table.row_stretch: 1.15
+table.caption.position: above
+code.highlight: none
+code.background: code_bg
+quote.rule: true
+quote.color: muted
+callout.style: filled
+callout.color: accent
+
+# ---- running heads ----------------------------------------------------------
+header_footer.header.left: runningtitle
+header_footer.header.right: page
+header_footer.header.rule: true
+header_footer.footer.right: none
+header_footer.footer.rule: false
+header_footer.first_page: none

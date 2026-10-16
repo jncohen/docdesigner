@@ -38,7 +38,6 @@ token reference, generated from the schema itself.
 designer_new_style("my-brief", from = "policy", path = ".", complete = FALSE)
 
 # 3. Errors must be fixed. Warnings flag risky combinations.
-#    "Not yet implemented" tokens validate but render nothing yet.
 designer_validate_style("my-brief")
 
 # 4. Render any document in the draft by pointing at the folder.

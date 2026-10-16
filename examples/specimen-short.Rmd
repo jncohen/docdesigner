@@ -20,6 +20,10 @@ abstract: |
   markedly more of it: temperature and wind together account for well over
   half of the variance.
 keywords: "air quality, ozone, weather, specimen"
+# Thesis styles only: the generic thesis needs a degree and an institution
+# (qc-thesis supplies its own). dev/render-specimens.R adds their contents.
+degree: "`r if (params$style == 'thesis') 'Doctor of Philosophy in Sociology' else ''`"
+institution: "`r if (params$style == 'thesis') 'Meridian University' else ''`"
 bibliography: gallery-document.bib
 params:
   style: minimal

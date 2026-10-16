@@ -45,7 +45,6 @@ color.rule: "#D4D9DE"                # hairline running-head / dividers
 color.code_bg: "#F4F6F8"             # tint behind listings — the "code shown clearly" move
 color.background: "#E9F3F2"          # light teal tint — the boxed abstract panel
 links.color: accent
-links.underline: false               # links coloured, not underlined (hover only)
 
 # ---- headings (numbered; teal sections, italic run-in subhead) ------------
 headings.number_sections: true

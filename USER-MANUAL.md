@@ -138,9 +138,47 @@ output:
 
 Styles apply to `docdesigner::pdf`. They do not apply to `docdesigner::html`.
 
-Thirteen styles ship in two sets: `academic` (`minimal`, `modern`, `nature`, `methods`,
-`demography`, `ssrn`, `sociology`, `ajs`) and `public` (`policy`, `government`,
-`economist`, `atlantic`, `humanities`).
+Sixteen styles ship in two sets: `academic` (`minimal`, `modern`, `nature`, `methods`,
+`demography`, `ssrn`, `sociology`, `ajs`, `thesis`, `qc-thesis`) and `public`
+(`policy`, `government`, `economist`, `atlantic`, `humanities`, `bulletin`).
+
+### Writing a thesis
+
+Two styles set a thesis: `thesis`, plain and conservative, and `qc-thesis`,
+the same with the Queens College title page for the MA in Data Analytics and
+Applied Social Research. Both use the thesis title layout: a title page with
+the degree statement, an optional copyright page, then contents,
+acknowledgements and abstract numbered i, ii, iii, with chapters starting on
+new pages from page 1.
+
+```yaml
+---
+title: "Thesis Title"
+author: "Student Name"
+date: "May 2027"
+degree: "Master of Arts in Sociology"     # qc-thesis fills this in
+institution: "Queens College"             # one line, or a list of lines
+committee:
+  - name: "Faculty Member"
+    role: "Committee Chair"
+  - name: "Second Reader"
+    role: "Committee Member"
+signatures: true      # signature lines on the title page; qc-thesis default
+copyright: true       # adds a copyright page
+toc: true
+acknowledgements: |
+  ...
+abstract: |
+  ...
+output:
+  docdesigner::pdf:
+    style: qc-thesis
+---
+```
+
+Each level-one heading (`#`) is a chapter. `signatures: false` removes the
+signature block. Any style can use the thesis layout with
+`title_layout: thesis` under `docdesigner::pdf:`.
 
 Per-style details — body font, accent colour, section numbering, column count —
 are **not** listed here on purpose. A hand-written table of them lived at this

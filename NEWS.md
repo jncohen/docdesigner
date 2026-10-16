@@ -1,3 +1,44 @@
+# docdesigner (development version)
+
+- **Three new styles.** `bulletin` (public set) is a two-column statistical
+  bulletin: sans headings in blue bars lettered A, B, C, shaded table rows,
+  framed figures and a rule between the columns. `thesis` (academic set) is a
+  plain thesis or dissertation: double-spaced 12pt Times-like type, a
+  1.5-inch binding margin and chapters on new pages. `qc-thesis` is `thesis`
+  with the Queens College title page for the MA in Data Analytics and Applied
+  Social Research.
+- **Thesis title layout.** `title.layout: thesis` (or
+  `pdf(title_layout = "thesis")`) sets a title page with the degree statement
+  and, with `signatures: true`, signature lines for the committee; a
+  copyright page with `copyright: true`; then the contents,
+  acknowledgements and abstract numbered i, ii, iii, before the body starts
+  at page 1. A document sets `degree`, `institution`, `committee`,
+  `signatures` and `copyright` in its YAML; a style supplies defaults with
+  `thesis.*` tokens.
+- **Every token now works.** Tokens that were accepted but ignored now render:
+  grid, zebra and minimal tables (`table.style`) and `table.header.rule_below`;
+  heading bars (`headings.<h>.bar.*`), heading faces (`headings.<h>.family`),
+  chapters on new pages (`headings.<h>.new_page`) and lettered or roman section
+  numbers (`headings.numbering`); a display face (`typography.display`,
+  `title.family`); `typography.hyphenation`; the column gap and rule
+  (`page.gutter`, `page.column_rule`); figure frames, width and placement
+  (`figure.style`, `figure.width`, `figure.placement`); the byline above the
+  title (`title.byline.position`); a narrower abstract
+  (`title.abstract.width`); and roman front-matter page numbers
+  (`header_footer.page_number.format`). government's tables are now gridded
+  and shaded, as designed.
+- **Keywords are printed.** A document's `keywords:` field appears under the
+  abstract (`title.keywords.show`, `title.keywords.label`).
+- **Removed tokens:** `links.underline`, `citations.link`,
+  `figure.span_columns` and `headings.<h>.rule.length`, which never did
+  anything.
+- **TeX Gyre Heros** is available as a font family, a Helvetica-like sans
+  that full TeX installations include.
+- **Fixed: running titles.** In a document without a subtitle, a running head
+  set to the title printed the section number instead.
+- **Fixed: paragraph indents in ragged-right styles.** A ragged-right style
+  lost its `paragraph.indent`.
+
 # docdesigner 0.10.0
 
 - **Removed: `snapshot()`.** The Household Finance Lab's one-page Snapshot

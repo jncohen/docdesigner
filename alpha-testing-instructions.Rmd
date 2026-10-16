@@ -9,8 +9,8 @@ abstract: |
   Thank you for taking a look at docdesigner. This alpha asks two questions and
   only two: **does it work on your machine and your documents, and is it easy to
   learn?** Comments on how the styles look are welcome too. Please read "What we
-  already know about" on page 3 before you start, so you don't spend time on the
-  three things we have not finished yet. Setup and the first task take about
+  already know about" on page 3 before you start, so you don't spend time on
+  known issues. Setup and the first task take about
   fifteen minutes.
 output:
   docdesigner::pdf:
@@ -25,9 +25,10 @@ engine turns into a typeset page. The promise is *same content, any style*: you
 point one document at a different style and it re-typesets, without your touching
 a word of the prose.
 
-Thirteen styles ship, in two sets. `academic` holds `minimal`, `modern`, `nature`,
-`methods`, `demography`, `ssrn`, `sociology` and `ajs`. `public` holds `policy`,
-`government`, `economist`, `atlantic` and `humanities`.
+Sixteen styles ship, in two sets. `academic` holds `minimal`, `modern`, `nature`,
+`methods`, `demography`, `ssrn`, `sociology`, `ajs`, `thesis` and `qc-thesis`.
+`public` holds `policy`, `government`, `economist`, `atlantic`, `humanities` and
+`bulletin`.
 
 This document was itself typeset by docdesigner, in the `methods` style.
 
@@ -43,7 +44,7 @@ remotes::install_github("jncohen/docdesigner")
 
 library(docdesigner)
 designer_check()      # reports anything missing from the toolchain
-designer_styles()     # the thirteen styles, with their sets
+designer_styles()     # the sixteen styles, with their sets
 ```
 
 If `designer_check()` reports a problem, fix that before going further. Nearly
@@ -127,14 +128,11 @@ they look.**
 
 Some things are known and do not need reporting:
 
-**1. Tables in `nature` and `economist` move.** In a two-column style every
+**1. Tables in `nature`, `economist` and `bulletin` move.** In a two-column style every
 table is placed by LaTeX, often after the paragraph that follows it, and a
 table wider than a column goes to the top of the next page.
 
-**2. Validation lists some "not yet implemented" settings.** Those are
-recognised but not yet acted on. The list is accurate.
-
-**3. `minimal` changed in 0.10.0.** It is now the plain look of an unstyled R
+**2. `minimal` changed in 0.10.0.** It is now the plain look of an unstyled R
 Markdown PDF. The clean preprint style it used to be is now called `modern`.
 
 One thing that is intentional rather than unfinished: **fonts substitute.**
@@ -153,7 +151,7 @@ What makes a report actionable, in rough order of value:
 1. **Attach the PDF**, or a screenshot of the part that went wrong. We cannot
    judge a layout problem from a description.
 2. **Which style**, and whether other styles do the same thing. "`sociology`
-   only" and "all thirteen" are different bugs.
+   only" and "all sixteen" are different bugs.
 3. **A small `.Rmd` that reproduces it.** If your document is confidential, cut
    it down until it is not — that usually localises the problem anyway.
 4. **The output of `designer_check()`**, and of `sessionInfo()`.
