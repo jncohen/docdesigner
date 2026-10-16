@@ -1,4 +1,4 @@
-# docdesigner (development version)
+# docdesigner 0.10.0
 
 - **Removed: `snapshot()`.** The Household Finance Lab's one-page Snapshot
   format now lives in the Lab's own package, hflsnap. Its template

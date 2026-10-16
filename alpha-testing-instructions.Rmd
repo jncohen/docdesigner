@@ -1,6 +1,6 @@
 ---
 title: "docdesigner: Alpha Testing"
-subtitle: "Instructions for participants — version 0.9.10"
+subtitle: "Instructions for participants — version 0.10.0"
 author: |
   Joseph N. Cohen\
   *Queens College, CUNY*
@@ -122,28 +122,20 @@ reports. Please send those even when nothing was broken.
 
 # What we already know about
 
-The engine is finished and tested, and the styles are now substantially
-designed: every setting a style declares is rendered, and the two styles that
-previously looked generic — `economist` and `government` — have the full-bleed
-masthead bands their designs are built around.
+The styles are designed and every one renders. **Please do comment on how
+they look.**
 
-**So yes, please do comment on how they look.** Earlier drafts of these
-instructions asked you not to; that is out of date.
+Some things are known and do not need reporting:
 
-Three things are genuinely still unfinished. Reporting them costs you time and
-tells us nothing new:
+**1. Tables in `nature` and `economist` move.** In a two-column style every
+table is placed by LaTeX, often after the paragraph that follows it, and a
+table wider than a column goes to the top of the next page.
 
-**1. No shipped style puts the title on its own page by default.** Any style
-can: set `title_layout: page` under `docdesigner::pdf:` in a document, or
-`title.layout: page` in a style. Every style we ship defaults to a title block
-at the head of the body. The richer title-page furniture (institution, series
-and report numbers, a formal author block) is still to come.
+**2. Validation lists some "not yet implemented" settings.** Those are
+recognised but not yet acted on. The list is accurate.
 
-**2. `policy` is being redesigned** from scratch, so judge it lightly.
-
-**3. Validation reports a handful of "not yet implemented" settings.** That
-list is accurate: those are recognised but not yet acted on. It is a roadmap,
-not a fault.
+**3. `minimal` changed in 0.10.0.** It is now the plain look of an unstyled R
+Markdown PDF. The clean preprint style it used to be is now called `modern`.
 
 One thing that is intentional rather than unfinished: **fonts substitute.**
 Proprietary typefaces are replaced by bundled open ones — XITS for Times, EB

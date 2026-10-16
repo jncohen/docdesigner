@@ -4,7 +4,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
-> **Status: 0.9.10, alpha.** `R CMD check` passes on Linux and Windows, all
+> **Status: 0.10.0, alpha.** `R CMD check` passes on Linux and Windows, all
 > thirteen styles render, and 90 checks that each style's tokens reach the page
 > pass. See [Known limitations](#known-limitations). Testers can start with
 > [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or
