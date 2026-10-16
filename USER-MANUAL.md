@@ -67,6 +67,29 @@ output:
 ---
 ```
 
+PDF options:
+
+```yaml
+---
+title: "Document Title"
+author:
+  - name: "First Author"
+    dept: "Department of Sociology"
+  - name: "Second Author"
+output:
+  docdesigner::pdf:
+    style: methods
+    doublespace: true
+---
+```
+
+- `doublespace: true` double-spaces the body text, as for a manuscript under
+  review. Titles, headings, tables, captions, footnotes and code stay
+  single-spaced.
+- `author` is a plain string or a list of people. Each person's `name` appears
+  in the byline, with several authors stacked. Other fields (`dept`, `inst`,
+  `email`, `web`, `orcid`) are accepted but not printed yet.
+
 HTML:
 
 ```yaml
