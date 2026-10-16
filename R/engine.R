@@ -516,6 +516,28 @@ dd_preamble <- function(s) {
   add("\\newcommand{\\ddtitlepagetop}{\\addtolength{\\droptitle}{", off, "\\textheight}}")
   add("\\newcommand{\\ddtitlepagebottom}{\\vfill\\thispagestyle{ddtitlepage}}")
 
+  # Title-page furniture, filled by the template from the document's YAML:
+  # the corresponding author's contact block (author.lua builds it), a warning
+  # line ("DRAFT: DO NOT CIRCULATE") between hairlines, and acknowledgements.
+  # On a title page they stack at the foot, under \ddtitlepagebottom's \vfill.
+  # In the header layout the warning sits above the title and the contact
+  # details and acknowledgements become \ddtitlenote, an unnumbered note at the
+  # foot of page 1.
+  fsize <- round(base * 0.9, 1); flead <- round(fsize * 1.35, 1)
+  add("\\newcommand{\\ddcontact}[1]{\\par\\begin{", align_env, "}", dd_size(fsize, flead),
+      "\\color{text}#1\\end{", align_env, "}\\par}")
+  add("\\newcommand{\\ddwarning}[1]{\\par\\vspace{0.6em}\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par",
+      "\\vspace{0.35em}{\\centering\\ddlabelfont", dd_size(fsize, flead),
+      "\\bfseries\\color{accent}#1\\par}\\vspace{0.1em}",
+      "\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par\\vspace{0.6em}}")
+  add("\\newcommand{\\ddacklabel}{{\\bfseries Acknowledgements.}\\enspace}")
+  add("\\newcommand{\\ddacknowledgements}[1]{\\par{", dd_size(fsize, flead),
+      "\\color{text}\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{0.3em}",
+      "\\ddacklabel #1\\par}}")
+  # Ragged right: justified in a narrow column, an email address with no break
+  # points was letter-spaced across the whole line.
+  add("\\newcommand{\\ddtitlenote}[1]{{\\let\\thefootnote\\relax\\footnotetext{\\raggedright #1}}}")
+
   # title.case / title.byline.case.
   #
   # These transform the title/author AS THEY ARE SET, by wrapping the \\title

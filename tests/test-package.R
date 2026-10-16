@@ -411,6 +411,35 @@ if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available
             grepl("Alan Turing", two_object, fixed = TRUE),
             grepl("\\and", two_object, fixed = TRUE),
             !grepl("true", two_object, ignore.case = TRUE))
+
+  # Title-page furniture: contact block, warning and acknowledgements reach
+  # the package template, on a title page and in the header layout.
+  furniture_tex <- function(extra = character()) {
+    md <- tempfile(fileext = ".md")
+    writeLines(c("---", "title: T",
+                 "author:", '  - name: "Ada Lovelace"', '    inst: "X"',
+                 '    email: "ada@example.org"', '    web: "example.org"',
+                 '  - name: "Alan Turing"',
+                 'warning: "DRAFT: DO NOT CIRCULATE"',
+                 'acknowledgments: "Thanks to Y."', "---", "", "Hello."), md)
+    tex <- tempfile(fileext = ".tex")
+    rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+      options = c("--standalone", "--template",
+                  docdesigner:::dd_pkg_file("templates", "docdesigner.tex"),
+                  "--lua-filter", docdesigner:::dd_pkg_file("engine", "author.lua"), extra))
+    paste(readLines(tex, warn = FALSE), collapse = "\n")
+  }
+  page_tex <- furniture_tex(c("-V", "dd-title-page=true"))
+  stopifnot(grepl("\\ddcontact{Ada Lovelace", page_tex, fixed = TRUE),
+            grepl("mailto:ada@example.org", page_tex, fixed = TRUE),
+            grepl("https://example.org", page_tex, fixed = TRUE),
+            grepl("\\ddwarning{DRAFT: DO NOT CIRCULATE}", page_tex, fixed = TRUE),
+            grepl("\\ddacknowledgements{", page_tex, fixed = TRUE))
+  header_tex <- furniture_tex()
+  stopifnot(grepl("\\renewcommand{\\maketitlehooka}{\\ddwarning{", header_tex, fixed = TRUE),
+            grepl("\\ddtitlenote{Correspondence: Ada Lovelace", header_tex, fixed = TRUE),
+            grepl("\\ddtitlenote{\\ddacklabel", header_tex, fixed = TRUE),
+            !grepl("\\ddcontact{", header_tex, fixed = TRUE))
 }
 
 # --- Page furniture and title tokens added in the 2026-10 style review --------

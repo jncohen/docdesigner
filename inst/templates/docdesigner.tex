@@ -540,6 +540,17 @@ $abstract$
 $endif$
 $endif$
 \ddtitlepagebottom
+$-- The foot of the title page: contact block, warning line, acknowledgements.
+$-- \ddcontact, \ddwarning and \ddacknowledgements come from dd_preamble().
+$if(dd-contact)$
+\ddcontact{$dd-contact$}
+$endif$
+$if(warning)$
+\ddwarning{$warning$}
+$endif$
+$if(acknowledgements)$
+\ddacknowledgements{$acknowledgements$}
+$endif$
 \end{titlepage}
 $if(abstract)$
 $if(dd-abstract-next)$
@@ -551,8 +562,21 @@ $endif$
 $endif$
 $else$
 $-- title.layout: header (and masthead, until port step 4). The title block
-$-- sits at the top of the first body page.
+$-- sits at the top of the first body page. A warning line goes above it; the
+$-- contact details and acknowledgements become an unnumbered note at the foot
+$-- of the page, as journals print them. The warning goes in through titling's
+$-- \maketitlehooka: \maketitle opens with \newpage, so anything set before it
+$-- would take a page of its own.
+$if(warning)$
+\renewcommand{\maketitlehooka}{\ddwarning{$warning$}}
+$endif$
 \maketitle
+$if(dd-contact-note)$
+\ddtitlenote{$dd-contact-note$}
+$endif$
+$if(acknowledgements)$
+\ddtitlenote{\ddacklabel $acknowledgements$}
+$endif$
 $if(abstract)$
 \begin{abstract}
 $abstract$

@@ -1,5 +1,15 @@
 # docdesigner (development version)
 
+- **Title-page furniture.** A document can carry a contact block, a warning
+  line and acknowledgements. The corresponding author's `dept`, `inst`,
+  `address`, `email` and `web` (author fields; mark one author
+  `corresponding: true`, or the first with contact details is used) make the
+  contact block; `warning:` ("DRAFT IN PROGRESS: DO NOT CIRCULATE") is set
+  between two rules; `acknowledgements:` (or `acknowledgments:`) follows. On a
+  title page (`title_layout: page`) the three stack at the foot of the page.
+  In the header layout the warning sits above the title, and the contact
+  details and acknowledgements become an unnumbered note at the foot of
+  page 1. Every style.
 - **Title pages.** `title.layout` is now a structural choice with three
   values: `header` (the title block at the head of page 1, as before),
   `page` (title and abstract on a page of their own) and `masthead`
@@ -85,8 +95,7 @@
   ...`, with `dept`, `inst`, etc.) printed "true" in the title block in every
   style, and two or more authors of either form failed to compile. Names now
   reach the title block and PDF metadata; several authors are stacked, and
-  joined by commas in running heads. The other author fields are not shown
-  yet: the title-page contact block arrives with the template port.
+  joined by commas in running heads.
 - **New: `doublespace` option for `pdf()`.** `docdesigner::pdf: {style: ...,
   doublespace: true}` double-spaces the body text, as for a manuscript under
   review, in any style. Titles, headings, tables, captions, footnotes and code
