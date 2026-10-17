@@ -35,7 +35,7 @@ res <- callr::r(function(repo, outdir, wanted) {
   if (length(wanted)) styles <- styles[styles$style %in% wanted, ]
   work <- file.path(tempdir(), "dd-specimens")
   unlink(work, recursive = TRUE); dir.create(work)
-  file.copy(file.path(repo, "examples", c("specimen-short.Rmd", "gallery-document.bib")), work)
+  file.copy(file.path(repo, "examples", c("specimen-short.Rmd", "specimen-short.bib", "scf2022-specimen.csv")), work)
   rows <- list()
   # A thesis style is shown in its own layout (title page, front matter,
   # chapters); every other style with the title on page 1 and on a page

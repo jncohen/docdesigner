@@ -1,5 +1,13 @@
 # docdesigner (development version)
 
+- **Page 1 starts at the top margin.** titling's `\maketitle` set an empty
+  line and 2em of space above the title, and kept the space after it, so the
+  first page began a third of an inch or more below every other page. The
+  title block now starts where the text block does, in every style.
+- **New specimen document.** The specimens and the website gallery now set a
+  short household-finance note, *Divorce and Net Worth*, from the public
+  2022 Survey of Consumer Finances (`examples/specimen-short.Rmd`, with a
+  one-implicate extract built by `dev/make-specimen-data.R`).
 - **Design review.** Block quotations are inset further than a paragraph
   indent, with no first-line indent, so they no longer read as ordinary
   paragraphs. Footnotes sit at the foot of the page even when a page ends

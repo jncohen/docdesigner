@@ -431,7 +431,18 @@ dd_preamble <- function(s) {
   }
 
   add("\\usepackage{titling}")
+  # titling's \maketitle opens with an empty line (\null) and 2em of space
+  # above the title, so page 1 began a third of an inch or more below the top
+  # margin every other page starts at -- most visible in a tight-margined
+  # style with no running head on page 1 (bulletin). Both are removed, and the
+  # title block starts at the top of the text block. A title page's offset
+  # (\ddtitlepagetop, through \droptitle) is unaffected.
   add("\\usepackage{etoolbox}")
+  # The starred \vspace*{\droptitle} goes too when there is no drop: even at
+  # 0pt it pins the top of the page, so the space after it (a warning line's,
+  # the title environment's own) was kept instead of being discarded there.
+  add("\\makeatletter\\patchcmd{\\@maketitle}{\\null\\vskip 2em\\vspace*{\\droptitle}}",
+      "{\\ifdim\\droptitle=\\z@\\else\\vspace*{\\droptitle}\\fi}{}{}\\makeatother")
   tsize <- round(base * ti$scale, 1)
   # title.align (center/left) governs the whole title block, not just the
   # title line itself, so byline/date share the same environment.
