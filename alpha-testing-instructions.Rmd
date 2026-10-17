@@ -160,7 +160,7 @@ is worth telling me about.
 
 # How to report
 
-Email **joseph.cohen@qc.cuny.edu**, one message per problem, with
+Email **joseph.cohen@qc.cuny.edu** with
 `docdesigner feedback` in the subject line.
 
 What makes a report actionable, in rough order of value:

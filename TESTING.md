@@ -77,7 +77,7 @@ reporting:
 
 ## How to report
 
-Email **joseph.cohen@qc.cuny.edu**, one message per problem, `docdesigner feedback`
+Email **joseph.cohen@qc.cuny.edu** with `docdesigner feedback`
 in the subject line. Most useful, in order: the PDF or a screenshot; which style,
 and whether others do the same; a small `.Rmd` that reproduces it; the output of
 `designer_check()` and `sessionInfo()`; what you expected instead.
