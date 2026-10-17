@@ -15,7 +15,7 @@ Two questions, and only two:
 2. **Is it easy to learn** — where did you get stuck, what did you have to look
    up, what did you expect to find and not find?
 
-Comments on how the styles look are welcome too. See "What we already know
+Comments on how the styles look are welcome too. See "What I already know
 about" below before reporting.
 
 ## Setup
@@ -45,9 +45,9 @@ designer_check()      # reports anything missing from the toolchain
 designer_styles()     # the sixteen styles, with their sets
 ```
 
-Fix anything `designer_check()` flags before going further. Please tell us how
+Fix anything `designer_check()` flags before going further. Please tell me how
 this step went even if it went fine — installation is the step most likely to
-lose a new user, and the one we can least easily test ourselves.
+lose a new user, and the one I can least easily test myself.
 
 ## What to try
 
@@ -55,14 +55,14 @@ lose a new user, and the one we can least easily test ourselves.
    `output: docdesigner::pdf: {style: minimal}`. One line names the style; that
    is the whole interface.
 2. **Render a real document of your own** — the messier the better — then switch
-   the `style:` line three or four times. *This is the one that matters.* We
+   the `style:` line three or four times. *This is the one that matters.* I
    want to know whether your content survives the switch: tables overflowing,
    figures in the wrong column, citations not resolving, code running off the
    edge. `nature` and `economist` are two-column, where wide content suffers
    most.
 3. **Install a style set**: `designer_install_set("academic")`.
 
-## What we already know about
+## What I already know about
 
 Please do comment on how the styles look. These are known and do not need
 reporting:

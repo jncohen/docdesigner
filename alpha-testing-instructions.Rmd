@@ -8,7 +8,7 @@ date: "`r format(Sys.Date(), '%B %d, %Y')`"
 abstract: |
   Thank you for taking a look at docdesigner. This alpha asks two questions and
   only two: **does it work on your machine and your documents, and is it easy to
-  learn?** Comments on how the styles look are welcome too. Please read "What we
+  learn?** Comments on how the styles look are welcome too. Please read "What I
   already know about" (section 5) before you start, so you don't spend time on
   known issues. Setup and the first task take about
   fifteen minutes.
@@ -67,9 +67,9 @@ designer_styles()     # the sixteen styles, with their sets
 If `designer_check()` reports a problem, fix that before going further. Nearly
 every confusing failure downstream is a missing `xelatex` or a missing font.
 
-**Please tell us how this step went even if it went fine** — how long it took,
+**Please tell me how this step went even if it went fine** — how long it took,
 and whether anything was unclear. Installation is the step most likely to lose a
-new user, and it is the one we can least easily test ourselves.
+new user, and it is the one I can least easily test myself.
 
 # What to try
 
@@ -95,7 +95,7 @@ produces a PDF, the package works on your machine.
 
 ## Render a real document of your own
 
-This is what we most need. Take a genuine paper, report or memo of yours — the
+This is what I most need. Take a genuine paper, report or memo of yours — the
 messier the better, ideally one with sections, tables, figures, footnotes and a
 bibliography — and render it. Then change that one `style:` line and render it
 again, three or four times:
@@ -106,14 +106,14 @@ output:
     style: nature      # then sociology, humanities, ssrn, ...
 ```
 
-We want to know whether **your content survives the switch**. Tables that
+I want to know whether **your content survives the switch**. Tables that
 overflow the page, figures that land in the wrong column, citations that stop
 resolving, headings that collide with the running head, code that runs off the
-edge — that is the failure class we cannot find on our own test documents,
-because our test documents are tidy and yours are real.
+edge — that is the failure class I cannot find on my own test documents,
+because my test documents are tidy and yours are real.
 
 Note that `nature` and `economist` are two-column. Wide tables and long code
-lines are the usual casualty there, and we would like to know how badly.
+lines are the usual casualty there, and I would like to know how badly.
 
 ## Install a style set
 
@@ -123,11 +123,11 @@ designer_sets()
 ```
 
 Sets install to your R user directory and survive package updates. This checks
-that distribution works from a machine that is not ours.
+that distribution works from a machine that is not mine.
 
 # Information sought
 
-Beyond outright breakage, the thing we cannot see from here is **where you got
+Beyond outright breakage, the thing I cannot see from here is **where you got
 stuck**. Specifically:
 
 - What did you have to look up, guess at, or read twice?
@@ -138,7 +138,7 @@ stuck**. Specifically:
 "I assumed X and it turned out to be Y" is a more useful report than most bug
 reports. Please send those even when nothing was broken.
 
-# What we already know about
+# What I already know about
 
 The styles are designed and every one renders. **Please do comment on how
 they look.**
@@ -156,7 +156,7 @@ One thing that is intentional rather than unfinished: **fonts substitute.**
 Proprietary typefaces are replaced by bundled open ones — XITS for Times, EB
 Garamond for oldstyle, Source Serif 4 for various. A style being "not quite the
 real typeface" is expected. A substitution that looks *wrong at the size used*
-is worth telling us about.
+is worth telling me about.
 
 # How to report
 
@@ -165,7 +165,7 @@ Email **joseph.cohen@qc.cuny.edu**, one message per problem, with
 
 What makes a report actionable, in rough order of value:
 
-1. **Attach the PDF**, or a screenshot of the part that went wrong. We cannot
+1. **Attach the PDF**, or a screenshot of the part that went wrong. I cannot
    judge a layout problem from a description.
 2. **Which style**, and whether other styles do the same thing. "`sociology`
    only" and "all sixteen" are different bugs.
