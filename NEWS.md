@@ -1,5 +1,16 @@
 # docdesigner (development version)
 
+- **Spacing review.** The warning line sits evenly between its two rules.
+  Reference lists have a small gap between entries again; the template port
+  had restored a full blank line. Keywords print inside the abstract, above
+  any closing rule, and never in bold. Headings no longer sit alone at the
+  foot of a page. A page-1 note never splits across pages. A page holding
+  only floats starts at the top. In a table whose standard errors sit under
+  their coefficients, the two rows are shaded and ruled as one.
+- **Rules above headings and titles.** `headings.<h>.rule.position: above` and
+  `title.rule.position: above` / `both` now place the rule above, as
+  sociology's headings and nature's title were designed; both rendered it
+  below before.
 - **Three new styles.** `bulletin` (public set) is a two-column statistical
   bulletin: sans headings in blue bars lettered A, B, C, shaded table rows,
   framed figures and a rule between the columns. `thesis` (academic set) is a

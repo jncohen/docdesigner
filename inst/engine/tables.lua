@@ -27,6 +27,7 @@
 local columns = 1
 local style = "booktabs"
 local rule_below = true
+local zebra = nil     -- shading colour, when this filter shades rows itself
 local MAX_FLOAT_ROWS = 25
 
 local function read_meta(m)
@@ -34,6 +35,8 @@ local function read_meta(m)
   columns = tonumber(get("dd-columns") or "1") or 1
   style = get("dd-table-style") or "booktabs"
   rule_below = get("dd-table-rule-below") ~= "false"
+  zebra = get("dd-table-zebra")
+  if zebra == "" then zebra = nil end
   return m
 end
 
@@ -141,12 +144,26 @@ local function head_rows(out, tbl, r)
   for _, row in ipairs(tbl.head.rows) do out[#out + 1] = row_latex(row) end
   push(out, r.head)
 end
+-- A row whose first cell is empty continues the row above it: a regression
+-- table's standard errors under their coefficients. Shading and grid rules
+-- treat the two as one row, so each term reads as a unit.
+local function continues(row)
+  local first = row.cells[1]
+  return first ~= nil and pandoc.utils.stringify(first.contents) == ""
+end
+
 local function body_rows(out, tbl, r)
+  local rows = {}
   for _, body in ipairs(tbl.bodies) do
-    for _, row in ipairs(body.body) do
-      out[#out + 1] = row_latex(row)
-      push(out, r.row)
-    end
+    for _, row in ipairs(body.body) do rows[#rows + 1] = row end
+  end
+  local group = 0
+  for i, row in ipairs(rows) do
+    if i == 1 or not continues(row) then group = group + 1 end
+    local shade = (zebra and group % 2 == 0) and ("\\rowcolor{" .. zebra .. "}") or ""
+    out[#out + 1] = shade .. row_latex(row)
+    local nxt = rows[i + 1]
+    if not (nxt and continues(nxt)) then push(out, r.row) end
   end
 end
 

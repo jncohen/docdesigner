@@ -588,12 +588,12 @@ $-- look, so it stays with the tokens.
 $if(abstract)$
 $if(dd-abstract-next)$
 $else$
+$if(keywords)$
+\ddsetkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 \begin{abstract}
 $abstract$
 \end{abstract}
-$if(keywords)$
-\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
-$endif$
 $endif$
 $endif$
 \ddtitlepagebottom
@@ -612,12 +612,12 @@ $endif$
 $if(abstract)$
 $if(dd-abstract-next)$
 $-- title.page.abstract: next. The abstract opens the first body page.
+$if(keywords)$
+\ddsetkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 \begin{abstract}
 $abstract$
 \end{abstract}
-$if(keywords)$
-\ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
-$endif$
 $endif$
 $endif$
 $else$
@@ -639,12 +639,14 @@ $if(acknowledgements)$
 \ddtitlenote{\ddacklabel $acknowledgements$}
 $endif$
 $if(abstract)$
+$if(keywords)$
+\ddsetkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$endif$
 \begin{abstract}
 $abstract$
 \end{abstract}
-$if(keywords)$
+$elseif(keywords)$
 \ddkeywords{$for(keywords)$$keywords$$sep$, $endfor$}
-$endif$
 $endif$
 $endif$
 $endif$

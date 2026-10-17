@@ -142,7 +142,7 @@ tokens:
   headings.<h>.space_before: {type: "scale:space", default: lg, status: impl}
   headings.<h>.space_after:  {type: "scale:space", default: sm, status: impl}
   headings.<h>.rule.position: {type: enum, values: [above, below, none], default: none, status: impl,
-                               doc: "`above` is not yet rendered; it behaves as `below`."}
+                               doc: "above: a rule over the heading. below: under it."}
   headings.<h>.rule.weight:   {type: "scale:rule_weight", default: medium, status: impl}
   headings.<h>.rule.color:    {type: role, default: rule, status: impl}
   headings.<h>.bar.fill:      {type: role, nullable: true, status: impl, doc: "Set to render the heading as a filled bar across the measure."}
@@ -187,7 +187,7 @@ tokens:
   title.case:   {type: enum, values: [none, upper, smallcaps], default: none, status: impl}
   title.weight: {type: enum, values: [bold, regular], default: bold, status: impl, doc: "regular is LaTeX's own unbolded title."}
   title.rule.position: {type: enum, values: [above, below, both, none], default: none, status: impl,
-                        doc: "Only `below` and `none` are rendered today; `above`/`both` behave as `below`."}
+                        doc: "above: over the kicker and title. below: under the title block. both: both."}
   title.rule.weight:   {type: "scale:rule_weight", default: thick, status: impl}
   title.rule.length: {type: inches, min: 0.3, max: 8.0, nullable: true, status: impl, doc: "Rule width in inches; omit for the full measure."}
   title.rule.color:    {type: role, default: rule, status: impl}

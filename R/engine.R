@@ -373,8 +373,14 @@ dd_preamble <- function(s) {
     }
     fmt <- paste0(align_cmd(h$align), fam, dd_size(size, lead), wt, it,
                   "\\color{", h$color %||% "accent", "}")
-    line <- paste0("\\titleformat{", cmd, "}[", shape, "]{", fmt, "}{", label, "}{0pt}{", txt, "}")
+    # headings.<h>.rule: above sets the rule over the heading (in titlesec's
+    # format argument, before the label), below under it (the after-code).
     rule <- dd_rule_tex(h$rule, "medium")
+    if (nzchar(rule) && identical(h$rule$position, "above") && identical(shape, "block")) {
+      fmt <- paste0(rule, "\\vspace{3pt}", fmt)
+      rule <- ""
+    }
+    line <- paste0("\\titleformat{", cmd, "}[", shape, "]{", fmt, "}{", label, "}{0pt}{", txt, "}")
     if (nzchar(rule)) line <- paste0(line, "[\\vspace{2pt}", rule, "]")
     line
   }
@@ -395,10 +401,17 @@ dd_preamble <- function(s) {
   }
   # headings.<h>.new_page: every heading of that level opens a page -- thesis
   # chapters. titlesec's \<name>break hooks run before the heading.
+  # Every other heading keeps a few lines below it on its page: \needspace
+  # moves the heading over when it would otherwise sit alone at the foot,
+  # parted from the text or list it introduces.
+  add("\\usepackage{needspace}")
   for (lvl in c("h1", "h2", "h3")) {
+    name <- c(h1 = "section", h2 = "subsection", h3 = "subsubsection")[[lvl]]
     if (isTRUE(hd[[lvl]]$new_page)) {
-      add("\\newcommand{\\", c(h1 = "section", h2 = "subsection", h3 = "subsubsection")[[lvl]],
-          "break}{\\clearpage}")
+      add("\\newcommand{\\", name, "break}{\\clearpage}")
+    } else {
+      add("\\newcommand{\\", name, "break}{\\addpenalty{-300}\\needspace{",
+          if (lvl == "h1") 4 else 3, "\\baselineskip}}")
     }
   }
   add(hspec("h1", "\\section"))
@@ -461,23 +474,32 @@ dd_preamble <- function(s) {
     kicker_tex <- paste0("{", kfont, dd_size(ksize, round(ksize * 1.2, 1)),
       "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
   }
-  add("\\pretitle{\\begin{", align_env, "}", kicker_tex, family_cmd(ti$family),
-      dd_size(tsize, round(tsize * 1.18, 1)),
-      if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries",
-      "\\color{", ti$color %||% "text", "}}")
+  # title.rule.position: above sets the rule over the kicker and title (nature's
+  # heavy black rule), below under the title block, both in both places.
   # \titlerule takes [weight]; \rule takes {width}{height}. Build inline rather
   # than reuse dd_rule_tex(), whose output suits titlesec's after-code only.
-  if (!is.null(ti$rule) && !identical(ti$rule$position %||% "none", "none")) {
+  rpos <- ti$rule$position %||% "none"
+  rule_tex <- ""
+  if (!identical(rpos, "none")) {
     w <- dd_len("rule_weight", ti$rule$weight, "thick")
     # A short centred rule is a distinct design move from a full-measure one
     # (atlantic's masthead uses 64px), so title.rule.length overrides \linewidth.
     len <- if (!is.null(ti$rule$length)) paste0(ti$rule$length, "in") else "\\linewidth"
     rule_tex <- paste0("{\\color{", ti$rule$color %||% "rule", "}\\rule{", len, "}{", w, "}}")
+  }
+  # Above: inside the alignment environment, so a short rule centres with the
+  # title, then a gap to the kicker or title.
+  above_tex <- if (rpos %in% c("above", "both")) paste0(rule_tex, "\\par\\vskip0.6em") else ""
+  add("\\pretitle{\\begin{", align_env, "}", above_tex, kicker_tex, family_cmd(ti$family),
+      dd_size(tsize, round(tsize * 1.18, 1)),
+      if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries",
+      "\\color{", ti$color %||% "text", "}}")
+  if (rpos %in% c("below", "both")) {
     # The rule is emitted after \end{center}, i.e. back in ordinary flush-left
     # mode. A full-measure rule fills the line so it looks centred either way,
     # but a short one would sit at the left margin without this.
-    if (identical(align_env, "center")) rule_tex <- paste0("\\centerline{", rule_tex, "}")
-    add("\\posttitle{\\par\\end{", align_env, "}\\vskip0.3em", rule_tex, "\\vskip0.4em}")
+    below_tex <- if (identical(align_env, "center")) paste0("\\centerline{", rule_tex, "}") else rule_tex
+    add("\\posttitle{\\par\\end{", align_env, "}\\vskip0.3em", below_tex, "\\vskip0.4em}")
   } else {
     add("\\posttitle{\\par\\end{", align_env, "}\\vskip0.4em}")
   }
@@ -530,22 +552,32 @@ dd_preamble <- function(s) {
           ",colframe=rule,arc=1pt,left=12pt,right=12pt,top=9pt,bottom=9pt]%")
       add("  ", body_fmt)
       add("  ", lab_tex)
-      add("}{\\end{tcolorbox}", arule_tex, "}")
+      add("}{\\ddkwline\\end{tcolorbox}", arule_tex, "}")
     } else {
       add("\\renewenvironment{abstract}{%")
       add("  \\list{}{\\leftmargin=", aind, "\\rightmargin=", aind, "}\\item\\relax")
       add("  ", body_fmt)
       add("  ", lab_tex)
-      add("}{", arule_tex, "\\endlist}")
+      add("}{\\ddkwline", arule_tex, "\\endlist}")
     }
   }
 
-  # Keywords: the template passes the document's keywords: field to
-  # \ddkeywords under the abstract. title.keywords.show: false prints nothing.
+  # Keywords. With an abstract, the template hands them over first
+  # (\ddsetkeywords) and the abstract prints them at its end (\ddkwline),
+  # inside its inset, box or closing rule, at its size but in roman, so a bold
+  # standfirst does not make them bold. Without an abstract the template sets
+  # them on their own (\ddkeywords). title.keywords.show: false prints none.
   kw <- ti$keywords
+  add("\\def\\ddkwtext{}\\newcommand{\\ddsetkeywords}[1]{\\gdef\\ddkwtext{#1}}")
   if (identical(kw$show, FALSE)) {
-    add("\\newcommand{\\ddkeywords}[1]{}")
+    add("\\newcommand{\\ddkwline}{}\\newcommand{\\ddkeywords}[1]{}")
   } else {
+    add("\\newcommand{\\ddkwline}{\\ifx\\ddkwtext\\empty\\else\\par\\vspace{0.45em}\\noindent",
+        # \textmd around the keywords themselves: in a bold standfirst (nature)
+        # a bare \mdseries before the label did not survive to the keywords,
+        # which came out bold.
+        "{\\mdseries\\upshape\\color{text}{\\itshape ", kw$label %||% "Keywords", ":}\\hspace{0.5em}",
+        "\\textmd{\\upshape\\ddkwtext}}\\fi}")
     ksz <- round(base * as.numeric(ab$size %||% 0.95), 1)
     # Inset to match the abstract above it.
     kind <- if (!is.null(ab$width)) {
@@ -609,10 +641,19 @@ dd_preamble <- function(s) {
   fsize <- round(base * 0.9, 1); flead <- round(fsize * 1.35, 1)
   add("\\newcommand{\\ddcontact}[1]{\\par\\begin{", align_env, "}", dd_size(fsize, flead),
       "\\color{text}#1\\end{", align_env, "}\\par}")
-  add("\\newcommand{\\ddwarning}[1]{\\par\\vspace{0.6em}\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par",
-      "\\vspace{0.35em}{\\centering\\ddlabelfont", dd_size(fsize, flead),
-      "\\bfseries\\color{accent}#1\\par}\\vspace{0.1em}",
-      "\\noindent{\\color{rule}\\rule{\\linewidth}{0.4pt}}\\par\\vspace{0.6em}}")
+  # The warning is one box: rule, gap, text, the same gap, rule. Built from
+  # separate paragraphs, the gaps counted from the baselines, so the space
+  # above the capitals was larger than the space below them. Here the text is
+  # boxed first ([t]: its height is the first line's, its depth the rest), and
+  # each gap is measured from the ink.
+  wgap <- paste0(round(fsize * 0.6, 1), "pt")
+  add("\\newsavebox{\\ddwarnbox}")
+  add("\\newcommand{\\ddwarning}[1]{\\par\\vspace{0.6em}",
+      "\\sbox{\\ddwarnbox}{\\parbox[t]{\\linewidth}{\\centering\\ddlabelfont", dd_size(fsize, flead),
+      "\\bfseries\\color{accent}#1}}",
+      "\\noindent\\vbox{\\hsize=\\linewidth{\\color{rule}\\hrule height0.4pt}\\vskip", wgap,
+      "\\hbox to\\linewidth{\\usebox{\\ddwarnbox}}\\vskip", wgap,
+      "{\\color{rule}\\hrule height0.4pt}}\\par\\vspace{0.6em}}")
   add("\\newcommand{\\ddacklabel}{{\\bfseries Acknowledgements.}\\enspace}")
   add("\\newcommand{\\ddacknowledgements}[1]{\\par{", dd_size(fsize, flead),
       "\\color{text}\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{0.3em}",
@@ -705,6 +746,10 @@ dd_preamble <- function(s) {
   # 1980s figures. With short tables and figures both floating, they left
   # pages holding a table and a figure centred in white space while the text
   # resumed overleaf. These are the usual journal-class values.
+  # A page of floats alone starts at the top, as journals set it; LaTeX's
+  # default centres them, leaving a table adrift mid-page.
+  add("\\makeatletter\\setlength{\\@fptop}{0pt}\\setlength{\\@fpbot}{0pt plus 1fil}",
+      "\\setlength{\\@dblfptop}{0pt}\\setlength{\\@dblfpbot}{0pt plus 1fil}\\makeatother")
   add("\\renewcommand{\\topfraction}{0.85}\\renewcommand{\\bottomfraction}{0.6}",
       "\\renewcommand{\\textfraction}{0.1}\\renewcommand{\\floatpagefraction}{0.85}",
       "\\setcounter{topnumber}{3}\\setcounter{totalnumber}{4}")
@@ -722,8 +767,18 @@ dd_preamble <- function(s) {
   # Pandoc's CSL reference list separated entries by a full blank line, which
   # reads as an enormous gap; tighten it to an even, modest space. Guarded so
   # it is inert when a document has no bibliography.
-  add("\\AtBeginDocument{\\ifcsname CSLReferences\\endcsname",
-      "\\AtBeginEnvironment{CSLReferences}{\\setlength{\\parskip}{0.3\\baselineskip}\\setlength{\\itemsep}{0pt}}\\fi}")
+  #
+  # The template's CSLReferences sets \itemsep to the CSL style's entry
+  # spacing -- usually a whole line -- INSIDE the list's own setup, after any
+  # hook at the start of the environment has run, so an earlier
+  # \AtBeginEnvironment fix silently stopped working when pdf() moved to the
+  # package template. Redefining the environment at begin-document, after the
+  # template's definition, is the only reliable place.
+  add("\\AtBeginDocument{\\ifcsname CSLReferences\\endcsname\\renewenvironment{CSLReferences}[2]",
+      "{\\begin{list}{}{\\setlength{\\itemindent}{0pt}\\setlength{\\leftmargin}{0pt}",
+      "\\setlength{\\parsep}{0pt}\\ifodd #1\\setlength{\\leftmargin}{\\cslhangindent}",
+      "\\setlength{\\itemindent}{-1\\cslhangindent}\\fi",
+      "\\setlength{\\itemsep}{0.35\\baselineskip}\\setlength{\\parskip}{0pt}}}{\\end{list}}\\fi}")
 
   # Wrap long code lines so listings never overflow the measure (especially the
   # narrow two-column body in nature). fvextra augments pandoc's fancyvrb.
@@ -897,7 +952,10 @@ dd_preamble <- function(s) {
   # table.style: zebra shades alternate body rows, in table.zebra_color or a
   # light wash of the rule colour; grid draws its rules in the rule colour.
   zebra <- tb$zebra_color %||% (if (identical(tstyle, "zebra")) "rule!15" else NULL)
-  if (!is.null(zebra)) {
+  # A style with its own rules has every table written by tables.lua, which
+  # shades rows itself, in groups (dd-table-zebra, set by pdf()). Only a
+  # booktabs style, whose long tables pandoc writes, shades with \rowcolors.
+  if (!is.null(zebra) && identical(tstyle, "booktabs")) {
     # rowcolors starts shading at the first BODY row: the header sits between
     # \toprule and \midrule and must not be tinted.
     tsetup <- c(tsetup, paste0("\\rowcolors{2}{}{", zebra, "}"))
@@ -909,6 +967,10 @@ dd_preamble <- function(s) {
   add("\\newcommand{\\ddtablesetup}{", paste(tsetup, collapse = ""), "}")
   add("\\AtBeginEnvironment{longtable}{\\ddtablesetup}")
   fn <- s$footnotes
+  # A footnote stays on one page. LaTeX will otherwise carry the tail of a
+  # long note -- the first-page correspondence and acknowledgements note
+  # especially -- over to the next page.
+  add("\\interfootnotelinepenalty=10000")
   if (!is.null(fn$size)) {
     fsz <- round(base * as.numeric(fn$size), 1)
     # \@setfontsize is the documented way to redefine a size command. This
@@ -1301,6 +1363,10 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "tables.lua"),
              "--metadata", paste0("dd-columns=", cols),
              "--metadata", paste0("dd-table-style=", s$table$style %||% "booktabs"),
+             if (!identical(s$table$style %||% "booktabs", "booktabs")) {
+               zc <- s$table$zebra_color %||% (if (identical(s$table$style, "zebra")) "rule!15" else NULL)
+               if (!is.null(zc)) c("--metadata", paste0("dd-table-zebra=", zc))
+             },
              "--metadata", paste0("dd-table-rule-below=",
                                   if (identical(s$table$header$rule_below, FALSE)) "false" else "true"))
 
