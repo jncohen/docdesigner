@@ -30,7 +30,7 @@ typography.body: EB Garamond
 typography.heading: EB Garamond
 typography.mono: Fira Code
 typography.base_size: "12pt" # measure: ~70 chars/line
-typography.line_height: 1.5
+typography.line_height: 1.3            # 2026-10 design review
 typography.justification: justified
 typography.numbers: oldstyle        # oldstyle numerals in running prose
 typography.microtype: true
@@ -46,13 +46,13 @@ links.color: accent
 headings.number_sections: false
 headings.run_in: [h3]               # h3 typeset run-in with the paragraph
 # h1 = # sections (Introduction, Results): centred small-caps, near-black.
-headings.h1.scale: 1.0
+headings.h1.scale: 1.1                 # 2026-10 design review
 headings.h1.weight: bold            # bundled EB Garamond ships Regular/Bold only
 headings.h1.case: smallcaps
 headings.h1.align: center
 headings.h1.color: text
 # h2 = ## subsections: same centred small-caps treatment.
-headings.h2.scale: 1.0
+headings.h2.scale: 1.1                 # 2026-10 design review
 headings.h2.weight: bold
 headings.h2.case: smallcaps
 headings.h2.align: center

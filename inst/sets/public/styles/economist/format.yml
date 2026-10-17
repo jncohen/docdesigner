@@ -114,7 +114,7 @@ code.border: true
 code.background: code_bg
 
 # ---- quotes (muted, with a red side rule) ----------------------------------
-quote.color: muted                   # style-sheet specimen quote is muted
+quote.color: text                      # 2026-10 design review
 quote.rule: true                     # vertical red accent rule at the left
 
 # ---- running head + folio --------------------------------------------------

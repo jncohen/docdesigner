@@ -33,7 +33,7 @@ typography.body: EB Garamond
 typography.heading: EB Garamond
 typography.mono: Fira Code
 typography.base_size: 11.5pt
-typography.line_height: 1.62          # generous, contemplative leading
+typography.line_height: 1.45           # 2026-10 design review
 typography.justification: justified
 typography.numbers: oldstyle          # oldstyle figures in running prose
 typography.microtype: true
@@ -41,7 +41,7 @@ typography.microtype: true
 # ---- colour (near-absent; single deep sepia accent) -----------------------
 color.text: "#211E18"                 # warm near-black on a faintly warm page
 color.accent: "#5A3A2E"               # deep sepia-brown — footnote marks + links
-color.muted: "#8A7F6B"
+color.muted: "#6E6553"                 # 2026-10 design review
 color.rule: "#B7AE97"                 # warm grey ornamental / separator rules
 links.color: accent
 
@@ -49,7 +49,7 @@ links.color: accent
 headings.number_sections: false
 headings.run_in: [h3]                 # h3 typeset run-in with the paragraph
 # h1 = # sections: centred small-caps, near-black, body-sized.
-headings.h1.scale: 1.0
+headings.h1.scale: 1.1                 # 2026-10 design review
 headings.h1.weight: bold              # model is 500; bundled EB Garamond ships
                                       # Regular/Bold only, medium -> bold
 headings.h1.case: smallcaps

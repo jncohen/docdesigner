@@ -335,7 +335,9 @@ dd_preamble <- function(s) {
   case_cmd <- function(case) switch(case %||% "none",
     upper = "\\MakeUppercase{#1}",
     lower = "\\MakeLowercase{#1}",
-    smallcaps = "\\textsc{\\MakeLowercase{#1}}",
+    # Small-caps headings are letterspaced, as small caps should be; set
+    # tight they read smaller and weaker than the text they head.
+    smallcaps = "{\\addfontfeature{LetterSpace=8}\\textsc{\\MakeLowercase{#1}}}",
     "#1")
   align_cmd <- function(align) switch(align %||% "left",
     center = "\\centering ", right = "\\raggedleft ", "")
@@ -490,7 +492,10 @@ dd_preamble <- function(s) {
   # Above: inside the alignment environment, so a short rule centres with the
   # title, then a gap to the kicker or title.
   above_tex <- if (rpos %in% c("above", "both")) paste0(rule_tex, "\\par\\vskip0.6em") else ""
-  add("\\pretitle{\\begin{", align_env, "}", above_tex, kicker_tex, family_cmd(ti$family),
+  # With the byline above the title, the kicker moves up with it (below).
+  byline_above <- identical(ti$byline$position, "above")
+  add("\\pretitle{\\begin{", align_env, "}", above_tex, if (byline_above) "" else kicker_tex,
+      family_cmd(ti$family),
       dd_size(tsize, round(tsize * 1.18, 1)),
       if (identical(ti$weight, "regular")) "\\mdseries" else "\\bfseries",
       "\\color{", ti$color %||% "text", "}}")
@@ -606,13 +611,23 @@ dd_preamble <- function(s) {
   # order, with hooks between them. The byline is captured as styled above and
   # set in \maketitlehooka, ahead of the title; its usual slot then swallows
   # it into a discarded box, the same lever the hidden date uses.
-  if (identical(ti$byline$position, "above")) {
-    add("\\makeatletter\\let\\dd@bspreauthor\\@bspreauthor\\let\\dd@bspostauthor\\@bspostauthor")
-    add("\\renewcommand{\\maketitlehooka}{{\\dd@bspreauthor\\@author\\dd@bspostauthor}\\vskip0.5em}")
-    add("\\preauthor{\\setbox0\\vbox\\bgroup}\\postauthor{\\egroup}\\makeatother")
-  }
   add("\\predate{\\begin{", align_env, "}\\linespread{1}\\selectfont\\color{", ti$date$color %||% "muted", "}}")
   add("\\postdate{\\end{", align_env, "}}")
+  # The kicker comes first, then the byline and its date, then the title: a
+  # kicker left above the title would separate it from the byline. The
+  # date moves up with the byline unless it is hidden.
+  if (byline_above) {
+    show_date <- !identical(ti$date$show, FALSE)
+    add("\\makeatletter\\let\\dd@bspreauthor\\@bspreauthor\\let\\dd@bspostauthor\\@bspostauthor",
+        "\\let\\dd@bspredate\\@bspredate\\let\\dd@bspostdate\\@bspostdate")
+    add("\\renewcommand{\\maketitlehooka}{",
+        if (nzchar(kicker_tex)) paste0("\\begin{", align_env, "}", kicker_tex, "\\end{", align_env, "}") else "",
+        "{\\dd@bspreauthor\\@author\\dd@bspostauthor}",
+        if (show_date) "{\\dd@bspredate\\@date\\dd@bspostdate}" else "",
+        "\\vskip0.6em}")
+    add("\\preauthor{\\setbox0\\vbox\\bgroup}\\postauthor{\\egroup}")
+    add("\\predate{\\setbox0\\vbox\\bgroup}\\postdate{\\egroup}\\makeatother")
+  }
 
   # title.layout: page. The template (inst/templates/docdesigner.tex) owns the
   # structure -- a titlepage holding \maketitle and the abstract, the body on
@@ -860,6 +875,13 @@ dd_preamble <- function(s) {
     if (identical(fc$align, "center")) opts <- c(opts, "justification=centering")
     if (identical(fc$align, "left"))   opts <- c(opts, "justification=raggedright")
     if (length(opts)) add("\\captionsetup[figure]{", paste(opts, collapse = ","), "}")
+    # Table captions take the same label style, size and colour, so a style's
+    # two kinds of caption agree. They are also held to a readable width,
+    # centred over the table: at the full measure, a long caption ran far
+    # wider than a narrow table and wrapped awkwardly.
+    topts <- setdiff(opts, c("justification=raggedright", "justification=centering"))
+    add("\\captionsetup[table]{", paste(c(topts, "width=0.85\\linewidth", "justification=centering"),
+                                       collapse = ","), "}")
     # Caption ABOVE a figure is a relocation, not a spacing change: pandoc
     # emits \caption after \includegraphics, and the caption package's
     # position= only adjusts the skip. floatrow actually moves it.
@@ -892,6 +914,12 @@ dd_preamble <- function(s) {
   }
   if (identical(ty$hyphenation, FALSE)) {
     add("\\hyphenpenalty=10000\\exhyphenpenalty=10000")
+  } else if (identical(s$page$columns %||% 1, 2L) || identical(as.numeric(s$page$columns %||% 1), 2)) {
+    # Justified type in a narrow column leaves loose lines when hyphenation
+    # is costly. Cheaper hyphens and a little emergency stretch close them up.
+    if (!identical(ty$justification, "ragged-right")) {
+      add("\\hyphenpenalty=20\\exhyphenpenalty=20\\setlength{\\emergencystretch}{0.8em}")
+    }
   }
   # Two-column furniture: the gap between columns and a hairline in it.
   if (!is.null(s$page$gutter)) add("\\setlength{\\columnsep}{", dd_len("gutter", s$page$gutter, "md"), "}")
@@ -971,6 +999,9 @@ dd_preamble <- function(s) {
   # long note -- the first-page correspondence and acknowledgements note
   # especially -- over to the next page.
   add("\\interfootnotelinepenalty=10000")
+  # And it sits at the foot of the page. article uses \raggedbottom, so on a
+  # page that ends early the notes floated up under the last line of text.
+  add("\\usepackage[bottom]{footmisc}")
   if (!is.null(fn$size)) {
     fsz <- round(base * as.numeric(fn$size), 1)
     # \@setfontsize is the documented way to redefine a size command. This
@@ -990,16 +1021,25 @@ dd_preamble <- function(s) {
   # style that says nothing about quotes keeps LaTeX's stock quote exactly.
   q <- s$quote
   if (length(q)) {
+    # No first-line indent inside a quotation: its paragraphs (and an
+    # attribution line) align with its own left edge.
     qpre <- paste0(
       if (!is.null(q$color)) paste0("\\color{", q$color, "}") else "",
-      if (identical(q$style, "italic")) "\\itshape" else "")
-    if (nzchar(qpre)) add("\\AtBeginEnvironment{quote}{", qpre, "}")
+      if (identical(q$style, "italic")) "\\itshape" else "",
+      "\\setlength{\\parindent}{0pt}")
+    add("\\AtBeginEnvironment{quote}{", qpre, "}")
     # A left accent bar needs a frame, not an indent. tcolorbox's blanker
     # skin draws nothing but the single borderline, so the quote keeps its
     # ordinary look and gains only the rule.
     if (isTRUE(q$rule) || !is.null(q$indent)) {
-      qind <- dd_len("indent", q$indent, "md")
+      # Quotation insets are deeper than the paragraph-indent scale: at
+      # md = 1em a roman quotation was set in exactly as far as an indented
+      # paragraph, and read as one.
+      qind <- c(none = "0pt", sm = "1.25em", md = "2em", lg = "3em")[[q$indent %||% "md"]]
       if (isTRUE(q$rule)) {
+        # A ruled quotation is marked by its rule; the inset is only the gap
+        # between rule and text, so it keeps the ordinary indent steps.
+        qind <- dd_len("indent", q$indent, "md")
         add("\\usepackage{tcolorbox}\\tcbuselibrary{skins,breakable}")
         add("\\AtBeginDocument{\\tcolorboxenvironment{quote}{blanker,breakable,",
             "left=", qind, ",right=0pt,top=2pt,bottom=2pt,",

@@ -33,7 +33,7 @@ typography.body: EB Garamond
 typography.heading: EB Garamond      # model display face is Playfair; see fidelity
 typography.mono: Fira Code
 typography.base_size: "12pt" # measure: ~70 chars/line
-typography.line_height: 1.62         # stylesheet spec
+typography.line_height: 1.45           # 2026-10 design review
 typography.mono_scale: 0.75          # code extract 12px / 16px body
 typography.justification: justified
 typography.microtype: true
@@ -41,7 +41,7 @@ typography.microtype: true
 # ---- colour (warm near-black + a single editorial red) ----------------------
 color.text: "#1C1913"
 color.accent: "#B2332A"              # kicker, title rule, pull quotes, links
-color.muted: "#8A857A"               # decks, captions, running heads
+color.muted: "#6E695F"                 # 2026-10 design review
 color.rule: "#CFC9BD"                # head/foot hairlines, light table rule
 color.background: "#FBFAF6"          # warm off-white paper (status new)
 color.code_bg: "#F2EFE7"             # tinted document-extract block (status new)
@@ -51,7 +51,7 @@ links.color: accent
 headings.number_sections: false
 headings.run_in: [h3]                # h3 typeset run-in with the paragraph
 # h1 = # cross-head ("THE SHAPE OF THE CLIMB"): centred spaced small caps, small.
-headings.h1.scale: 0.8
+headings.h1.scale: 1.0                 # 2026-10 design review
 headings.h1.weight: bold
 headings.h1.case: smallcaps
 headings.h1.align: center
@@ -74,7 +74,7 @@ headings.h4.color: text              # else falls through to the accent default
 # a magazine feature carries a deck, not a labelled block.
 title.layout: header
 title.align: center
-title.scale: 3.4                     # title 54px / 16px body (opener)
+title.scale: 2.8                       # 2026-10 design review
 title.color: text                    # title is near-black; the kicker is accent
 title.subtitle.scale: 1.15           # deck 18px / 16px body
 title.subtitle.style: italic

@@ -45,6 +45,24 @@ muted  <- if (is.null(pal$muted)) "#666666" else pal$muted
 # rule is black, and a full-strength grid competes with the data.
 grid   <- grDevices::adjustcolor(if (is.null(pal$rule)) "#CCCCCC" else pal$rule, alpha.f = 0.3)
 
+# The chart is drawn in the style's own body face, so its labels match the
+# page. showtext loads the face from the style's font files; without it the
+# chart falls back to a generic serif.
+chart_family <- "serif"
+if (requireNamespace("showtext", quietly = TRUE)) {
+  chart_family <- tryCatch({
+    spec <- docdesigner::designer_style(params$style)
+    reg <- docdesigner:::dd_font_registry(spec)
+    body <- spec$typography$body
+    dir <- docdesigner:::dd_font_family_dir(body, reg, docdesigner:::dd_font_dirs(spec))
+    path <- function(f) if (nzchar(dir)) file.path(dir, f) else system2("kpsewhich", f, stdout = TRUE)
+    sysfonts::font_add("ddbody", regular = path(reg[[body]]$regular), bold = path(reg[[body]]$bold))
+    showtext::showtext_opts(dpi = 300)
+    knitr::opts_chunk$set(fig.showtext = TRUE)
+    "ddbody"
+  }, error = function(e) "serif")
+}
+
 aq <- airquality
 aq$month <- factor(month.name[aq$Month], levels = month.name[5:9])
 aq$date  <- as.Date(sprintf("1973-%02d-%02d", aq$Month, aq$Day))
@@ -103,7 +121,8 @@ August.
 
 ```{r line, fig.cap = "Daily afternoon ozone, May to September 1973. The dashed line marks 70 ppb."}
 par(mar = c(2.6, 3.8, 0.6, 0.6), mgp = c(2.4, 0.6, 0), tcl = -0.25,
-    las = 1, bty = "n", col.axis = muted, col.lab = muted, cex.axis = 0.85)
+    las = 1, bty = "n", col.axis = muted, col.lab = muted, cex.axis = 0.85,
+    family = chart_family)
 plot(aq$date, aq$Ozone, type = "n", xlab = "", ylab = "Ozone (ppb)",
      ylim = c(0, max(aq$Ozone, na.rm = TRUE)))
 abline(h = pretty(c(0, 170)), col = grid, lwd = 0.5)

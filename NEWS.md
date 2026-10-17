@@ -1,5 +1,18 @@
 # docdesigner (development version)
 
+- **Design review.** Block quotations are inset further than a paragraph
+  indent, with no first-line indent, so they no longer read as ordinary
+  paragraphs. Footnotes sit at the foot of the page even when a page ends
+  early. Table captions take the figure-caption style and a readable width,
+  centred over the table. Small-caps headings are letterspaced. In
+  two-column justified styles, hyphenation is cheaper and loose lines rarer.
+  Per style: ajs, demography and ssrn set body text at 1.3 leading, atlantic
+  and humanities at 1.45; atlantic's and humanities' grey is darker, for
+  readable contrast; atlantic's title is smaller; demography's,
+  atlantic's and humanities' section heads are larger; bulletin orders its
+  title block kicker, byline, date, title and sets its summary in regular
+  weight; government's Highlights label is flush left; economist and nature
+  set quotations in text colour.
 - **Spacing review.** The warning line sits evenly between its two rules.
   Reference lists have a small gap between entries again; the template port
   had restored a full blank line. Keywords print inside the abstract, above

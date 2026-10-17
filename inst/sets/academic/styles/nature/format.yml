@@ -100,7 +100,7 @@ code.border: true
 
 # ---- quote (block set with a vertical accent rule at the left) ------------
 quote.rule: true
-quote.color: muted
+quote.color: text                      # 2026-10 design review
 quote.indent: md
 
 # ---- running foot (no header anywhere; footer folio on every page) --------

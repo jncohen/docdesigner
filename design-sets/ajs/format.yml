@@ -31,7 +31,7 @@ typography.body: XITS
 typography.heading: XITS
 typography.mono: Fira Code           # first-page billing-code line only
 typography.base_size: "11.5pt" # measure: ~70 chars/line
-typography.line_height: 1.5            # round 2
+typography.line_height: 1.3            # 2026-10 design review
 typography.justification: justified
 typography.microtype: true
 # numbers: default lining — correct for a Times-family journal (no override).

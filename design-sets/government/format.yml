@@ -111,3 +111,4 @@ callout.tint: 8
 header_footer.header.bleed: false      # 2026-10 review
 header_footer.footer.right: none          # 2026-10 review: folio is in the band
 header_footer.footer.rule: false          # 2026-10 review
+title.abstract.label_align: left       # 2026-10 design review
