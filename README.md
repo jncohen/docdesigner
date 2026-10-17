@@ -319,3 +319,14 @@ reference, the [style gallery](https://jncohen.github.io/docdesigner/articles/ga
 [Getting started](https://jncohen.github.io/docdesigner/articles/getting-started.html)
 and [Creating a style](https://jncohen.github.io/docdesigner/articles/creating-styles.html).
 [USER-MANUAL.md](USER-MANUAL.md) collects the user documentation in one file.
+
+## Alpha testers
+
+docdesigner is in alpha testing. Everyone who tries it and reports back is
+credited here. To take part, follow the
+[alpha testing instructions](alpha-testing-instructions.pdf) (or the short
+version, [TESTING.md](TESTING.md)).
+
+Thanks to:
+
+*(No testers listed yet.)*
