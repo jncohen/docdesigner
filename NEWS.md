@@ -1,4 +1,4 @@
-# docdesigner (development version)
+# docdesigner 0.11.0
 
 - **New: `kicker:` in the document YAML.** It replaces the label a style sets
   above the title (policy's "Policy Brief", ssrn's "Working Paper"), adds one

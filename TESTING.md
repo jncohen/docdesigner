@@ -1,6 +1,6 @@
 # Testing docdesigner
 
-Alpha, version 0.10.0. Thank you for taking a look.
+Alpha, version 0.11.0. Thank you for taking a look.
 
 **The full instructions are in
 [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf)**, in this

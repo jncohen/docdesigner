@@ -1,6 +1,6 @@
 ---
 title: "docdesigner: Alpha Testing"
-subtitle: "Instructions for participants — version 0.10.0"
+subtitle: "Instructions for participants — version 0.11.0"
 author: |
   Joseph N. Cohen\
   *Queens College, CUNY*
