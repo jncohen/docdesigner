@@ -99,6 +99,10 @@ output:
   (marked `corresponding: true`, otherwise the first author with an `address`,
   `email` or `web`) gets a contact block: name, `dept` and `inst`, `address`,
   and linked `email` and `web`. `orcid` is accepted but not printed yet.
+- `kicker` replaces the small label some styles set above the title
+  ("POLICY BRIEF" in policy, "WORKING PAPER" in ssrn and economist):
+  `kicker: "Research Brief"`. `kicker: ""` removes it, and any style accepts
+  one.
 - `warning` is a line such as "DRAFT IN PROGRESS: DO NOT CIRCULATE", set
   between two rules. `acknowledgements` (or `acknowledgments`) is a paragraph
   or more of thanks.

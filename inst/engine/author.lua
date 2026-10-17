@@ -96,6 +96,17 @@ function Meta(m)
     m.acknowledgements = m.acknowledgments
   end
 
+  -- kicker: replaces the style's eyebrow label over the title; kicker: ""
+  -- removes it. A template cannot tell an empty field from a missing one, so
+  -- the empty case gets a flag of its own.
+  if m.kicker ~= nil then
+    if pandoc.utils.stringify(m.kicker) == "" then
+      m["dd-kicker-none"] = true
+    else
+      m["dd-kicker"] = m.kicker
+    end
+  end
+
   local a = m.author
   if a == nil then return m end
   local authors = is_object(a) and { a } or (pandoc.utils.type(a) == "List" and a or {})

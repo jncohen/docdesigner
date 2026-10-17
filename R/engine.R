@@ -474,19 +474,23 @@ dd_preamble <- function(s) {
   # Kicker: a short eyebrow label emitted ABOVE the title, inside \pretitle's
   # alignment environment. Defaults to the sans label face so it reads as
   # furniture against the serif headline (the economist/government/policy move).
+  #
+  # The text is \ddkickertext: the style's title.kicker.text by default, which
+  # a document replaces with its own `kicker:` field, or removes with
+  # `kicker: ""` (author.lua passes either to the template). The kicker's look
+  # is always defined, so a document can add one to a style that has none.
   kick <- ti$kicker
-  kicker_tex <- ""
-  if (!is.null(kick$text)) {
-    ksize <- round(base * as.numeric(kick$scale %||% 0.8), 1)
-    kfont <- switch(kick$font %||% "label", label = "\\ddlabelfont", heading = head_cmd, "")
-    kcased <- switch(kick$case %||% "upper",
-      upper = paste0("\\MakeUppercase{", kick$text, "}"),
-      lower = paste0("\\MakeLowercase{", kick$text, "}"),
-      smallcaps = paste0("\\textsc{\\MakeLowercase{", kick$text, "}}"),
-      kick$text)
-    kicker_tex <- paste0("{", kfont, dd_size(ksize, round(ksize * 1.2, 1)),
-      "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
-  }
+  add("\\def\\ddkickertext{", kick$text %||% "", "}")
+  ksize <- round(base * as.numeric(kick$scale %||% 0.8), 1)
+  kfont <- switch(kick$font %||% "label", label = "\\ddlabelfont", heading = head_cmd, "")
+  kcased <- switch(kick$case %||% "upper",
+    upper = "\\MakeUppercase{\\ddkickertext}",
+    lower = "\\MakeLowercase{\\ddkickertext}",
+    smallcaps = "\\textsc{\\MakeLowercase{\\ddkickertext}}",
+    "\\ddkickertext")
+  kicker_inner <- paste0("{", kfont, dd_size(ksize, round(ksize * 1.2, 1)),
+    "\\bfseries\\color{", kick$color %||% "accent", "}", kcased, "\\par}\\vskip0.35em ")
+  kicker_tex <- paste0("\\ifx\\ddkickertext\\empty\\else", kicker_inner, "\\fi")
   # title.rule.position: above sets the rule over the kicker and title (nature's
   # heavy black rule), below under the title block, both in both places.
   # \titlerule takes [weight]; \rule takes {width}{height}. Build inline rather
@@ -632,7 +636,8 @@ dd_preamble <- function(s) {
     add("\\makeatletter\\let\\dd@bspreauthor\\@bspreauthor\\let\\dd@bspostauthor\\@bspostauthor",
         "\\let\\dd@bspredate\\@bspredate\\let\\dd@bspostdate\\@bspostdate")
     add("\\renewcommand{\\maketitlehooka}{",
-        if (nzchar(kicker_tex)) paste0("\\begin{", align_env, "}", kicker_tex, "\\end{", align_env, "}") else "",
+        paste0("\\ifx\\ddkickertext\\empty\\else\\begin{", align_env, "}", kicker_inner,
+               "\\end{", align_env, "}\\fi"),
         "{\\dd@bspreauthor\\@author\\dd@bspostauthor}",
         if (show_date) "{\\dd@bspredate\\@date\\dd@bspostdate}" else "",
         "\\vskip0.6em}")

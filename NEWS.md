@@ -1,5 +1,9 @@
 # docdesigner (development version)
 
+- **New: `kicker:` in the document YAML.** It replaces the label a style sets
+  above the title (policy's "Policy Brief", ssrn's "Working Paper"), adds one
+  to a style that has none, or with `kicker: ""` removes it. The style's
+  `title.kicker.text` is the default.
 - **Page 1 starts at the top margin.** titling's `\maketitle` set an empty
   line and 2em of space above the title, and kept the space after it, so the
   first page began a third of an inch or more below every other page. The

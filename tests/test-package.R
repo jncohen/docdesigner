@@ -535,4 +535,21 @@ if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available
             grepl("2027 A. All rights reserved.", th, fixed = TRUE),
             grepl("\\pagenumbering{roman}", th, fixed = TRUE))
   stopifnot(!grepl("\\ddsignatures", thesis_tex("signatures: false"), fixed = TRUE))
+
+  # kicker: a document replaces the style's kicker, or removes it with "".
+  kicker_tex <- function(extra) {
+    md <- tempfile(fileext = ".md")
+    writeLines(c("---", "title: T", extra, "---", "", "x"), md)
+    tex <- tempfile(fileext = ".tex")
+    rmarkdown::pandoc_convert(md, to = "latex", output = tex,
+      options = c("--standalone", "--template", docdesigner:::dd_pkg_file("templates", "docdesigner.tex"),
+                  "--lua-filter", docdesigner:::dd_pkg_file("engine", "author.lua")))
+    paste(readLines(tex, warn = FALSE), collapse = "\n")
+  }
+  stopifnot(grepl("\\def\\ddkickertext{Research Brief}", kicker_tex('kicker: "Research Brief"'), fixed = TRUE),
+            grepl("\\def\\ddkickertext{}", kicker_tex('kicker: ""'), fixed = TRUE),
+            !grepl("\\def\\ddkickertext", kicker_tex(character()), fixed = TRUE))
 }
+# The style's kicker is the default; a style without one defines it empty.
+stopifnot(has(docdesigner:::dd_preamble(designer_style("policy")), "\\def\\ddkickertext{Policy Brief}"),
+          has(docdesigner:::dd_preamble(designer_style("modern")), "\\def\\ddkickertext{}"))

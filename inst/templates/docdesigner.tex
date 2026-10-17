@@ -516,6 +516,14 @@ $endif$
 \date{$date$}
 
 \begin{document}
+$-- A document's kicker: field replaces the style's eyebrow label;
+$-- kicker: "" removes it (author.lua sets these).
+$if(dd-kicker-none)$
+\def\ddkickertext{}
+$endif$
+$if(dd-kicker)$
+\def\ddkickertext{$dd-kicker$}
+$endif$
 $if(has-frontmatter)$
 \frontmatter
 $endif$
