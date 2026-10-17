@@ -9,7 +9,7 @@ abstract: |
   Thank you for taking a look at docdesigner. This alpha asks two questions and
   only two: **does it work on your machine and your documents, and is it easy to
   learn?** Comments on how the styles look are welcome too. Please read "What we
-  already know about" on page 3 before you start, so you don't spend time on
+  already know about" (section 5) before you start, so you don't spend time on
   known issues. Setup and the first task take about
   fifteen minutes.
 output:
@@ -37,6 +37,23 @@ This document was itself typeset by docdesigner, in the `methods` style.
 You need R, a LaTeX installation providing `xelatex`, and pandoc. RStudio bundles
 pandoc; TinyTeX and MiKTeX both work for LaTeX. If you have knitted an R Markdown
 document to PDF before, you already have all three.
+
+## Installing LaTeX in RStudio
+
+If you have never knitted to PDF, install LaTeX from RStudio first. In the
+RStudio console, run:
+
+```r
+install.packages("tinytex")
+tinytex::install_tinytex()        # takes a few minutes
+tinytex::tlmgr_install("tex-gyre") # a font the bulletin style uses
+```
+
+Then restart RStudio. TinyTeX is a small LaTeX installation made for R; it
+fetches any further LaTeX packages it needs the first time you knit. If you
+already have MiKTeX, MacTeX or TeX Live, skip this step.
+
+## Installing docdesigner
 
 ```r
 # install.packages("remotes")
@@ -108,7 +125,7 @@ designer_sets()
 Sets install to your R user directory and survive package updates. This checks
 that distribution works from a machine that is not ours.
 
-# What we most want to hear
+# Information sought
 
 Beyond outright breakage, the thing we cannot see from here is **where you got
 stuck**. Specifically:
@@ -143,8 +160,8 @@ is worth telling us about.
 
 # How to report
 
-Email **josephncohen@gmail.com**, one message per problem, with
-`docdesigner alpha` in the subject line.
+Email **joseph.cohen@qc.cuny.edu**, one message per problem, with
+`docdesigner feedback` in the subject line.
 
 What makes a report actionable, in rough order of value:
 
