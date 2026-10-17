@@ -2,8 +2,8 @@
 title: "Hot Days, High Ozone"
 subtitle: "Temperature, wind and ozone in New York, summer 1973"
 author: |
-  Joseph N. Cohen\
-  *Queens College, City University of New York*
+  Unvetted Artificial Intelligence\
+  *Example University*
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 warning: "AI-GENERATED ANALYSIS: NOT VETTED, NOT FOR CITATION"
 acknowledgements: |

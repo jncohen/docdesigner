@@ -2,7 +2,7 @@
 title: "The Shape of Household Wealth"
 subtitle: "Standalone specimen — style: ajs"
 author: |
-  Joseph N. Cohen\
+  Unvetted Artificial Intelligence\
   *Meridian University*
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 abstract: |

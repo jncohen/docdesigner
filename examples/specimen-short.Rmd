@@ -2,12 +2,12 @@
 title: "Divorce and Net Worth"
 subtitle: "Marital status and household wealth in the 2022 Survey of Consumer Finances"
 author:
-  - name: "Joseph N. Cohen"
-    dept: "Department of Sociology"
-    inst: "Queens College, City University of New York"
-    address: "65-30 Kissena Blvd, Queens, NY 11367"
-    email: "author@example.edu"
-    web: "jncohen.commons.gc.cuny.edu"
+  - name: "Unvetted Artificial Intelligence"
+    dept: "Specimen Department"
+    inst: "Example University"
+    address: "1 Example Street, Example City, NY 10000"
+    email: "specimen@example.edu"
+    web: "jncohen.github.io/docdesigner"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 warning: "AI-GENERATED ANALYSIS: NOT VETTED, NOT FOR CITATION"
 acknowledgements: |

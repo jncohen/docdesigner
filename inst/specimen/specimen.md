@@ -1,7 +1,7 @@
 ---
 title: "The Shape of Household Wealth"
 subtitle: "A specimen document for visual review"
-author: "A. N. Author"
+author: "Unvetted Artificial Intelligence"
 date: "January 2026"
 abstract: |
   This document exists to exercise every design token a docdesigner style can
