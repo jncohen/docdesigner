@@ -82,15 +82,21 @@ dd_markup_preamble <- function(s) {
       # on the second pass, which every render makes).
       if (twoside) "\\usepackage{changepage}\\strictpagecheck",
       "\\newlength{\\ddparsep}\\setlength{\\ddparsep}{1.6em}",
+      # \\ddparnumbox sets the number beside the start of the line it is
+      # called at. \\ddparnum guards against boxes and table cells, where a
+      # paragraph number does not belong; \\ddparnumhead is for a run-in
+      # heading, which titlesec sets in a box at the start of the line.
       if (twoside) {
-        paste0("\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode\\checkoddpage",
-               "\\def\\ddpn{{\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}}",
+        paste0("\\newcommand{\\ddparnumbox}[1]{\\checkoddpage",
+               "\\def\\ddpn{{\\normalfont\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}}",
                "\\ifoddpage\\llap{\\ddpn\\hspace{\\ddparsep}}",
-               "\\else\\rlap{\\hspace{\\linewidth}\\hspace{\\ddparsep}\\ddpn}\\fi\\fi}")
+               "\\else\\rlap{\\hspace{\\linewidth}\\hspace{\\ddparsep}\\ddpn}\\fi}")
       } else {
-        paste0("\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode",
-               "\\llap{{\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}\\hspace{\\ddparsep}}\\fi}")
+        paste0("\\newcommand{\\ddparnumbox}[1]{",
+               "\\llap{{\\normalfont\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}\\hspace{\\ddparsep}}}")
       },
+      "\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode\\ddparnumbox{#1}\\fi}",
+      "\\newcommand{\\ddparnumhead}[1]{\\ddparnumbox{#1}}",
       "\\newcommand{\\ddflag}[1]{\\ifinner{\\ddlabelfont\\footnotesize\\color{ddflag}[#1]}\\else\\ddnote{\\color{ddflag}\\textbf{#1}}\\fi}",
       "\\newcommand{\\ddflagtext}[1]{\\textcolor{ddflag}{#1}}",
       # A heading's flag rides on the paragraph under it, raised to the
@@ -136,7 +142,9 @@ dd_markup_args <- function(s) {
               "--metadata", paste0("dd-markup-parnum=", flag(m$paragraph_numbers)),
               "--metadata", paste0("dd-markup-flags=", flag(m$flags)),
               "--metadata", paste0("dd-markup-citekeys=", flag(m$cite_keys)),
-              "--metadata", paste0("dd-markup-changebars=", flag(m$changebars)))
+              "--metadata", paste0("dd-markup-changebars=", flag(m$changebars)),
+              "--metadata", paste0("dd-runin-levels=",
+                                   paste(sub("^h", "", unlist(s$headings$run_in)), collapse = ",")))
   }
   depth <- as.integer(m$map %||% 0L)
   chars <- s$header_footer$section_chars

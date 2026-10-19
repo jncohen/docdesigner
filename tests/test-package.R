@@ -330,6 +330,12 @@ if (rmarkdown::pandoc_available("3.1.8")) {
   # chunks are skipped, and its citation is ignored in the comparison.
   stopifnot(lengths(regmatches(out, gregexpr("\\cbstart", out, fixed = TRUE))) == 2L,
             !grepl("\\cbstart{}\\ddparnum{1}", out, fixed = TRUE))
+  # Under a run-in heading the number goes on the heading, which opens the
+  # paragraph's first line.
+  ri <- run_filter(c("#### A run-in head", "", "Its paragraph."), "markup.lua",
+                   "dd-markup-parnum=true")
+  stopifnot(grepl("\\paragraph{\\texorpdfstring{\\ddparnumhead{1}A run-in", ri, fixed = TRUE),
+            !grepl("}\n\n\\ddparnum", ri, fixed = TRUE))
   # Text that is not a known tag is left alone.
   lit <- run_filter("Keep [[not a tag]] as is.", "markup.lua", "dd-markup-flags=true")
   stopifnot(grepl("{[}{[}not a tag{]}{]}", lit, fixed = TRUE) || grepl("[[not a tag]]", lit, fixed = TRUE))

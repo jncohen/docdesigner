@@ -209,9 +209,15 @@ function Pandoc(doc)
     refs = reference_set(opt("dd-changes-ref"))
   end
 
+  -- Levels set run-in: h4 always, plus any in headings.run_in. A run-in
+  -- heading opens its paragraph's first line, so that paragraph's number
+  -- goes on the heading; set after it, it would print over the heading.
+  local runin = { [4] = true }
+  for lv in opt("dd-runin-levels"):gmatch("%d") do runin[tonumber(lv)] = true end
+
   local count = 0
   local function mark(blocks)
-    for _, b in ipairs(blocks) do
+    for i, b in ipairs(blocks) do
       if b.t == "Para" and not image_only(b) then
         local text = plain_text(b)
         if text ~= "" then
@@ -220,7 +226,13 @@ function Pandoc(doc)
           if changed then pre:insert(raw("\\cbstart{}")) end
           if parnum then
             count = count + 1
-            pre:insert(raw("\\ddparnum{" .. count .. "}"))
+            local prev = blocks[i - 1]
+            if prev and prev.t == "Header" and runin[prev.level] then
+              -- pandoc keeps it out of the PDF bookmark (\\texorpdfstring).
+              prev.content:insert(1, raw("\\ddparnumhead{" .. count .. "}"))
+            else
+              pre:insert(raw("\\ddparnum{" .. count .. "}"))
+            end
           end
           local content = pandoc.Inlines({})
           content:extend(pre)
