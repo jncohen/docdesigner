@@ -17,7 +17,8 @@ no abstract.
 - Palette: text `#211E18` (warm near-black), accent `#5A3A2E` (deep sepia —
   footnote markers + links only), muted `#8A7F6B`, rule `#B7AE97` (warm grey).
   Near-monochrome; the identity is its restraint.
-- Asymmetric margins (top 1.125 / bottom 0.875 / sides 1.5625 in), single column.
+- Margins top 1.125 / bottom 0.875 / sides 1.25 in (models: sides 1.5625 in;
+  capped by the house rule of no margin over 1.25in), single column.
 - Title: centred (`title.align: center`), small-caps (`title.case: smallcaps`),
   near-black (`title.color: text`) with a hairline rule below
   (`title.rule.position: below`, `weight: hairline`, `length: 0.5625in` = the

@@ -21,11 +21,12 @@ description: >
 # ---- page (asymmetric margins measured from the models) --------------------
 # firstpage padding 108/150/84 px; body 84/150/84; title 150/150/96 (÷96 = in).
 # Sides 150px = 1.5625in across all three; opener top 108px = 1.125in.
+# Sides capped at 1.25in (house rule: no margin wider than 1.25in).
 page.papersize: letter
 page.margins.top: 1.125
 page.margins.bottom: 0.875
-page.margins.inner: 1.75               # 2026-10 review
-page.margins.outer: 1.75               # 2026-10 review
+page.margins.inner: 1.25               # house cap: no margin over 1.25in
+page.margins.outer: 1.25               # house cap: no margin over 1.25in
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------

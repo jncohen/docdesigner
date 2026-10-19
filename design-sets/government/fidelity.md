@@ -14,7 +14,8 @@ in = px/96, pt = px*0.75).
   line-height 1.32; justified; microtype on; mono at 0.9.
 - Palette: text `#1C2126`, accent navy `#1A3A5C`, muted `#5A636B`,
   rule `#C7CDD3`.
-- Single column, US Letter, `normal` (1in) margins taken from the body page.
+- Single column, US Letter; margins 1in top/bottom, 1.25in sides (the house
+  cap: no margin over 1.25in).
 - Numbered sections (`1.`, `2.`); navy bold h1/h2, near-black bold h3.
 - Flush-left title (`title.align: left`), title colour left at the `text`
   default (opener title is near-black `#14181C`), with a navy rule below it
@@ -47,7 +48,7 @@ in = px/96, pt = px*0.75).
 - **Running head** `header_footer.header.left: runningtitle` structurally
   reproduces the ruled top running line, but renders the document's short title,
   not the model's fixed "Statistical Bulletin" series label (below).
-- **Margins** `normal` (1in) from the body page (sides 76px ~= 0.79in, top
+- **Margins** 1in top/bottom, 1.25in sides (body-page model: sides 76px ~= 0.79in, top
   46px ~= 0.48in); the masthead bleeds past the margin — see not expressible.
 
 ## Declared-inert (valid, awaiting engine wiring)

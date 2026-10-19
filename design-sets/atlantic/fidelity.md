@@ -15,7 +15,8 @@ the standalone cover (`atlantic-title`).
 - Palette: text `#1C1913`, accent `#B2332A` (a single editorial red — kicker,
   title rule, pull quotes, links), muted `#8A857A` (decks, captions, heads),
   rule `#CFC9BD` (head/foot hairlines). All `color.*` are `status: impl`.
-- Symmetric wide measure: margins top 0.65 / bottom 0.81 / sides 1.375 in,
+- Margins top 0.65 / bottom 0.81 / sides 1.25 in (models: sides 1.375 in;
+  capped by the house rule of no margin over 1.25in),
   single column, `page.twoside: true` (heads and the outer folio alternate
   recto/verso, as the firstpage/page models show).
 - Body leading 1.62, justified, microtype on.

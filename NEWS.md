@@ -1,3 +1,11 @@
+# docdesigner (development version)
+
+- **No margin wider than 1.25in.** ssrn (1.9in), humanities (1.75in), atlantic
+  and government (1.65in) had side margins wide enough to waste the page;
+  all four now use 1.25in. `designer_validate_style()` warns when a style
+  sets any margin over 1.25in. The thesis styles are exempt, since the college
+  sets their 1.5in binding margin.
+
 # docdesigner 0.11.0
 
 - **New: `kicker:` in the document YAML.** It replaces the label a style sets

@@ -203,6 +203,18 @@ stopifnot(any(grepl("unknown token", v$message)))
 stopifnot(any(grepl("colour role", v$message)))
 unlink(bad, recursive = TRUE)
 
+# No shipped style exceeds the 1.25in margin cap (thesis layouts exempt).
+for (s in designer_styles()$style) {
+  v <- suppressWarnings(designer_validate_style(s))
+  stopifnot(!any(grepl("margin cap", v$message)))
+}
+wide <- tempfile("docdesigner-wide-"); dir.create(wide)
+writeLines(c("id: wide", "label: Wide", "page.margins.inner: 1.5"),
+           file.path(wide, "format.yml"))
+v <- suppressWarnings(designer_validate_style(file.path(wide, "format.yml")))
+stopifnot(any(grepl("margin cap", v$message)))
+unlink(wide, recursive = TRUE)
+
 # --- Bundled assets are discoverable -----------------------------------------
 stopifnot(file.exists(docdesigner:::dd_template()))
 stopifnot(dir.exists(docdesigner:::dd_fonts_dir()))

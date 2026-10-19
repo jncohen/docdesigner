@@ -20,11 +20,12 @@ description: >
 # firstpage & body padding 62 / 132 / 78 px (top / sides / bottom, div 96 = in).
 # Sides 132px = 1.375in ~= scales.margin.wide. Two-side: the running heads and
 # the outer folio alternate recto/verso across the models.
+# Sides capped at 1.25in (house rule: no margin wider than 1.25in).
 page.papersize: letter
 page.margins.top: 0.65
 page.margins.bottom: 0.81
-page.margins.inner: 1.65               # 2026-10 review
-page.margins.outer: 1.65               # 2026-10 review
+page.margins.inner: 1.25               # house cap: no margin over 1.25in
+page.margins.outer: 1.25               # house cap: no margin over 1.25in
 page.twoside: true
 page.columns: 1
 

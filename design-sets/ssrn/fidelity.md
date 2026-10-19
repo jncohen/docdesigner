@@ -14,7 +14,8 @@ in = px/96, pt = px*0.75).
   base 12pt; line-height 1.68; justified; microtype on.
 - Palette: text `#1A1A1A`, accent `#333333` (links only), muted `#555555`,
   rule `#B8B8B8`. Effectively colourless — the identity is its restraint.
-- Asymmetric margins (top 1.0 / bottom 0.875 / sides 1.333 in), single column.
+- Margins top 1.0 / bottom 1.0 / sides 1.25 in (models: sides 1.333 in; capped
+  by the house rule of no margin over 1.25in), single column.
 - Numbered sections; bold near-black section/subsection heads (not the accent).
 - Booktabs tables with a bold header; code unhighlighted (`none`).
 - Folio centred in the footer, no footer rule (`footer.center: page`,

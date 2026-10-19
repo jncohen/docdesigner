@@ -22,12 +22,13 @@ description: >
 # ---- page -----------------------------------------------------------------
 # Body-page model padding 46 / 76 / 76 px (top/side/bottom) -> sides 0.79in,
 # top 0.48in. The masthead band bleeds to the trim edge; there is no bleed
-# token, so margins are ordinary `normal` (1in), taken from the body page.
+# token, so margins are taken from the body page (top/bottom 1in).
+# Sides capped at 1.25in (house rule: no margin wider than 1.25in).
 page.papersize: letter
 page.margins.top: 1        # measure: ~70 chars/line
 page.margins.bottom: 1     # measure: ~70 chars/line
-page.margins.inner: 1.65               # 2026-10 review
-page.margins.outer: 1.65               # 2026-10 review
+page.margins.inner: 1.25               # house cap: no margin over 1.25in
+page.margins.outer: 1.25               # house cap: no margin over 1.25in
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------

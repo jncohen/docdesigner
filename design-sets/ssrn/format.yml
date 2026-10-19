@@ -20,11 +20,12 @@ description: >
 # ---- page (asymmetric margins measured from the models) --------------------
 # body page padding 96/128/84 px; title 108/128/84; firstpage 92/128/84
 # (px / 96 = inches). Sides 128px = 1.333in ~= scales.margin.wide (1.35in).
+# Sides capped at 1.25in (house rule: no margin wider than 1.25in).
 page.papersize: letter
 page.margins.top: 1.0
 page.margins.bottom: 1                 # round 2
-page.margins.inner: 1.9    # measure: ~70 chars/line
-page.margins.outer: 1.9    # measure: ~70 chars/line
+page.margins.inner: 1.25               # house cap: no margin over 1.25in
+page.margins.outer: 1.25               # house cap: no margin over 1.25in
 page.columns: 1
 
 # ---- typography (Times-metrics XITS, large and loose) ----------------------

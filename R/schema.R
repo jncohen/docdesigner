@@ -239,6 +239,22 @@ designer_validate_style <- function(style) {
     add(key = "page.margin", severity = "warning",
         message = "is overridden by page.margins.*; setting both is redundant")
   }
+  # House cap on margins. The thesis layout is exempt: colleges set its
+  # binding margin (1.5in at Queens College).
+  if (!identical(g("title.layout"), "thesis")) {
+    if (identical(g("page.margin"), "wide")) {
+      add(key = "page.margin", severity = "warning",
+          message = "wide (1.35in) exceeds the 1.25in margin cap")
+    }
+    for (side in c("top", "bottom", "inner", "outer")) {
+      k <- paste0("page.margins.", side)
+      v <- g(k)
+      if (is.numeric(v) && v > 1.25) {
+        add(key = k, severity = "warning",
+            message = paste0(v, "in exceeds the 1.25in margin cap"))
+      }
+    }
+  }
   for (lvl in schema$heading_levels) {
     if (!is.null(g(paste0("headings.", lvl, ".bar.fill"))) &&
         !none(g(paste0("headings.", lvl, ".rule.position")))) {

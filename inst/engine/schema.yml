@@ -352,6 +352,11 @@ rules:
     doc: "page.margins overrides page.margin; setting both is redundant."
     when: "page.margins.* && page.margin"
 
+  - id: margin-cap
+    severity: warning
+    doc: "No margin wider than 1.25in. The thesis title layout is exempt (college binding margins)."
+    when: "(page.margins.* > 1.25 || page.margin == wide) && title.layout != thesis"
+
   - id: bar-and-rule
     severity: warning
     doc: "A heading bar already carries its own edge; a rule on the same level reads as an error."
