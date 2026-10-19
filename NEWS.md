@@ -39,6 +39,16 @@
 - `markup.floats: false` keeps every table a longtable and sets figures with
   `[H]`: in a draft, "the table below" must be below.
 
+- **Underlined links build.** A reference underlined with `{.underline}` and
+  holding its URL stopped LaTeX, in every style: soul's `\ul` cannot take
+  `\url`. The link now comes out of the underline.
+- **Quotes and dashes in heading and label faces.** A heading such as
+  *Many Conceptions of "Entrepreneurs"* printed its backticks in styles whose
+  headings or labels use a face of their own; those faces now get TeX
+  ligatures.
+- **review: the footer stamp fits.** A long title wrapped in the foot and ran
+  into the folio; the stamp prints the title before its colon, cut at 45
+  characters. changebar's `.cb` files are cleaned up after a render.
 - **No margin wider than 1.25in.** ssrn (1.9in), humanities (1.75in), atlantic
   and government (1.65in) had side margins wide enough to waste the page;
   all four now use 1.25in. `designer_validate_style()` warns when a style
