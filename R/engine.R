@@ -258,7 +258,12 @@ dd_size <- function(size, lead) {
 dd_fontspec <- function(cmd, family, reg, dirs) {
   files <- reg[[family]]
   fontpath <- dd_font_family_dir(family, reg, dirs)
-  tail <- paste0("[", if (nzchar(fontpath)) paste0("Path=", fontpath, ","), "BoldFont=", files$bold)
+  # Ligatures=TeX: pandoc writes quotes as `` '' and dashes as -- ---. The main
+  # font gets it from pandoc's template; a \newfontfamily face needs it here,
+  # or a quoted heading prints its backticks.
+  tail <- paste0("[", if (nzchar(fontpath)) paste0("Path=", fontpath, ","),
+                 if (grepl("newfontfamily", cmd, fixed = TRUE)) "Ligatures=TeX,",
+                 "BoldFont=", files$bold)
   if (!is.null(files$italic)) tail <- paste0(tail, ",ItalicFont=", files$italic,
                                              ",BoldItalicFont=", files$bolditalic)
   paste0(cmd, "{", files$regular, "}", tail, "]")
@@ -316,7 +321,7 @@ dd_preamble <- function(s) {
     add(dd_fontspec("\\newfontfamily\\ddlabelfont", ty$label, reg, dirs))
   } else if (!is.null(ty$label)) {
     add("\\IfFontExistsTF{", ty$label, "}{\\newfontfamily\\ddlabelfont{", ty$label,
-        "}}{\\providecommand{\\ddlabelfont}{}}")
+        "}[Ligatures=TeX]}{\\providecommand{\\ddlabelfont}{}}")
   } else {
     add("\\providecommand{\\ddlabelfont}{}")
   }
@@ -1109,7 +1114,11 @@ dd_preamble <- function(s) {
   # \\ddversion is filled in per render by pdf()'s pre-processor (git short
   # hash); \\ddstampdate likewise. Both default to something printable.
   add("\\providecommand{\\ddversion}{}\\providecommand{\\ddstampdate}{\\today}")
-  add("\\newcommand{\\ddstamp}{{\\def\\\\{ }\\ifcsname ddrtitle\\endcsname\\ddrtitle\\else\\thetitle\\fi",
+  # The title in the stamp is the shortened title pdf()'s pre-processor
+  # defines (\\ddstamptitle), else the running title: a full long title wraps
+  # in the foot and runs into the folio.
+  add("\\newcommand{\\ddstamp}{{\\def\\\\{ }\\ifcsname ddstamptitle\\endcsname\\ddstamptitle",
+      "\\else\\ifcsname ddrtitle\\endcsname\\ddrtitle\\else\\thetitle\\fi\\fi",
       "\\ifx\\ddversion\\empty\\else\\enspace\\textperiodcentered\\enspace v\\ddversion\\fi",
       "\\enspace\\textperiodcentered\\enspace\\ddstampdate}}")
   # header_footer.section_chars: the head names the section a page serves:
@@ -1445,6 +1454,10 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   # template prints the object as "true" in the title block. Every style.
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "author.lua"))
 
+  # Underlined text holding a link: soul's \ul cannot take \url or \href, and
+  # LaTeX stops. The links come out of the underline. Every style.
+  pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "underline.lua"))
+
   # Table header treatment. Pandoc gives the header row no macro to hook from
   # the preamble, so it is done on the document tree. This must be added BEFORE
   # the two-column filter, which rewrites Tables into raw LaTeX.
@@ -1518,7 +1531,14 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
     pandoc_args = pargs)
   # Per-render stamps (version, date, warning: auto, the changebar reference)
   # depend on the input file, which only rmarkdown's pre-processor sees.
+  # changebar writes .cb and .cb2 files beside the PDF, which tinytex's
+  # cleanup does not know; they go when the render cleans up.
+  post <- function(metadata, input_file, output_file, clean, verbose) {
+    if (isTRUE(clean)) unlink(paste0(tools::file_path_sans_ext(output_file), c(".cb", ".cb2")))
+    output_file
+  }
   rmarkdown::output_format(knitr = NULL, pandoc = NULL,
     pre_processor = dd_pre_processor(s, version, changes_since),
+    post_processor = post,
     base_format = base)
 }

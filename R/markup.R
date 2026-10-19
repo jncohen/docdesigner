@@ -224,6 +224,20 @@ dd_tex_text <- function(x) {
   gsub("([#$%&_{}])", "\\\\\\1", x)
 }
 
+# The title as the stamp prints it: the part before a subtitle colon, cut at
+# a word to `n` characters. Markdown emphasis marks are dropped.
+dd_stamp_title <- function(title, n = 45L) {
+  if (is.null(title) || !length(title)) return("")
+  x <- gsub("[*_`]", "", paste(as.character(title), collapse = " "))
+  x <- trimws(gsub("\\s+", " ", x))
+  x <- sub(":\\s.*$", "", x)
+  if (nchar(x) <= n) return(x)
+  head <- substr(x, 1L, n)
+  sp <- regexpr(" [^ ]*$", head)
+  if (sp > n / 2) head <- substr(head, 1L, sp - 1L)
+  paste0(head, "…")
+}
+
 dd_pre_processor <- function(s, version, changes_since) {
   hf <- unlist(s$header_footer[c("header", "footer")])
   stamped <- "stamp" %in% hf || isTRUE(s$title$warning$auto)
@@ -234,8 +248,10 @@ dd_pre_processor <- function(s, version, changes_since) {
          else dd_git_version(src)
     date <- format(Sys.Date(), "%Y-%m-%d")
     hdr <- tempfile("dd-stamp-", fileext = ".tex")
+    st <- dd_stamp_title(metadata$title)
     writeLines(c(paste0("\\def\\ddversion{", dd_tex_text(v), "}"),
-                 paste0("\\def\\ddstampdate{", date, "}")), hdr)
+                 paste0("\\def\\ddstampdate{", date, "}"),
+                 if (nzchar(st)) paste0("\\def\\ddstamptitle{", dd_tex_text(st), "}")), hdr)
     args <- c("--include-in-header", hdr)
     w <- metadata$warning
     if (identical(w, "auto") || (is.null(w) && isTRUE(s$title$warning$auto))) {

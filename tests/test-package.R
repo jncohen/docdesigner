@@ -354,7 +354,26 @@ if (rmarkdown::pandoc_available("3.1.8")) {
             grepl("\\ddsectitle{2}{2\\enspace Estimates move with\u2026}", out, fixed = TRUE),
             grepl("\\ddsecanchor{3}", out, fixed = TRUE),
             !grepl("References &", out, fixed = TRUE))                    # apparatus is not mapped
+
+  # An underlined reference keeps its URL out of soul's \ul, which cannot
+  # take \url; plain underlines are untouched.
+  out <- run_filter(c("[Damico 2016. At <https://example.org/a%20b>]{.underline}", "",
+                      "[Just underlined]{.underline}"), "underline.lua", "dd-none=1")
+  stopifnot(grepl("\\ul{Damico 2016. At }\\url{https://example.org/a\\%20b}", out, fixed = TRUE),
+            grepl("\\ul{Just underlined}", out, fixed = TRUE))
 }
+
+# Extra font families get TeX ligatures, so `` '' and -- in a heading or the
+# argument map print as quotes and dashes.
+rpre <- docdesigner:::dd_preamble(designer_style("review"))
+stopifnot(any(grepl("\\newfontfamily\\ddheadfont{", rpre, fixed = TRUE) &
+              grepl("Ligatures=TeX", rpre, fixed = TRUE)))
+# The stamp's title: the part before a subtitle colon, cut at a word.
+stopifnot(identical(docdesigner:::dd_stamp_title(
+  "Measuring Entrepreneurship: Measurement Choices Can Influence Empirics"), "Measuring Entrepreneurship"),
+  identical(docdesigner:::dd_stamp_title("A very long title that goes on and on well past the limit", 30L),
+            "A very long title that goes…"),
+  identical(docdesigner:::dd_stamp_title(NULL), ""))
 
 html_format <- html()
 stopifnot(inherits(html_format, "rmarkdown_output_format"))
