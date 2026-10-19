@@ -1,5 +1,42 @@
 # docdesigner (development version)
 
+- **New style: `review`.** A working draft printed to be read and marked up by
+  hand, in the academic set. A 3in outer margin and space between paragraphs
+  for handwritten insertions; a short, ragged, unhyphenated measure; line
+  numbers (every 5th, per page) and paragraph numbers (continuous) to find a
+  mark again in the source; a map of the argument (every heading, its words
+  and page) opening the body; the section's claim in the running head; a
+  stamp of title, git version and date on every page; and nothing floats.
+  `examples/specimen-review.Rmd` shows it on a revised copy of the short
+  specimen.
+- **New: draft markup tokens, `markup.*`.** Each is off by default, so no
+  other style changes: `line_numbers`, `paragraph_numbers`, `flags`
+  (`[[TODO]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]`, `[[FIX]]` in the
+  text print as margin tags; `[[TODO: words]]` keeps the words inline),
+  `cite_keys` (each citation's key after it), `map`, `claim_check` (a heading
+  of fewer than four words is flagged `[[LABEL?]]`), `changebars` (a rule
+  beside each paragraph changed since a reference version) and `floats`.
+  New filters `markup.lua` and `headings.lua` carry them.
+- **New `pdf()` arguments.** `markup = list(...)` overrides the style's
+  markup for one render; `version` sets the version the stamp prints (by
+  default the document's git short hash, `+` when it has uncommitted
+  changes); `changes_since` names the reference for changebars: a git tag,
+  branch or commit, or an earlier copy of the source (default: the latest
+  tag). Changebars compare prose: inline R code, citations and numbers are
+  ignored, so an `.Rmd` reference works without knitting it.
+- **New running-head values and tokens.** `folio` prints page of pages;
+  `stamp` the running title, version and date. `header_footer.alternate`
+  mirrors the slots under `page.twoside`, so `right` is always the outer
+  edge. `header_footer.section_chars` makes `section` name the first level-1
+  section starting on the page (else the one carried over), numbered and cut
+  to length. `title.warning.auto`, or `warning: auto` in the document, prints
+  a stamped "Review draft" line.
+- **The 1.25in margin cap exempts a markup style's outer margin**, which is a
+  writing workspace rather than a page proportion. `page.margins.outer` now
+  accepts up to 3.5in.
+- `markup.floats: false` keeps every table a longtable and sets figures with
+  `[H]`: in a draft, "the table below" must be below.
+
 - **No margin wider than 1.25in.** ssrn (1.9in), humanities (1.75in), atlantic
   and government (1.65in) had side margins wide enough to waste the page;
   all four now use 1.25in. `designer_validate_style()` warns when a style

@@ -10,6 +10,9 @@
 #   <style>-header.pdf   title block at the head of page 1
 #   <style>-page.pdf     title page of its own
 #   <style>-thesis.pdf   a thesis style, in the thesis layout
+#   review-header.pdf    the review style, on examples/specimen-review.Rmd: the
+#                        short specimen revised (flags, rewritten headings, a
+#                        reworded paragraph), with changebars against it
 #   <style>-<layout>.png page 1 at 110 dpi
 #   index.csv            style, set, layout, pages, status
 
@@ -35,21 +38,30 @@ res <- callr::r(function(repo, outdir, wanted) {
   if (length(wanted)) styles <- styles[styles$style %in% wanted, ]
   work <- file.path(tempdir(), "dd-specimens")
   unlink(work, recursive = TRUE); dir.create(work)
-  file.copy(file.path(repo, "examples", c("specimen-short.Rmd", "specimen-short.bib", "scf2022-specimen.csv")), work)
+  file.copy(file.path(repo, "examples", c("specimen-short.Rmd", "specimen-review.Rmd",
+                                          "specimen-short.bib", "scf2022-specimen.csv")), work)
   rows <- list()
   # A thesis style is shown in its own layout (title page, front matter,
   # chapters); every other style with the title on page 1 and on a page
   # of its own.
+  # A markup style (review) is a working draft: shown once, title on page 1,
+  # on the revised specimen so its flags and changebars have work to do.
+  markup_style <- function(st) docdesigner:::dd_markup_on(
+    docdesigner:::dd_flatten_dotted(docdesigner::designer_style(st)))
   layouts_of <- function(st) {
     if (identical(docdesigner:::dd_title_layout(docdesigner::designer_style(st)), "thesis")) "thesis"
+    else if (markup_style(st)) "header"
     else c("header", "page")
   }
   for (i in seq_len(nrow(styles))) for (lay in layouts_of(styles$style[i])) {
     st <- styles$style[i]
     out <- sprintf("%s-%s.pdf", st, lay)
     r <- tryCatch({
-      pdf <- rmarkdown::render(file.path(work, "specimen-short.Rmd"),
-        output_format = docdesigner::pdf(style = st, title_layout = lay, toc = identical(lay, "thesis")),
+      review <- markup_style(st)
+      src <- if (review) "specimen-review.Rmd" else "specimen-short.Rmd"
+      pdf <- rmarkdown::render(file.path(work, src),
+        output_format = docdesigner::pdf(style = st, title_layout = lay, toc = identical(lay, "thesis"),
+                                         changes_since = if (review) file.path(work, "specimen-short.Rmd")),
         params = list(style = st), output_file = out, output_dir = outdir,
         quiet = TRUE, envir = new.env(parent = globalenv()))
       pdftools::pdf_convert(pdf, pages = 1, dpi = 110, verbose = FALSE,

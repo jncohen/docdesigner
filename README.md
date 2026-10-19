@@ -5,7 +5,7 @@ Knit attractive, publication-quality documents from R Markdown without deep LaTe
 `docdesigner` is a **token-driven rendering engine** plus **distributable style sets**. A style is a small YAML file of design tokens; the engine turns those tokens into LaTeX. Styles are self-contained and independently upgradeable, and sets can be installed from GitHub.
 
 > **Status: 0.11.0, alpha.** `R CMD check` passes on Linux and Windows, all
-> sixteen styles render, and 108 checks that each style's tokens reach the page
+> seventeen styles render, and 108 checks that each style's tokens reach the page
 > pass. See [Known limitations](#known-limitations). Testers can start with
 > [alpha-testing-instructions.pdf](alpha-testing-instructions.pdf), or
 > [TESTING.md](TESTING.md) for the short version.
@@ -157,9 +157,47 @@ Each level-one heading (`#`) is a chapter. `signatures: false` removes the
 signature block. Any style can use the thesis layout with
 `title_layout: thesis` under `docdesigner::pdf:`.
 
+## Reviewing a draft
+
+The `review` style is for a manuscript printed to read and mark up by hand.
+It is not a publication look: every choice serves reading slowly, writing on
+the page, and finding each mark again in the source.
+
+```
+---
+title: "Paper Title"
+output:
+  docdesigner::pdf:
+    style: review
+    changes_since: v1.0     # optional: a git tag, commit, or earlier copy
+---
+```
+
+- A 3in outer margin, and space between paragraphs, for handwritten
+  insertions. A short ragged measure with no hyphenation.
+- Line numbers (every 5th, restarting on each page) in the outer margin and
+  paragraph numbers in the inner one, so "p. 7, l. 15" or "para. 14" names a
+  spot in this printout and the next.
+- The body opens with a **map of the argument**: every heading to two levels,
+  its words and its page. Write headings as claims; a heading of fewer than
+  four words is flagged `LABEL?` in the margin.
+- The running head names the section's claim; the foot stamps the title, the
+  git version (`+` when the file has uncommitted changes) and the date.
+- `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]` and
+  `[[FIX]]` in the text print as margin tags. Citation keys print after
+  citations.
+- **Changebars** mark every paragraph changed since the latest git tag, or
+  since `changes_since`. They compare prose, ignoring inline R code,
+  citations and numbers, so an `.Rmd` reference works as it is.
+- Nothing floats: tables and figures stay where they are written.
+
+Each feature is a `markup.*` token, off in every other style, and
+`markup = list(...)` turns one off for a single render:
+`docdesigner::pdf(style = "review", markup = list(line_numbers = 0))`.
+
 ## Styles and style sets
 
-A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Sixteen styles ship in two sets:
+A **style** is a directory containing `format.yml`. A **set** is a directory of styles with a `set.yml` manifest. Seventeen styles ship in two sets:
 
 ```text
 inst/sets/
@@ -167,7 +205,7 @@ inst/sets/
     set.yml
     styles/
       minimal/ modern/ nature/ methods/ demography/ ssrn/ sociology/ ajs/
-      thesis/ qc-thesis/
+      review/ thesis/ qc-thesis/
   public/
     set.yml
     styles/

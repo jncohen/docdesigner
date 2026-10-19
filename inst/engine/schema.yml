@@ -94,7 +94,7 @@ tokens:
   page.margins.top:    {type: inches, min: 0.4, max: 2.0, status: impl, doc: "Overrides page.margin when set."}
   page.margins.bottom: {type: inches, min: 0.4, max: 2.0, status: impl}
   page.margins.inner:  {type: inches, min: 0.4, max: 2.0, status: impl, doc: "Binding edge when twoside; else left."}
-  page.margins.outer:  {type: inches, min: 0.4, max: 2.0, status: impl}
+  page.margins.outer:  {type: inches, min: 0.4, max: 3.5, status: impl, doc: "Over 1.25in only for a markup style (markup.*), whose outer margin is a workspace for handwritten notes."}
   page.twoside:     {type: bool, default: false, status: impl, doc: "Mirror margins, alternate running heads."}
   page.columns:     {type: int, values: [1, 2], default: 1, status: impl}
   page.gutter:      {type: "scale:gutter", nullable: true, status: impl, doc: "Space between columns under columns: 2. Unset: LaTeX's 10pt."}
@@ -305,9 +305,9 @@ tokens:
   footnotes.numbering: {type: enum, values: [arabic, symbol], default: arabic, status: impl}
 
   # -- running heads ---------------------------------------------------------
-  header_footer.header.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
-  header_footer.header.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
-  header_footer.header.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
+  header_footer.header.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: none, status: impl}
+  header_footer.header.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: none, status: impl}
+  header_footer.header.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: none, status: impl}
   header_footer.header.rule:   {type: bool, default: false, status: impl}
   header_footer.header.fill:   {type: role, nullable: true, status: impl,
                                 doc: "Fill the running head with a full-bleed colour band spanning the whole paper width, not just the text block. The Economist flag and a government masthead. Suppresses header.rule, which a filled band does not want."}
@@ -317,13 +317,41 @@ tokens:
                                 doc: "Ink used inside the running head. Unset: muted for a plain head, text inside a band. With header.fill set this is the knockout colour -- white-on-red is fill: accent, color: knockout."}
   header_footer.footer.color:  {type: role, nullable: true, status: impl,
                                 doc: "Ink used in the running foot. Unset: muted."}
-  header_footer.footer.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
-  header_footer.footer.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: none, status: impl}
-  header_footer.footer.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page], default: page, status: impl}
+  header_footer.footer.left:   {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: none, status: impl}
+  header_footer.footer.center: {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: none, status: impl}
+  header_footer.footer.right:  {type: enum, values: [none, title, runningtitle, author, surname, section, page, folio, stamp], default: page, status: impl}
   header_footer.footer.rule:   {type: bool, default: true, status: impl}
+  header_footer.alternate:     {type: bool, default: false, status: impl,
+                                doc: "Under page.twoside: mirror the left and right slots on even pages, so `right` is always the outer edge and `left` the inner. Slot values: folio is page/pages; stamp is the running title, version and date (see pdf(version = ))."}
+  header_footer.section_chars: {type: int, min: 20, max: 120, nullable: true, status: impl,
+                                doc: "Set: `section` in a running head shows the first level-1 heading on the page, numbered and cut at this many characters. Unset: LaTeX's own \\rightmark."}
   header_footer.page_number.format: {type: enum, values: [arabic, roman], default: arabic, status: impl, doc: "Front-matter page numbers in the thesis layout. roman: i, ii, ...; the body starts again at 1."}
   header_footer.first_page:    {type: enum, values: [plain, none, header, folio], default: plain, status: impl,
                                 doc: "plain: LaTeX default (centred footer folio, no running head on page 1). none: nothing on page 1. header: carry the running head onto page 1 too. folio: page 1 keeps the band and the folio slots, but drops the running title."}
+
+  # -- markup (working drafts) ----------------------------------------------
+  # Features for a draft printed to be read and marked up by hand. Each is off
+  # by default, so no publication style is touched. pdf(markup = list(...))
+  # overrides any of them for one render.
+  markup.line_numbers:      {type: int, min: 0, max: 10, default: 0, status: impl,
+                             doc: "Number every nth line in the outer margin, restarting on each page. 0: off."}
+  markup.paragraph_numbers: {type: bool, default: false, status: impl,
+                             doc: "Number body paragraphs continuously in the inner margin (\u00b6n), so a note made on one printout finds its paragraph in the next."}
+  markup.flags:             {type: bool, default: false, status: impl,
+                             doc: "[[TODO]], [[CITE]], [[WEAK]], [[CUT]], [[CHECK]], [[FIX]] in the text print as margin tags; [[TAG: words]] also keeps the words inline in markup.flag_color."}
+  markup.flag_color:        {type: role, default: accent, status: impl}
+  markup.cite_keys:         {type: bool, default: false, status: impl,
+                             doc: "Print each citation's bibliography key in small muted type after it."}
+  markup.map:               {type: int, min: 0, max: 3, default: 0, status: impl,
+                             doc: "Open the body with a map of the argument: each heading to this depth, with its words and starting page. 0: off."}
+  markup.claim_check:       {type: bool, default: false, status: impl,
+                             doc: "Flag [[LABEL?]] beside a heading of fewer than four words: a label where a claim belongs. Advisory."}
+  markup.changebars:        {type: bool, default: false, status: impl,
+                             doc: "Rule beside each paragraph changed since a reference version: pdf(changes_since = ), else the latest git tag."}
+  markup.floats:            {type: bool, default: true, status: impl,
+                             doc: "false: tables and figures stay exactly where they are written; nothing floats."}
+  title.warning.auto:       {type: bool, default: false, status: impl,
+                             doc: "With no warning: in the document, print a stamped draft line (version, date, do not circulate). warning: auto does the same in any style."}
 
   # -- links and citations ---------------------------------------------------
   links.color:     {type: role, default: accent, status: impl}
@@ -346,6 +374,11 @@ rules:
     severity: warning
     doc: "figure.span_columns has no effect in a single-column body."
     when: "figure.span_columns && page.columns == 1"
+
+  - id: markup-no-columns
+    severity: warning
+    doc: "Margin markup (line and paragraph numbers, flags, changebars) needs a single-column page."
+    when: "markup.* && page.columns == 2"
 
   - id: margins-override
     severity: warning

@@ -4,7 +4,15 @@
 \alias{pdf}
 \title{Designed PDF output format}
 \usage{
-pdf(..., style = "minimal", doublespace = FALSE, title_layout = NULL)
+pdf(
+  ...,
+  style = "minimal",
+  doublespace = FALSE,
+  title_layout = NULL,
+  markup = NULL,
+  version = NULL,
+  changes_since = NULL
+)
 }
 \arguments{
 \item{...}{Passed to \code{\link[rmarkdown:pdf_document]{rmarkdown::pdf_document()}}.}
@@ -20,6 +28,19 @@ and code stay single-spaced. Overrides the style's
 \code{"page"} (title and abstract on a page of their own) or \code{"thesis"} (a
 thesis title page and front matter). \code{NULL}, the default, uses the
 style's \code{title.layout} token.}
+
+\item{markup}{A named list overriding the style's \verb{markup.*} tokens for
+this render, e.g. \code{list(line_numbers = 0)} to drop line numbers from one
+printout. See \code{\link[=designer_tokens]{designer_tokens()}} for the keys.}
+
+\item{version}{The version printed by the \code{stamp} running-head slot and by
+\verb{warning: auto}. \code{NULL} (default): the git short hash of the document's
+last commit, with \code{+} when it has uncommitted changes, when the style
+prints a stamp. A string: printed as is. \code{FALSE}: none.}
+
+\item{changes_since}{For \code{markup.changebars}: the version to mark changes
+against. A git tag, branch or commit, or a path to an earlier copy of the
+source. \code{NULL} (default): the latest git tag.}
 }
 \value{
 An R Markdown output format.

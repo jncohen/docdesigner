@@ -28,6 +28,7 @@ local columns = 1
 local style = "booktabs"
 local rule_below = true
 local zebra = nil     -- shading colour, when this filter shades rows itself
+local may_float = true  -- markup.floats: false keeps every table where it is written
 local MAX_FLOAT_ROWS = 25
 
 local function read_meta(m)
@@ -37,6 +38,7 @@ local function read_meta(m)
   rule_below = get("dd-table-rule-below") ~= "false"
   zebra = get("dd-table-zebra")
   if zebra == "" then zebra = nil end
+  may_float = get("dd-tables-float") ~= "false"
   return m
 end
 
@@ -232,7 +234,7 @@ end
 local function handle_table(tbl)
   -- Two columns: every table must leave longtable. One column: only those a
   -- float can carry; the rest keep longtable's ability to cross pages.
-  if columns == 2 or floatable(tbl) then
+  if columns == 2 or (may_float and floatable(tbl)) then
     return to_float(tbl)
   end
   -- A long table in a style with its own rules. Spanning cells are left to

@@ -295,6 +295,27 @@ bibliography: references.bib
 csl: default.csl
 ```
 
+## Reviewing a Draft
+
+The `review` style prints a manuscript to read and mark up by hand: a 3in
+writing margin, line and paragraph numbers, a map of the argument from the
+headings, margin flags, citation keys, and changebars against an earlier
+version.
+
+```yaml
+output:
+  docdesigner::pdf:
+    style: review
+    changes_since: v1.0          # a git tag, commit, or earlier copy; default: latest tag
+    markup:
+      line_numbers: 0            # turn one feature off for this printout
+```
+
+In the text, `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]`
+and `[[FIX]]` print as margin tags. Write headings as claims: a heading of
+fewer than four words is flagged `LABEL?`. `warning: auto` prints a stamped
+"Review draft" line with the git version and date.
+
 ## Diagnostics
 
 Run:

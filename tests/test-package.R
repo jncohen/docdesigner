@@ -164,7 +164,10 @@ consumed <- c(
   "paragraph.indent", "paragraph.spacing",
   "page.papersize", "page.margin", "page.columns",
   "table.row_stretch", "code.highlight", "links.color",
-  "header_footer.footer.right", "header_footer.footer.rule")
+  "header_footer.footer.right", "header_footer.footer.rule",
+  "header_footer.alternate", "header_footer.section_chars", "title.warning.auto",
+  "markup.line_numbers", "markup.paragraph_numbers", "markup.flags", "markup.flag_color",
+  "markup.cite_keys", "markup.map", "markup.claim_check", "markup.changebars", "markup.floats")
 status <- stats::setNames(tok$status, tok$key)
 mismarked <- consumed[status[consumed] != "impl"]
 if (length(mismarked)) {
@@ -213,6 +216,18 @@ writeLines(c("id: wide", "label: Wide", "page.margins.inner: 1.5"),
            file.path(wide, "format.yml"))
 v <- suppressWarnings(designer_validate_style(file.path(wide, "format.yml")))
 stopifnot(any(grepl("margin cap", v$message)))
+# A markup style's OUTER margin is a writing workspace and is exempt; its
+# other margins are not, and a publication style's outer margin is not.
+writeLines(c("id: wide", "label: Wide", "markup.line_numbers: 5",
+             "page.margins.outer: 3.0", "page.margins.inner: 1.5"),
+           file.path(wide, "format.yml"))
+v <- suppressWarnings(designer_validate_style(file.path(wide, "format.yml")))
+stopifnot(!any(v$key == "page.margins.outer" & grepl("margin cap", v$message)))
+stopifnot(any(v$key == "page.margins.inner" & grepl("margin cap", v$message)))
+writeLines(c("id: wide", "label: Wide", "page.margins.outer: 3.0"),
+           file.path(wide, "format.yml"))
+v <- suppressWarnings(designer_validate_style(file.path(wide, "format.yml")))
+stopifnot(any(v$key == "page.margins.outer" & grepl("margin cap", v$message)))
 unlink(wide, recursive = TRUE)
 
 # --- Bundled assets are discoverable -----------------------------------------
@@ -228,6 +243,99 @@ stopifnot(identical(minimal_format$pandoc$latex_engine, "xelatex"))
 stopifnot(any(grepl("docdesigner.tex", minimal_format$pandoc$args, fixed = TRUE)))
 page_format <- pdf(style = "minimal", title_layout = "page")
 stopifnot(any(page_format$pandoc$args == "dd-title-page=true"))
+
+# --- Draft markup (the review style) -----------------------------------------
+rv <- designer_style("review")
+stopifnot(identical(as.integer(rv$markup$line_numbers), 5L), isTRUE(rv$markup$changebars),
+          identical(rv$markup$floats, FALSE), identical(as.integer(rv$markup$map), 2L))
+# Off by default: no other shipped style turns any markup on.
+for (st in setdiff(designer_styles()$style, "review")) {
+  stopifnot(!docdesigner:::dd_markup_on(docdesigner:::dd_flatten_dotted(designer_style(st))))
+}
+pre_min <- docdesigner:::dd_preamble(designer_style("minimal"))
+for (pkg in c("lineno", "changebar", "changepage", "refcount", "{float}")) {
+  stopifnot(!grepl(pkg, pre_min, fixed = TRUE))
+}
+pre_rv <- docdesigner:::dd_preamble(rv)
+stopifnot(grepl("\\modulolinenumbers[5]", pre_rv, fixed = TRUE),
+          grepl("{changebar}", pre_rv, fixed = TRUE),
+          grepl("\\ddsectionhead", pre_rv, fixed = TRUE),
+          grepl("\\pageref*{LastPage}", pre_rv, fixed = TRUE))
+# float must load before changebar, which patches it.
+stopifnot(regexpr("{float}", pre_rv, fixed = TRUE) < regexpr("{changebar}", pre_rv, fixed = TRUE))
+# lineno by command, never by package option: fvextra may load it first.
+stopifnot(!grepl("]{lineno}", pre_rv, fixed = TRUE))
+# alternate: under twoside, `right` is the outer edge on every page.
+stopifnot(grepl("\\fancyfoot[RO,LE]", pre_rv, fixed = TRUE))
+# Margin-note room comes from the outer margin.
+stopifnot("marginparwidth=2.35in" %in% docdesigner:::dd_geometry_opts(rv))
+# pdf(markup = ) overrides one render; an unknown key is caught.
+off <- docdesigner:::dd_apply_markup(rv, list(line_numbers = 0))
+stopifnot(!grepl("lineno", docdesigner:::dd_preamble(off), fixed = TRUE))
+bad_markup <- tryCatch(pdf(style = "review", markup = list(nonsense = 1)),
+                       error = function(e) conditionMessage(e))
+stopifnot(grepl("Unknown: nonsense", bad_markup))
+review_format <- pdf(style = "review")
+stopifnot(any(grepl("markup.lua", review_format$pandoc$args, fixed = TRUE)),
+          any(grepl("headings.lua", review_format$pandoc$args, fixed = TRUE)),
+          any(review_format$pandoc$args == "dd-tables-float=false"),
+          is.function(review_format$pre_processor))
+stopifnot(!any(grepl("markup.lua", minimal_format$pandoc$args, fixed = TRUE)))
+# Version and change reference degrade quietly outside a repository.
+stopifnot(identical(docdesigner:::dd_git_version(file.path(tempdir(), "x.Rmd")), ""))
+ref_file <- tempfile(fileext = ".md"); writeLines("Old text.", ref_file)
+stopifnot(identical(docdesigner:::dd_changes_ref(file.path(tempdir(), "x.Rmd"), ref_file),
+                    normalizePath(ref_file, winslash = "/")))
+stopifnot(is.null(suppressMessages(docdesigner:::dd_changes_ref(file.path(tempdir(), "x.Rmd"), "tag"))))
+stopifnot(identical(docdesigner:::dd_tex_text("a_b & 50%"), "a\\_b \\& 50\\%"))
+stopifnot(identical(docdesigner:::dd_source_file(file.path(tempdir(), "nope.knit.md")),
+                    file.path(tempdir(), "nope.knit.md")))
+
+# The filters, through pandoc itself when it is available (no LaTeX needed).
+if (rmarkdown::pandoc_available("3.1.8")) {
+  run_filter <- function(md, filter, meta) {
+    inp <- tempfile(fileext = ".md"); writeLines(md, inp)
+    args <- c(inp, "-t", "latex", "--lua-filter", docdesigner:::dd_pkg_file("engine", filter),
+              as.vector(rbind("--metadata", meta)))
+    paste(system2(rmarkdown::pandoc_exec(), args, stdout = TRUE), collapse = "\n")
+  }
+  ref <- tempfile(fileext = ".Rmd")
+  writeLines(c("```{r setup, include=FALSE}", "x <- 1", "```", "",
+               "An unchanged paragraph, cited [@key2020].", "",
+               "A paragraph about to change.", "", "```{r}", "y <- 2", "```"), ref)
+  out <- run_filter(c("An unchanged paragraph, cited [@key2020].", "",
+                      "A paragraph now changed. [[TODO: check this]]", "",
+                      "Bare tag here [[CITE]], then text."),
+                    "markup.lua",
+                    c("dd-markup-parnum=true", "dd-markup-flags=true", "dd-markup-citekeys=true",
+                      "dd-markup-changebars=true", paste0("dd-changes-ref=", ref)))
+  stopifnot(grepl("\\ddparnum{1}", out, fixed = TRUE), grepl("\\ddparnum{3}", out, fixed = TRUE),
+            grepl("\\ddflag{TODO}\\ddflagtext{check this}", out, fixed = TRUE),
+            grepl("here\\ddflag{CITE},", out, fixed = TRUE),          # no space before the comma
+            grepl("\\ddcitekey{\\detokenize{key2020}}", out, fixed = TRUE))
+  # Only the changed and the new paragraphs carry changebars: the reference's
+  # chunks are skipped, and its citation is ignored in the comparison.
+  stopifnot(lengths(regmatches(out, gregexpr("\\cbstart", out, fixed = TRUE))) == 2L,
+            !grepl("\\cbstart{}\\ddparnum{1}", out, fixed = TRUE))
+  # Text that is not a known tag is left alone.
+  lit <- run_filter("Keep [[not a tag]] as is.", "markup.lua", "dd-markup-flags=true")
+  stopifnot(grepl("{[}{[}not a tag{]}{]}", lit, fixed = TRUE) || grepl("[[not a tag]]", lit, fixed = TRUE))
+
+  out <- run_filter(c("# Introduction", "", "Words here.", "",
+                      "# Estimates move with the convention", "", "## A sub claim that holds", "",
+                      "More words in this part.", "", "# References {-}", "", "Refs."),
+                    "headings.lua",
+                    c("dd-map-depth=2", "dd-claim-check=true", "dd-section-chars=20",
+                      "dd-number-sections=true"))
+  stopifnot(grepl("MAP|ddmapopen", out),
+            grepl("1 & Introduction & 2 & \\pageref{introduction}", out, fixed = TRUE),
+            grepl("\\ddmapsub{2.1\\quad A sub claim that holds}", out, fixed = TRUE),
+            grepl("\\ddheadflag{LABEL?}Words", out, fixed = TRUE),     # a label is flagged
+            !grepl("\\ddheadflag{LABEL?}More", out, fixed = TRUE),     # a claim is not
+            grepl("\\ddsectitle{2}{2\\enspace Estimates move with\u2026}", out, fixed = TRUE),
+            grepl("\\ddsecanchor{3}", out, fixed = TRUE),
+            !grepl("References &", out, fixed = TRUE))                    # apparatus is not mapped
+}
 
 html_format <- html()
 stopifnot(inherits(html_format, "rmarkdown_output_format"))

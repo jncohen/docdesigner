@@ -34,6 +34,12 @@ for (f in idx$file) {
   # high-density screen, at about 30 KB.
   pdftools::pdf_convert(file.path(src, f), pages = 1, dpi = 40, verbose = FALSE,
                         filenames = file.path(dest, sub("pdf$", "png", f)))
+  # A markup style's specimen (review) also gets its first body page, where
+  # the line and paragraph numbers, flags and changebars show.
+  if (identical(sub("-header\\.pdf$", "", f), "review")) {
+    pdftools::pdf_convert(file.path(src, f), pages = 2, dpi = 40, verbose = FALSE,
+                          filenames = file.path(dest, sub("\\.pdf$", "-body.png", f)))
+  }
   # A thesis specimen also gets its first chapter page, the first page whose
   # text opens with the chapter "1 Introduction".
   if (grepl("-thesis\\.pdf$", f)) {

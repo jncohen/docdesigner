@@ -5,8 +5,8 @@ description: "Sample PDFs of every docdesigner style."
 
 Each style below sets the same short document. The left page shows the title
 at the top of page 1. The right page shows a separate title page. The two
-thesis styles show their title page and first chapter. Click a page to open
-the PDF.
+thesis styles show their title page and first chapter, and the review style
+its first page and a body page. Click a page to open the PDF.
 
 The specimen is a short note on divorce and net worth, using the public 2022
 Survey of Consumer Finances. Its data and statistical tests are real, but its
@@ -47,7 +47,11 @@ cards <- vapply(seq_len(nrow(styles)), function(i) {
   s <- docdesigner::designer_style(id)
   cols <- if ((s$page$columns %||% 1) == 2) 2L else 1L
   thesis <- identical(docdesigner:::dd_title_layout(s), "thesis")
-  yaml <- if (thesis) {
+  # A markup style (review) is shown as page 1 and a body page.
+  markup <- docdesigner:::dd_markup_on(docdesigner:::dd_flatten_dotted(s))
+  yaml <- if (markup) {
+    sprintf("output:\n  docdesigner::pdf:\n    style: %s\n    changes_since: v1.0   # optional: a tag, commit or file", id)
+  } else if (thesis) {
     sprintf("toc: true\noutput:\n  docdesigner::pdf:\n    style: %s", id)
   } else {
     sprintf("output:\n  docdesigner::pdf:\n    style: %s\n    title_layout: header   # or page", id)
@@ -60,6 +64,7 @@ cards <- vapply(seq_len(nrow(styles)), function(i) {
     esc(s$typography$body), '</p>',
     '<div class="dd-thumbs">',
     if (thesis) paste0(thumb(id, "thesis", "Title page"), thumb(id, "thesis", "First chapter", "-body"))
+    else if (markup) paste0(thumb(id, "header", "Page 1: the map"), thumb(id, "header", "A body page", "-body"))
     else paste0(thumb(id, "header", "Title on page 1"), thumb(id, "page", "Title page")),
     '</div>',
     '<p class="dd-desc">', esc(first_sentence(styles$description[i])), '</p>',

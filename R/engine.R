@@ -1102,6 +1102,41 @@ dd_preamble <- function(s) {
       co$title$color %||% ccol, "}", ctcase, "\\par}\\vspace{0.3em}\\fi\\noindent\\ignorespaces")
   add("}{\\end{tcolorbox}\\par\\addvspace{0.8em}}")
 
+  # --- Running-head values and draft markup --------------------------------
+  hf_vals <- unlist(lapply(c("header", "footer"), function(w)
+    lapply(c("left", "center", "right"), function(p) s$header_footer[[w]][[p]] %||% "none")))
+  if ("folio" %in% hf_vals) add("\\usepackage{lastpage}")
+  # \\ddversion is filled in per render by pdf()'s pre-processor (git short
+  # hash); \\ddstampdate likewise. Both default to something printable.
+  add("\\providecommand{\\ddversion}{}\\providecommand{\\ddstampdate}{\\today}")
+  add("\\newcommand{\\ddstamp}{{\\def\\\\{ }\\ifcsname ddrtitle\\endcsname\\ddrtitle\\else\\thetitle\\fi",
+      "\\ifx\\ddversion\\empty\\else\\enspace\\textperiodcentered\\enspace v\\ddversion\\fi",
+      "\\enspace\\textperiodcentered\\enspace\\ddstampdate}}")
+  # header_footer.section_chars: the head names the section a page serves:
+  # the first level-1 section that starts on the page, else the last one
+  # started before it. headings.lua defines each section's (numbered, cut)
+  # title and drops a \\label after its heading; the head compares their pages.
+  # Labels, not marks: lineno, longtable and margin notes each run passes of
+  # the output routine, which shift TeX's marks against the pages they belong
+  # to. A label records the page it is shipped on. It settles on the second
+  # LaTeX pass, which every render makes.
+  if (!is.null(s$header_footer$section_chars)) {
+    add("\\usepackage{refcount}\\makeatletter",
+        "\\def\\dd@secn{0}\\newcount\\dd@k\\newcount\\dd@eq\\newcount\\dd@lt",
+        "\\newcommand{\\ddsectitle}[2]{\\expandafter\\gdef\\csname dd@sect@#1\\endcsname{#2}\\xdef\\dd@secn{#1}}",
+        "\\newcommand{\\ddsecanchor}[1]{\\label{ddsec-#1}\\nobreak}",
+        "\\newcommand{\\ddsectionhead}{{\\dd@eq=0 \\dd@lt=0 \\dd@k=1 ",
+        "\\loop\\ifnum\\dd@k>\\dd@secn\\relax\\else",
+        "\\edef\\dd@pg{\\getpagerefnumber{ddsec-\\the\\dd@k}}",
+        "\\ifnum\\dd@pg=\\value{page}\\ifnum\\dd@eq=0 \\dd@eq=\\dd@k\\fi\\fi",
+        "\\ifnum\\dd@pg<\\value{page}\\dd@lt=\\dd@k\\fi",
+        "\\advance\\dd@k by 1 \\repeat",
+        "\\ifnum\\dd@eq>0 \\dd@lt=\\dd@eq\\fi",
+        "\\ifnum\\dd@lt>0 \\csname dd@sect@\\the\\dd@lt\\endcsname\\fi}}",
+        "\\makeatother")
+  }
+  add(dd_markup_preamble(s))
+
   # Drop cap. The package only defines \\lettrine; choosing WHICH paragraph
   # gets it is done by inst/engine/drop-cap.lua, because a preamble has no
   # hook for "the first paragraph of the body".
@@ -1109,6 +1144,12 @@ dd_preamble <- function(s) {
 
   add("\\usepackage{fancyhdr}\\pagestyle{fancy}\\fancyhf{}")
   slot <- c(left = "L", center = "C", right = "R")
+  # header_footer.alternate: under twoside, `right` is the outer edge on every
+  # page and `left` the inner, so a folio or a section claim sits where the eye
+  # meets it when the pages are turned.
+  if (isTRUE(s$header_footer$alternate) && isTRUE(s$page$twoside)) {
+    slot <- c(left = "LO,RE", center = "C", right = "RO,LE")
+  }
   # LaTeX's default \headheight (12pt) is too small for a populated running
   # head, and fancyhdr warns and overprints. Only widen it when a header is
   # actually declared, so header-less styles keep their existing text block;
@@ -1138,7 +1179,11 @@ dd_preamble <- function(s) {
     # head several authors become a comma-separated list instead.
     author = ,
     surname = "{\\def\\and{, }\\theauthor}",
-    section = "\\rightmark",
+    section = "\\ifdefined\\ddsectionhead\\ddsectionhead\\else\\rightmark\\fi",
+    # folio: page of pages. stamp: running title, version and date, so a
+    # printout can be matched to its source (pdf(version = )).
+    folio = "\\thepage\\,/\\,\\pageref*{LastPage}",
+    stamp = "\\ddstamp",
     "\\thepage")
   hfill <- s$header_footer$header$fill
   # Plain running heads and feet are muted unless a style names an ink; a
@@ -1155,7 +1200,8 @@ dd_preamble <- function(s) {
   # first_page: folio carries its folio (and its band) but no running title,
   # which would only repeat the title set directly below it.
   build_hf <- function(folio_only = FALSE) {
-    keep <- function(what) !identical(what, "none") && (!folio_only || identical(what, "page"))
+    keep <- function(what) !identical(what, "none") &&
+      (!folio_only || what %in% c("page", "folio", "stamp"))
     out <- character()
     for (pos in names(slot)) {
       hwhat <- s$header_footer$header[[pos]] %||% "none"
@@ -1267,8 +1313,13 @@ dd_geometry_opts <- function(s) {
   top <- inch(mg$top); bottom <- inch(mg$bottom)
   inner <- inch(mg$inner); outer <- inch(mg$outer)
 
+  # Margin notes (markup.*) are set in a box as wide as the outer margin
+  # allows, less the gap that holds the line numbers.
+  outer_in <- as.numeric(sub("in$", "", outer %||% shorthand))
+  notes <- dd_markup_geometry(s, outer_in)
+
   if (is.null(top) && is.null(bottom) && is.null(inner) && is.null(outer)) {
-    return(paste0("margin=", shorthand))
+    return(c(paste0("margin=", shorthand), notes))
   }
 
   top <- top %||% shorthand; bottom <- bottom %||% shorthand
@@ -1277,7 +1328,7 @@ dd_geometry_opts <- function(s) {
   c(paste0("top=", top), paste0("bottom=", bottom),
     if (twoside) c(paste0("inner=", inner), paste0("outer=", outer))
     else c(paste0("left=", inner), paste0("right=", outer)),
-    if (twoside) "twoside")
+    if (twoside) "twoside", notes)
 }
 
 dd_geometry <- function(s) {
@@ -1318,9 +1369,20 @@ dd_title_layout <- function(s, override = NULL) {
 #'   `"page"` (title and abstract on a page of their own) or `"thesis"` (a
 #'   thesis title page and front matter). `NULL`, the default, uses the
 #'   style's `title.layout` token.
+#' @param markup A named list overriding the style's `markup.*` tokens for
+#'   this render, e.g. `list(line_numbers = 0)` to drop line numbers from one
+#'   printout. See [designer_tokens()] for the keys.
+#' @param version The version printed by the `stamp` running-head slot and by
+#'   `warning: auto`. `NULL` (default): the git short hash of the document's
+#'   last commit, with `+` when it has uncommitted changes, when the style
+#'   prints a stamp. A string: printed as is. `FALSE`: none.
+#' @param changes_since For `markup.changebars`: the version to mark changes
+#'   against. A git tag, branch or commit, or a path to an earlier copy of the
+#'   source. `NULL` (default): the latest git tag.
 #' @return An R Markdown output format.
 #' @export
-pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL) {
+pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL,
+                markup = NULL, version = NULL, changes_since = NULL) {
   if (!requireNamespace("rmarkdown", quietly = TRUE)) stop("rmarkdown is required.", call. = FALSE)
   if (!requireNamespace("yaml", quietly = TRUE)) stop("The 'yaml' package is required.", call. = FALSE)
   # The structural template is pandoc 3.8's. Pandoc 3.1.7 and older write
@@ -1335,7 +1397,7 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
          ". Update RStudio, or install pandoc from https://pandoc.org/installing.html.",
          call. = FALSE)
   }
-  s <- dd_resolve_style(style)
+  s <- dd_apply_markup(dd_resolve_style(style), markup)
   preamble <- dd_preamble(s)
   # Double spacing is a property of the DOCUMENT (a manuscript for review),
   # not of the style, so it is an argument here rather than a token. It comes
@@ -1405,6 +1467,10 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   # dd_preamble() defines for every style.
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "callout.lua"))
 
+  # Draft markup (markup.*): paragraph numbers, flags, citation keys,
+  # changebars, the argument map, heading checks, running-head marks.
+  pargs <- c(pargs, dd_markup_args(s))
+
   # Figure frames, for a style that rules or frames its figures.
   if (isTRUE(s$figure$style %in% c("ruled", "inset"))) {
     pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "figure.lua"))
@@ -1418,6 +1484,7 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
   # tables into floats that stay whole and leaves long ones as longtable.
   pargs <- c(pargs, "--lua-filter", dd_pkg_file("engine", "tables.lua"),
              "--metadata", paste0("dd-columns=", cols),
+             if (identical(s$markup$floats, FALSE)) c("--metadata", "dd-tables-float=false"),
              "--metadata", paste0("dd-table-style=", s$table$style %||% "booktabs"),
              if (!identical(s$table$style %||% "booktabs", "booktabs")) {
                zc <- s$table$zebra_color %||% (if (identical(s$table$style, "zebra")) "rule!15" else NULL)
@@ -1443,10 +1510,15 @@ pdf <- function(..., style = "minimal", doublespace = FALSE, title_layout = NULL
                "--lua-filter", dd_pkg_file("engine", "thesis.lua"))
   }
 
-  rmarkdown::pdf_document(...,
+  base <- rmarkdown::pdf_document(...,
     template = dd_pkg_file("templates", "docdesigner.tex"),
     latex_engine = "xelatex",
     number_sections = isTRUE(s$headings$number_sections),
     includes = rmarkdown::includes(in_header = header),
     pandoc_args = pargs)
+  # Per-render stamps (version, date, warning: auto, the changebar reference)
+  # depend on the input file, which only rmarkdown's pre-processor sees.
+  rmarkdown::output_format(knitr = NULL, pandoc = NULL,
+    pre_processor = dd_pre_processor(s, version, changes_since),
+    base_format = base)
 }

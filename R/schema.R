@@ -239,14 +239,23 @@ designer_validate_style <- function(style) {
     add(key = "page.margin", severity = "warning",
         message = "is overridden by page.margins.*; setting both is redundant")
   }
+  # Margin markup is drawn in the margins, so it needs a single column.
+  markup_on <- dd_markup_on(raw)
+  if (markup_on && identical(as.integer(g("page.columns", 1L)), 2L)) {
+    add(key = "page.columns", severity = "warning",
+        message = "margin markup (markup.*) needs a single-column page")
+  }
   # House cap on margins. The thesis layout is exempt: colleges set its
-  # binding margin (1.5in at Queens College).
+  # binding margin (1.5in at Queens College). So is the OUTER margin of a
+  # markup style: there the margin is a workspace for handwritten notes, line
+  # numbers and flags, not a page proportion.
   if (!identical(g("title.layout"), "thesis")) {
     if (identical(g("page.margin"), "wide")) {
       add(key = "page.margin", severity = "warning",
           message = "wide (1.35in) exceeds the 1.25in margin cap")
     }
-    for (side in c("top", "bottom", "inner", "outer")) {
+    sides <- c("top", "bottom", "inner", if (!markup_on) "outer")
+    for (side in sides) {
       k <- paste0("page.margins.", side)
       v <- g(k)
       if (is.numeric(v) && v > 1.25) {
@@ -346,4 +355,15 @@ designer_tokens <- function() {
                stringsAsFactors = FALSE)
   })
   do.call(rbind, rows)
+}
+
+# TRUE when a style's own tokens switch on any margin markup. floats and
+# flag_color only modify the page; they mark nothing.
+dd_markup_on <- function(raw) {
+  keys <- c("markup.line_numbers", "markup.paragraph_numbers", "markup.flags",
+            "markup.cite_keys", "markup.map", "markup.claim_check", "markup.changebars")
+  any(vapply(keys, function(k) {
+    v <- raw[[k]]
+    !is.null(v) && (isTRUE(v) || (is.numeric(v) && v > 0))
+  }, logical(1)))
 }
