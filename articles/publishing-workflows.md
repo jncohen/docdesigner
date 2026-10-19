@@ -1,0 +1,53 @@
+# Publishing Workflows
+
+`docdesigner` supports three publishing paths:
+
+- [`docdesigner::pdf`](https://jncohen.github.io/docdesigner/reference/pdf.md)
+  for designed PDF documents.
+- [`docdesigner::html`](https://jncohen.github.io/docdesigner/reference/html.md)
+  for plain body HTML that can be pasted into a CMS.
+
+## Designed PDF
+
+Use this for reports, papers, briefs, technical notes, and other general
+documents.
+
+``` yaml
+---
+title: "Document Title"
+author: "Your Name"
+output:
+  docdesigner::pdf:
+    style: policy
+---
+```
+
+Choose a style with
+[`docdesigner::designer_styles()`](https://jncohen.github.io/docdesigner/reference/designer_styles.md).
+Styles apply only to general PDFs.
+
+## Plain HTML
+
+Use this when the target is a web editor such as WordPress.
+
+``` yaml
+---
+title: "Article Title"
+author: "Your Name"
+output:
+  docdesigner::html
+---
+```
+
+The HTML output is intentionally plain. It is a paste source, not a web
+theme.
+
+## Handoff Checks
+
+Before sharing:
+
+1.  Render the document.
+2.  Open the PDF or HTML output locally.
+3.  Confirm figures, tables, citations, and links.
+4.  Upload copied image assets to the CMS media library when using HTML.
+5.  Preview the web post on desktop and mobile.
