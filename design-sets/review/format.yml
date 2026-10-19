@@ -4,14 +4,14 @@
 # on the same page. Not a publication look. Every choice serves reading
 # slowly, writing on the page, and finding each mark again in the source.
 #
-#   * A 3in outer margin is the workspace; insertions are written there and in
-#     the space between paragraphs. Paragraphs are separated by space, not
+#   * A 3in right margin, on every page, is the workspace; insertions are
+#     written there and in the space between paragraphs. Paragraphs are separated by space, not
 #     indent, for the same reason.
 #   * Short measure (about 55 characters), generous leading, ragged right, no
 #     hyphenation: slower reading, stable line breaks, and every hyphen on the
 #     page is in the text.
-#   * Line numbers (every 5th, outer margin, per page) and paragraph numbers
-#     (inner margin, continuous) let a mark on paper be found in the source,
+#   * Line numbers (every 5th, right margin, per page) and paragraph numbers
+#     (left margin, continuous) let a mark on paper be found in the source,
 #     and a coauthor's note on paragraph 14 find paragraph 14 in the next version.
 #   * The headings map the argument: the body opens with a table of every
 #     claim, its words and its page; the running head names the section's
@@ -34,11 +34,11 @@ description: >
 
 # ---- page -----------------------------------------------------------------
 page.papersize: letter
-page.twoside: true
+page.twoside: false             # the wide margin is always on the right
 page.margins.top: 1.0
 page.margins.bottom: 1.0
-page.margins.inner: 1.25
-page.margins.outer: 3.0
+page.margins.inner: 1.25        # left
+page.margins.outer: 3.0         # right: the writing margin
 page.columns: 1
 
 # ---- typography -----------------------------------------------------------
@@ -81,8 +81,7 @@ title.rule.position: below
 title.rule.weight: medium
 title.warning.auto: true
 
-# ---- running heads: section claim and folio outside, stamp inside ----------
-header_footer.alternate: true
+# ---- running heads: section claim and folio right, stamp left -------------
 header_footer.section_chars: 60
 header_footer.header.right: section
 header_footer.header.rule: true

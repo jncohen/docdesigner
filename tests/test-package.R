@@ -265,8 +265,21 @@ stopifnot(grepl("\\modulolinenumbers[5]", pre_rv, fixed = TRUE),
 stopifnot(regexpr("{float}", pre_rv, fixed = TRUE) < regexpr("{changebar}", pre_rv, fixed = TRUE))
 # lineno by command, never by package option: fvextra may load it first.
 stopifnot(!grepl("]{lineno}", pre_rv, fixed = TRUE))
-# alternate: under twoside, `right` is the outer edge on every page.
-stopifnot(grepl("\\fancyfoot[RO,LE]", pre_rv, fixed = TRUE))
+# review is one-sided: the writing margin, line numbers, flags and bars are
+# always on the right, paragraph numbers always on the left.
+stopifnot(!isTRUE(rv$page$twoside),
+          grepl("\\rightlinenumbers", pre_rv, fixed = TRUE),
+          grepl("rightbars", pre_rv, fixed = TRUE),
+          !grepl("changepage", pre_rv, fixed = TRUE),
+          grepl("\\fancyfoot[R]", pre_rv, fixed = TRUE))
+# alternate: under twoside, `right` is the outer edge on every page, and the
+# markup follows the outer margin.
+two <- rv; two$page$twoside <- TRUE; two$header_footer$alternate <- TRUE
+pre_two <- docdesigner:::dd_preamble(two)
+stopifnot(grepl("\\fancyfoot[RO,LE]", pre_two, fixed = TRUE),
+          grepl("\\switchlinenumbers", pre_two, fixed = TRUE),
+          grepl("outerbars", pre_two, fixed = TRUE),
+          grepl("changepage", pre_two, fixed = TRUE))
 # Margin-note room comes from the outer margin.
 stopifnot("marginparwidth=2.35in" %in% docdesigner:::dd_geometry_opts(rv))
 # pdf(markup = ) overrides one render; an unknown key is caught.

@@ -173,10 +173,10 @@ output:
 ---
 ```
 
-- A 3in outer margin, and space between paragraphs, for handwritten
-  insertions. A short ragged measure with no hyphenation.
-- Line numbers (every 5th, restarting on each page) in the outer margin and
-  paragraph numbers in the inner one, so "p. 7, l. 15" or "para. 14" names a
+- A 3in right margin on every page, and space between paragraphs, for
+  handwritten insertions. A short ragged measure with no hyphenation.
+- Line numbers (every 5th, restarting on each page) in the right margin and
+  paragraph numbers in the left one, so "p. 7, l. 15" or "para. 14" names a
   spot in this printout and the next.
 - The body opens with a **map of the argument**: every heading to two levels,
   its words and its page. Write headings as claims; a heading of fewer than

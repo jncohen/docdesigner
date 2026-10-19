@@ -1,7 +1,8 @@
 # docdesigner (development version)
 
 - **New style: `review`.** A working draft printed to be read and marked up by
-  hand, in the academic set. A 3in outer margin and space between paragraphs
+  hand, in the academic set. A 3in right-hand margin on every page and space
+  between paragraphs
   for handwritten insertions; a short, ragged, unhyphenated measure; line
   numbers (every 5th, per page) and paragraph numbers (continuous) to find a
   mark again in the source; a map of the argument (every heading, its words
@@ -27,7 +28,8 @@
 - **New running-head values and tokens.** `folio` prints page of pages;
   `stamp` the running title, version and date. `header_footer.alternate`
   mirrors the slots under `page.twoside`, so `right` is always the outer
-  edge. `header_footer.section_chars` makes `section` name the first level-1
+  edge, and the markup (line numbers, flags, changebars) follows the outer
+  margin; one-sided, it stays on the right. `header_footer.section_chars` makes `section` name the first level-1
   section starting on the page (else the one carried over), numbered and cut
   to length. `title.warning.auto`, or `warning: auto` in the document, prints
   a stamped "Review draft" line.

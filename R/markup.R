@@ -46,6 +46,10 @@ dd_markup_geometry <- function(s, outer_in) {
 dd_markup_preamble <- function(s) {
   m <- s$markup %||% list()
   L <- character()
+  # Two-sided: notes, numbers and bars sit in the OUTER margin, which
+  # alternates. One-sided: the outer margin is always the right one, and
+  # paragraph numbers always sit at the left.
+  twoside <- isTRUE(s$page$twoside)
   ln <- as.integer(m$line_numbers %||% 0L)
   if (ln > 0L) {
     # switch: outer margin under twoside. pagewise: 5, 10, 15 on every page,
@@ -56,7 +60,8 @@ dd_markup_preamble <- function(s) {
            paste0("\\modulolinenumbers[", ln, "]"),
            "\\renewcommand{\\linenumberfont}{\\normalfont\\fontsize{7}{8}\\selectfont\\color{muted}}",
            "\\setlength{\\linenumbersep}{1.1em}",
-           "\\AtBeginDocument{\\switchlinenumbers\\pagewiselinenumbers}")
+           paste0("\\AtBeginDocument{", if (twoside) "\\switchlinenumbers" else "\\rightlinenumbers*",
+                  "\\pagewiselinenumbers}"))
   }
   if (dd_markup_notes(s)) {
     # \marginpar, not marginnote: lineno re-sets every numbered paragraph,
@@ -75,12 +80,17 @@ dd_markup_preamble <- function(s) {
       # note is written. So the number is set beside the first line directly,
       # left or right as changepage reports the page odd or even (it settles
       # on the second pass, which every render makes).
-      "\\usepackage{changepage}\\strictpagecheck",
+      if (twoside) "\\usepackage{changepage}\\strictpagecheck",
       "\\newlength{\\ddparsep}\\setlength{\\ddparsep}{1.6em}",
-      paste0("\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode\\checkoddpage",
-             "\\def\\ddpn{{\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}}",
-             "\\ifoddpage\\llap{\\ddpn\\hspace{\\ddparsep}}",
-             "\\else\\rlap{\\hspace{\\linewidth}\\hspace{\\ddparsep}\\ddpn}\\fi\\fi}"),
+      if (twoside) {
+        paste0("\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode\\checkoddpage",
+               "\\def\\ddpn{{\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}}",
+               "\\ifoddpage\\llap{\\ddpn\\hspace{\\ddparsep}}",
+               "\\else\\rlap{\\hspace{\\linewidth}\\hspace{\\ddparsep}\\ddpn}\\fi\\fi}")
+      } else {
+        paste0("\\newcommand{\\ddparnum}[1]{\\ifinner\\else\\leavevmode",
+               "\\llap{{\\ddlabelfont\\footnotesize\\color{muted}\\P\\thinspace#1}\\hspace{\\ddparsep}}\\fi}")
+      },
       "\\newcommand{\\ddflag}[1]{\\ifinner{\\ddlabelfont\\footnotesize\\color{ddflag}[#1]}\\else\\ddnote{\\color{ddflag}\\textbf{#1}}\\fi}",
       "\\newcommand{\\ddflagtext}[1]{\\textcolor{ddflag}{#1}}",
       # A heading's flag rides on the paragraph under it, raised to the
@@ -99,7 +109,7 @@ dd_markup_preamble <- function(s) {
   if (isTRUE(m$changebars)) {
     # outerbars: the bar sits between the text and the line numbers, on the
     # side where the notes are written.
-    L <- c(L, "\\usepackage[xetex,outerbars,color]{changebar}",
+    L <- c(L, paste0("\\usepackage[xetex,", if (twoside) "outerbars" else "rightbars", ",color]{changebar}"),
            "\\setlength{\\changebarsep}{0.45em}\\setlength{\\changebarwidth}{1.5pt}",
            "\\cbcolor{accent}")
   }
