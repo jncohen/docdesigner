@@ -8,8 +8,9 @@ Driven by metadata pdf() sets from the markup.* tokens:
                         in \cbstart ... \cbend
   dd-changes-ref        path to the reference text (pdf()'s pre-processor)
   dd-markup-flags       true: [[TAG]] and [[TAG: words]] become margin tags;
-                        [[V]], [[C]] and [[F]] are short for VERIFY,
-                        CITATION NEEDED and FACT CHECK
+                        [[V]], [[C]], [[F]], [[N]] and [[Q]] are short for
+                        VERIFY, CITATION NEEDED, FACT CHECK, RECOMPUTE
+                        and QUESTION
   dd-markup-citekeys    true: each citation is followed by its key
 
 Paragraphs are compared and numbered BEFORE anything is added to them. Only
@@ -23,11 +24,13 @@ local stringify = pandoc.utils.stringify
 
 -- Each tag and the label it prints in the margin.
 local TAGS = { TODO = "TODO", CITE = "CITATION NEEDED", WEAK = "WEAK", CUT = "CUT",
-               CHECK = "CHECK", FIX = "FIX", VERIFY = "VERIFY", FACT = "FACT CHECK" }
+               CHECK = "CHECK", FIX = "FIX", VERIFY = "VERIFY", FACT = "FACT CHECK",
+               RECOMPUTE = "RECOMPUTE", QUESTION = "QUESTION" }
 -- One-letter forms for the tags written most often while drafting: a
 -- citation to check against its source, a claim with no citation, a fact to
--- confirm. Each stays in the margin until the tag is removed.
-local ALIAS = { V = "VERIFY", C = "CITE", F = "FACT" }
+-- confirm, a number to recompute, a question for a coauthor. Each stays in
+-- the margin until the tag is removed.
+local ALIAS = { V = "VERIFY", C = "CITE", F = "FACT", N = "RECOMPUTE", Q = "QUESTION" }
 
 local function raw(s) return pandoc.RawInline("latex", s) end
 

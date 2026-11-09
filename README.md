@@ -183,14 +183,8 @@ output:
   four words is flagged `LABEL?` in the margin.
 - The running head names the section's claim; the foot stamps the title, the
   git version (`+` when the file has uncommitted changes) and the date.
-- `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]`,
-  `[[FIX]]`, `[[VERIFY]]` and `[[FACT]]` in the text print as margin tags.
-  Three have one-letter forms for the checks a draft needs most: `[[V]]`
-  prints VERIFY after a citation not yet checked against its source,
-  `[[C]]` prints CITATION NEEDED, `[[F]]` prints FACT CHECK. Each stays in
-  the margin until you remove the tag. Leave a space between a citation and
-  its tag: `[@key] [[V]]` or `@key [[V]]`, not `[@key][[V]]`. Citation keys
-  print after citations.
+- `[[TAG]]` in the text prints as a margin tag; see [Margin
+  tags](#margin-tags) below. Citation keys print after citations.
 - **Changebars** mark every paragraph changed since the latest git tag, or
   since `changes_since`. They compare prose, ignoring inline R code,
   citations and numbers, so an `.Rmd` reference works as it is.
@@ -199,6 +193,31 @@ output:
 Each feature is a `markup.*` token, off in every other style, and
 `markup = list(...)` turns one off for a single render:
 `docdesigner::pdf(style = "review", markup = list(line_numbers = 0))`.
+
+### Margin tags
+
+A tag written in the text prints in the right margin beside its line, and
+stays there on every printout until you remove it from the source. Any tag
+takes a note, `[[TAG: words]]`, which prints inline in the tag colour.
+
+| Tag | Short form | Prints | Use it for |
+|---|---|---|---|
+| `[[VERIFY]]` | `[[V]]` | VERIFY | a citation not yet checked against its source |
+| `[[CITE]]` | `[[C]]` | CITATION NEEDED | a claim with no citation |
+| `[[FACT]]` | `[[F]]` | FACT CHECK | a fact to confirm |
+| `[[RECOMPUTE]]` | `[[N]]` | RECOMPUTE | a number whose data or model may change |
+| `[[QUESTION]]` | `[[Q]]` | QUESTION | a point to put to a coauthor |
+| `[[TODO]]` | | TODO | work still to do |
+| `[[WEAK]]` | | WEAK | an argument that does not yet hold |
+| `[[CUT]]` | | CUT | a passage to consider removing |
+| `[[CHECK]]` | | CHECK | anything else to look at again |
+| `[[FIX]]` | | FIX | a known error |
+
+Leave a space between a citation and its tag: `[@key] [[V]]` or `@key [[V]]`,
+not `[@key][[V]]`, which Markdown reads as a link. Text in double brackets
+that is not a tag, like `[[not a tag]]`, prints as written. The tags are
+part of `markup.flags`, so they print only in a style that turns it on; in
+every other style they appear in the text as typed.
 
 ## Styles and style sets
 

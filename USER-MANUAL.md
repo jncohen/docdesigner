@@ -312,12 +312,15 @@ output:
 ```
 
 In the text, `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]`,
-`[[FIX]]`, `[[VERIFY]]` and `[[FACT]]` print as margin tags. Three have
-one-letter forms for the checks a draft needs most: `[[V]]` prints VERIFY
-after a citation not yet checked against its source, `[[C]]` prints CITATION
-NEEDED, `[[F]]` prints FACT CHECK. Each stays in the margin until you remove
-the tag. Leave a space between a citation and its tag: `[@key] [[V]]` or
-`@key [[V]]`, not `[@key][[V]]`. Write headings as claims: a heading of
+`[[FIX]]`, `[[VERIFY]]`, `[[FACT]]`, `[[RECOMPUTE]]` and `[[QUESTION]]` print
+as margin tags. Five have one-letter forms for the checks a draft needs most:
+`[[V]]` prints VERIFY after a citation not yet checked against its source,
+`[[C]]` prints CITATION NEEDED, `[[F]]` prints FACT CHECK, `[[N]]` prints
+RECOMPUTE beside a number whose data or model may change, `[[Q]]` prints
+QUESTION for a point to put to a coauthor. Each stays in the margin until
+you remove the tag. Leave a space between a citation and its tag:
+`[@key] [[V]]` or `@key [[V]]`, not `[@key][[V]]`. Write headings as claims:
+a heading of
 fewer than four words is flagged `LABEL?`. `warning: auto` prints a stamped
 "Review draft" line with the git version and date.
 

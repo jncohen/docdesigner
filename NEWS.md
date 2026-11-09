@@ -3,8 +3,10 @@
 - **New margin tags with one-letter forms.** `[[V]]` (`[[VERIFY]]`) prints
   VERIFY after a citation not yet checked against its source; `[[C]]`
   (`[[CITE]]`) prints CITATION NEEDED; `[[F]]` (`[[FACT]]`) prints FACT
-  CHECK. Each stays in the margin of a `review` printout until the tag is
-  removed. `[[CITE]]` now prints CITATION NEEDED rather than CITE. Like the
+  CHECK; `[[N]]` (`[[RECOMPUTE]]`) marks a number whose data or model may
+  change, which changebars do not track; `[[Q]]` (`[[QUESTION]]`) marks a
+  point for a coauthor. Each stays in the margin of a `review` printout
+  until the tag is removed. `[[CITE]]` now prints CITATION NEEDED rather than CITE. Like the
   other tags, `[[V: words]]` keeps the words inline.
 - **New style: `review`.** A working draft printed to be read and marked up by
   hand, in the academic set. A 3in right-hand margin on every page and space

@@ -321,6 +321,7 @@ if (rmarkdown::pandoc_available("3.1.8")) {
                       "Bare tag here [[CITE]], then text.",
                       "Cited [@key2020][[V]] and [@key2020] [[VERIFY: page?]] again.",
                       "A claim [[C]] and a figure [[F: recount]].",
+                      "Up 12% [[N]] since 2019 [[Q: which wave?]]",
                       "As @key2020 [[V]] shows, and @key2020 [p. 3] says."),
                     "markup.lua",
                     c("dd-markup-parnum=true", "dd-markup-flags=true", "dd-markup-citekeys=true",
@@ -333,6 +334,8 @@ if (rmarkdown::pandoc_available("3.1.8")) {
             grepl("\\ddflag{VERIFY}\\ddflagtext{page?}", out, fixed = TRUE),
             grepl("\\ddflag{CITATION NEEDED}and", out, fixed = TRUE),   # [[C]] is [[CITE]]
             grepl("\\ddflag{FACT CHECK}\\ddflagtext{recount}", out, fixed = TRUE),
+            grepl("\\ddflag{RECOMPUTE}", out, fixed = TRUE),
+            grepl("\\ddflag{QUESTION}\\ddflagtext{which wave?}", out, fixed = TRUE),
             # A tag after an in-text citation is pandoc's "suffix": it comes back
             # out as a flag, and a real suffix stays.
             grepl("@key2020\\ddcitekey{\\detokenize{key2020}}\\ddflag{VERIFY}", out, fixed = TRUE),
