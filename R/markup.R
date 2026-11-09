@@ -74,7 +74,10 @@ dd_markup_preamble <- function(s) {
     L <- c(L,
       paste0("\\colorlet{ddflag}{", m$flag_color %||% "accent", "}"),
       "\\newcommand{\\ddnote}[2][0pt]{\\ifinner\\else\\leavevmode\\marginpar[\\raggedleft\\ddnotebox{#1}{#2}]{\\raggedright\\ddnotebox{#1}{#2}}\\fi}",
-      "\\newcommand{\\ddnotebox}[2]{\\raisebox{#1}[0pt][0pt]{\\ddlabelfont\\footnotesize #2}}",
+      # The box keeps its natural height: LaTeX stacks a second note on the
+      # same line below the first only by what the first occupies, so a
+      # zero-height box would leave the two printed over each other.
+      "\\newcommand{\\ddnotebox}[2]{\\raisebox{#1}{\\ddlabelfont\\footnotesize #2}}",
       # Paragraph numbers go in the INNER margin. \\reversemarginpar cannot
       # put them there: LaTeX reads it when the page is shipped, not where the
       # note is written. So the number is set beside the first line directly,

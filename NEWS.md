@@ -8,6 +8,10 @@
   point for a coauthor. Each stays in the margin of a `review` printout
   until the tag is removed. `[[CITE]]` now prints CITATION NEEDED rather than CITE. Like the
   other tags, `[[V: words]]` keeps the words inline.
+- **Margin tags on one line stack.** Two tags on the same printed line were
+  set over each other; the second now sits below the first, and a tag on
+  the next line moves down with it. The note box had no height, so LaTeX
+  had nothing to stack against.
 - **New style: `review`.** A working draft printed to be read and marked up by
   hand, in the academic set. A 3in right-hand margin on every page and space
   between paragraphs
