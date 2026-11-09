@@ -318,13 +318,25 @@ if (rmarkdown::pandoc_available("3.1.8")) {
                "A paragraph about to change.", "", "```{r}", "y <- 2", "```"), ref)
   out <- run_filter(c("An unchanged paragraph, cited [@key2020].", "",
                       "A paragraph now changed. [[TODO: check this]]", "",
-                      "Bare tag here [[CITE]], then text."),
+                      "Bare tag here [[CITE]], then text.",
+                      "Cited [@key2020][[V]] and [@key2020] [[VERIFY: page?]] again.",
+                      "A claim [[C]] and a figure [[F: recount]].",
+                      "As @key2020 [[V]] shows, and @key2020 [p. 3] says."),
                     "markup.lua",
                     c("dd-markup-parnum=true", "dd-markup-flags=true", "dd-markup-citekeys=true",
                       "dd-markup-changebars=true", paste0("dd-changes-ref=", ref)))
   stopifnot(grepl("\\ddparnum{1}", out, fixed = TRUE), grepl("\\ddparnum{3}", out, fixed = TRUE),
             grepl("\\ddflag{TODO}\\ddflagtext{check this}", out, fixed = TRUE),
-            grepl("here\\ddflag{CITE},", out, fixed = TRUE),          # no space before the comma
+            grepl("here\\ddflag{CITATION NEEDED},", out, fixed = TRUE), # no space before the comma
+            grepl("\\ddflag{VERIFY} and", out, fixed = TRUE),          # [[V]] is [[VERIFY]]
+            !grepl("\\ddflag{V}", out, fixed = TRUE),
+            grepl("\\ddflag{VERIFY}\\ddflagtext{page?}", out, fixed = TRUE),
+            grepl("\\ddflag{CITATION NEEDED}and", out, fixed = TRUE),   # [[C]] is [[CITE]]
+            grepl("\\ddflag{FACT CHECK}\\ddflagtext{recount}", out, fixed = TRUE),
+            # A tag after an in-text citation is pandoc's "suffix": it comes back
+            # out as a flag, and a real suffix stays.
+            grepl("@key2020\\ddcitekey{\\detokenize{key2020}}\\ddflag{VERIFY}", out, fixed = TRUE),
+            grepl("3{]}\\ddcitekey{\\detokenize{key2020}}", out, fixed = TRUE),
             grepl("\\ddcitekey{\\detokenize{key2020}}", out, fixed = TRUE))
   # Only the changed and the new paragraphs carry changebars: the reference's
   # chunks are skipped, and its citation is ignored in the comparison.

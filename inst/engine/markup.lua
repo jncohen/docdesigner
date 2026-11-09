@@ -7,7 +7,9 @@ Driven by metadata pdf() sets from the markup.* tokens:
   dd-markup-changebars  true: wrap paragraphs absent from the reference text
                         in \cbstart ... \cbend
   dd-changes-ref        path to the reference text (pdf()'s pre-processor)
-  dd-markup-flags       true: [[TAG]] and [[TAG: words]] become margin tags
+  dd-markup-flags       true: [[TAG]] and [[TAG: words]] become margin tags;
+                        [[V]], [[C]] and [[F]] are short for VERIFY,
+                        CITATION NEEDED and FACT CHECK
   dd-markup-citekeys    true: each citation is followed by its key
 
 Paragraphs are compared and numbered BEFORE anything is added to them. Only
@@ -19,7 +21,13 @@ The macros are defined by dd_markup_preamble() in R/markup.R.
 
 local stringify = pandoc.utils.stringify
 
-local TAGS = { TODO = true, CITE = true, WEAK = true, CUT = true, CHECK = true, FIX = true }
+-- Each tag and the label it prints in the margin.
+local TAGS = { TODO = "TODO", CITE = "CITATION NEEDED", WEAK = "WEAK", CUT = "CUT",
+               CHECK = "CHECK", FIX = "FIX", VERIFY = "VERIFY", FACT = "FACT CHECK" }
+-- One-letter forms for the tags written most often while drafting: a
+-- citation to check against its source, a claim with no citation, a fact to
+-- confirm. Each stays in the margin until the tag is removed.
+local ALIAS = { V = "VERIFY", C = "CITE", F = "FACT" }
 
 local function raw(s) return pandoc.RawInline("latex", s) end
 
@@ -135,8 +143,9 @@ local function make_flag(inner)
     tag = first.text:match("^(%u+%??)$")
     if not tag or #inner > 1 then return nil end
   end
+  tag = ALIAS[tag] or tag
   if not TAGS[tag] then return nil end
-  local out = pandoc.Inlines({ raw("\\ddflag{" .. tag .. "}") })
+  local out = pandoc.Inlines({ raw("\\ddflag{" .. TAGS[tag] .. "}") })
   local words = pandoc.Inlines({})
   if rest and rest ~= "" then words:insert(pandoc.Str(rest)) end
   for k = 2, #inner do
@@ -149,6 +158,46 @@ local function make_flag(inner)
     out:insert(raw("}"))
   end
   return out
+end
+
+-- A tag written after an in-text citation ("@key [[V]]") is read by pandoc
+-- as the citation's suffix, "[V]", and would print inside the parentheses.
+-- Take it back out: the suffix goes, the flag follows the citation. A
+-- suffix that is not a tag ("@key [p. 3]") is left alone.
+local function cite_flag(c)
+  local n = #c.citations
+  if n == 0 then return nil end
+  local suf = c.citations[n].suffix
+  if not suf or #suf == 0 then return nil end
+  local first, last = suf[1], suf[#suf]
+  if first.t ~= "Str" or last.t ~= "Str" then return nil end
+  if first.text:sub(1, 1) ~= "[" or last.text:sub(-1) ~= "]" then return nil end
+  local inner = {}
+  for i, x in ipairs(suf) do
+    if x.t == "Str" then
+      local t = x.text
+      if i == 1 then t = t:sub(2) end
+      if i == #suf then t = t:sub(1, -2) end
+      inner[i] = pandoc.Str(t)
+    else
+      inner[i] = x
+    end
+  end
+  local flag = make_flag(inner)
+  if not flag then return nil end
+  c.citations[n].suffix = pandoc.Inlines({})
+  -- Without citeproc the citation prints as written, so drop the tag from
+  -- its text too (and the space before it).
+  local content = pandoc.Inlines({})
+  for _, x in ipairs(c.content) do
+    if x.t == "Str" and x.text:find("[[", 1, true) == 1 then break end
+    content:insert(x)
+  end
+  while #content > 0 and (content[#content].t == "Space" or content[#content].t == "SoftBreak") do
+    content:remove(#content)
+  end
+  c.content = content
+  return flag
 end
 
 local function flag_inlines(inls)
@@ -265,11 +314,17 @@ function Pandoc(doc)
     walkers.Para = function(p) local c = flag_inlines(p.content); if c then p.content = c; return p end end
     walkers.Plain = function(p) local c = flag_inlines(p.content); if c then p.content = c; return p end end
   end
-  if citekeys then
+  if flags or citekeys then
     walkers.Cite = function(c)
-      local keys = {}
-      for _, ct in ipairs(c.citations) do keys[#keys + 1] = ct.id end
-      return { c, raw("\\ddcitekey{\\detokenize{" .. table.concat(keys, ", ") .. "}}") }
+      local flag = flags and cite_flag(c) or nil
+      local out = pandoc.Inlines({ c })
+      if citekeys then
+        local keys = {}
+        for _, ct in ipairs(c.citations) do keys[#keys + 1] = ct.id end
+        out:insert(raw("\\ddcitekey{\\detokenize{" .. table.concat(keys, ", ") .. "}}"))
+      end
+      if flag then out:extend(flag) end
+      return out
     end
   end
   if next(walkers) then doc = doc:walk(walkers) end

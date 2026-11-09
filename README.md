@@ -183,9 +183,14 @@ output:
   four words is flagged `LABEL?` in the margin.
 - The running head names the section's claim; the foot stamps the title, the
   git version (`+` when the file has uncommitted changes) and the date.
-- `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]` and
-  `[[FIX]]` in the text print as margin tags. Citation keys print after
-  citations.
+- `[[TODO: words]]`, `[[CITE]]`, `[[WEAK]]`, `[[CUT]]`, `[[CHECK]]`,
+  `[[FIX]]`, `[[VERIFY]]` and `[[FACT]]` in the text print as margin tags.
+  Three have one-letter forms for the checks a draft needs most: `[[V]]`
+  prints VERIFY after a citation not yet checked against its source,
+  `[[C]]` prints CITATION NEEDED, `[[F]]` prints FACT CHECK. Each stays in
+  the margin until you remove the tag. Leave a space between a citation and
+  its tag: `[@key] [[V]]` or `@key [[V]]`, not `[@key][[V]]`. Citation keys
+  print after citations.
 - **Changebars** mark every paragraph changed since the latest git tag, or
   since `changes_since`. They compare prose, ignoring inline R code,
   citations and numbers, so an `.Rmd` reference works as it is.

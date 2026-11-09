@@ -114,7 +114,7 @@ Marriage pools two incomes and two sets of assets, and divorce divides them,
 often along with the costs of setting up a second household. Divorced people
 have long been found to hold less wealth than married people, and the gap
 grows with the years of marriage that precede it [@zagorsky2005].
-[[CHECK: still the estimate most often cited?]] This note
+[[F: still the estimate most often cited?]] This note
 describes the gap in the most recent Survey of Consumer Finances, the Federal
 Reserve's triennial survey of household balance sheets [@aladangady2023].
 
@@ -220,7 +220,7 @@ knitr::kable(rows, format = "pipe", row.names = FALSE, align = "lrr",
 
 # Conclusion
 
-In 2022, as in earlier work [[CITE]], divorced households held far less
+In 2022, as in earlier work [[C]], divorced households held far less
 wealth than married ones, and the usual suspects (age, education and income)
 explain only part of the gap. These data cannot say how much of it divorce
 causes and how much reflects who divorces. [[WEAK]] Two questions follow:
