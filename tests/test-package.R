@@ -322,7 +322,8 @@ if (rmarkdown::pandoc_available("3.1.8")) {
                       "Cited [@key2020][[V]] and [@key2020] [[VERIFY: page?]] again.",
                       "A claim [[C]] and a figure [[F: recount]].",
                       "Up 12% [[N]] since 2019 [[Q: which wave?]]",
-                      "As @key2020 [[V]] shows, and @key2020 [p. 3] says."),
+                      "As @key2020 [[V]] shows, and @key2020 [p. 3] says.",
+                      "A tag after a line break", "[[WEAK]]. Then more."),
                     "markup.lua",
                     c("dd-markup-parnum=true", "dd-markup-flags=true", "dd-markup-citekeys=true",
                       "dd-markup-changebars=true", paste0("dd-changes-ref=", ref)))
@@ -340,6 +341,7 @@ if (rmarkdown::pandoc_available("3.1.8")) {
             # out as a flag, and a real suffix stays.
             grepl("@key2020\\ddcitekey{\\detokenize{key2020}}\\ddflag{VERIFY}", out, fixed = TRUE),
             grepl("3{]}\\ddcitekey{\\detokenize{key2020}}", out, fixed = TRUE),
+            grepl("break\\ddflag{WEAK}.", out, fixed = TRUE),              # no space before the period
             grepl("\\ddcitekey{\\detokenize{key2020}}", out, fixed = TRUE))
   # Only the changed and the new paragraphs carry changebars: the reference's
   # chunks are skipped, and its citation is ignored in the comparison.

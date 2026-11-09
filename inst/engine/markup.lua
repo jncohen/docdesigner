@@ -219,9 +219,10 @@ local function flag_inlines(inls)
       else
         local inner = { table.unpack(toks, i + 1, j - 1) }
         local flag = make_flag(inner)
-        if flag and #flag == 1 and #res > 0 and res[#res].t == "Space" then
+        if flag and #flag == 1 and #res > 0 and (res[#res].t == "Space" or res[#res].t == "SoftBreak") then
           -- A bare tag leaves nothing in the text, so it must not leave a
-          -- doubled space or a space before punctuation either.
+          -- doubled space or a space before punctuation either. A line
+          -- break in the source before the tag counts as a space.
           local nxt = toks[j + 1]
           if nxt and not is_marker(nxt) and nxt.t == "Space" then
             j = j + 1
