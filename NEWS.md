@@ -8,6 +8,12 @@
   point for a coauthor. Each stays in the margin of a `review` printout
   until the tag is removed. `[[CITE]]` now prints CITATION NEEDED rather than CITE. Like the
   other tags, `[[V: words]]` keeps the words inline.
+- **New: `designer_ai_context()`.** Writes a folder of context for designing
+  a style with an AI assistant: instructions for the assistant, the design
+  brief, the token table, shipped styles as commented examples, a test
+  document, and `check-style.R`, which validates a style, renders it and
+  writes every page as an image. *Creating a style* now assumes a person and
+  an AI working together and lists what to load into the assistant's context.
 - **Building styles with an AI.** *Creating a style* has two new sections:
   how to have an AI assistant write a style (give it the brief and a
   scaffold, make it validate and look at the render), and what makes a

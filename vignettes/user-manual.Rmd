@@ -25,7 +25,7 @@ docdesigner::designer_use(template = "html")
 
 Use `docdesigner::designer_styles()` to inspect built-in PDF styles. Use `docdesigner::designer_gallery()` to write a local HTML style gallery, or `docdesigner::designer_specimens()` to render a specimen PDF of every style.
 
-A style is a `format.yml` file of design tokens. Scaffold one with `docdesigner::designer_new_style()`, check it with `docdesigner::designer_validate_style()`, and see `docdesigner::designer_tokens()` for the full token vocabulary. The *Creating a style* article covers the workflow and the principles of a good style.
+A style is a `format.yml` file of design tokens. Scaffold one with `docdesigner::designer_new_style()`, check it with `docdesigner::designer_validate_style()`, and see `docdesigner::designer_tokens()` for the full token vocabulary. To design a style with an AI assistant, start with `docdesigner::designer_ai_context()`, which writes the files that make an assistant accurate. The *Creating a style* article covers the workflow and the principles of a good style.
 
 ## Update Local Assets
 

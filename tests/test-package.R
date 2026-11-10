@@ -728,3 +728,22 @@ if (requireNamespace("rmarkdown", quietly = TRUE) && rmarkdown::pandoc_available
 # The style's kicker is the default; a style without one defines it empty.
 stopifnot(has(docdesigner:::dd_preamble(designer_style("policy")), "\\def\\ddkickertext{Policy Brief}"),
           has(docdesigner:::dd_preamble(designer_style("modern")), "\\def\\ddkickertext{}"))
+
+# --- The AI context folder ---------------------------------------------------
+ctx <- file.path(tempdir(), "dd-context")
+unlink(ctx, recursive = TRUE)
+suppressMessages(designer_ai_context(ctx, from = "minimal", examples = "review"))
+stopifnot(all(file.exists(file.path(ctx, c("AI-INSTRUCTIONS.md", "brief.md", "tokens.csv",
+                                           "specimen.md", "check-style.R",
+                                           "examples/minimal.yml", "examples/review.yml")))))
+stopifnot(nrow(utils::read.csv(file.path(ctx, "tokens.csv"))) == nrow(designer_tokens()))
+instr <- readLines(file.path(ctx, "AI-INSTRUCTIONS.md"))
+rule_ids <- vapply(docdesigner:::dd_schema()$rules, `[[`, "", "id")
+stopifnot(all(vapply(rule_ids, function(r) any(grepl(paste0("`", r, "`"), instr, fixed = TRUE)), logical(1))))
+stopifnot(grepl("from = \"minimal\"", paste(instr, collapse = "\n"), fixed = TRUE))
+invisible(parse(file.path(ctx, "check-style.R")))         # the script is valid R
+# The examples keep their authors' comments.
+stopifnot(any(grepl("^#", readLines(file.path(ctx, "examples/review.yml")))))
+# A second write needs overwrite = TRUE; an unknown style is refused.
+stopifnot(inherits(try(suppressMessages(designer_ai_context(ctx)), silent = TRUE), "try-error"))
+stopifnot(inherits(try(designer_ai_context(tempfile(), from = "nope"), silent = TRUE), "try-error"))

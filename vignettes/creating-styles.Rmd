@@ -19,33 +19,67 @@ so on. The engine turns those tokens into LaTeX. You never write LaTeX, and a
 style cannot break a document: every token is checked against a schema with
 fixed types, bounds and named steps.
 
-This guide covers the workflow, working with an AI, the rules for setting
-tokens, the principles that separate a good style from a merely valid one, and
-markup styles for drafts, and closes with the full token reference, generated
-from the schema itself.
+This guide assumes you design a style with an AI assistant. You decide what
+the style is for and judge every page. The assistant writes the file, checks
+it and renders it. The split plays to each side: an assistant writes valid
+tokens quickly once it has the vocabulary, and a person sees at a glance
+whether a page works.
+
+The guide covers the workflow, the context to give the assistant, the rules
+for setting tokens, the principles that separate a good style from a merely
+valid one, and markup styles for drafts. It closes with the full token
+reference. Everything after the workflow is background for both of you: for
+you, to judge the result; for the assistant, to produce it.
 
 # The workflow
 
-1. **Scaffold** a style from the existing style nearest to what you want.
-2. **Edit** only the tokens that differ.
-3. **Validate** it against the schema.
-4. **Render** a realistic document and look at the pages.
-5. Repeat 2 to 4. Then **share** it, as a folder or inside a set.
+1. **Write a context folder** with `designer_ai_context()`. It gathers the
+   files that make an assistant accurate; the next section lists them.
+2. **Give the folder to the assistant**, `AI-INSTRUCTIONS.md` first.
+3. **Say what the style is for**: the kind of document, who reads it and
+   how, and anything it should resemble. Pictures of pages you admire do
+   more than adjectives.
+4. **The assistant drafts.** It copies the nearest shipped style, changes
+   only the tokens that differ, writes a reason beside each, then validates
+   and renders with the folder's `check-style.R`.
+5. **You look at the pages** and say what is wrong. Repeat 4 and 5.
+6. **Read the finished `format.yml`.** Every token should carry a reason
+   you agree with. Then share it, as a folder or inside a set.
 
 ```r
-# 1. A new folder my-brief/ with format.yml, seeded from `policy`.
-#    complete = FALSE copies only the tokens policy declares;
-#    complete = TRUE (the default) writes every token at its value, as a reference.
+# 1. The context folder, built around the style you will start from.
+#    Name two or three other styles to show the assistant the range.
+designer_ai_context("my-context", from = "policy", examples = c("economist", "minimal"))
+```
+
+A first message to the assistant can be as short as this:
+
+> Read `AI-INSTRUCTIONS.md` and the files beside it. I want a style for
+> two-page briefs on housing policy, read by city officials on paper and on
+> screen. It should feel authoritative but not academic. I've attached three
+> pages from briefs I like. Start from `policy`.
+
+The assistant's loop runs four commands. You can run them yourself at any
+point:
+
+```r
+# Copy the nearest shipped style. complete = FALSE copies only the tokens
+# that style declares, so the draft stays short and every line is a choice.
 designer_new_style("my-brief", from = "policy", path = ".", complete = FALSE)
 
-# 3. Errors must be fixed. Warnings flag risky combinations.
+# Errors must be fixed. Warnings flag risky combinations.
 designer_validate_style("my-brief")
 
-# 4. Render any document in the draft by pointing at the folder.
+# Render any document with the draft by pointing at its folder.
 rmarkdown::render("paper.Rmd", output_format = docdesigner::pdf(style = "my-brief"))
 ```
 
-Inside a document's YAML header the same thing reads:
+```sh
+# Or all three steps, plus an image of every page, in one:
+Rscript my-context/check-style.R my-brief
+```
+
+Inside a document's YAML header the style is named the same way:
 
 ```yaml
 output:
@@ -54,41 +88,48 @@ output:
     title_layout: page        # optional: override the style's title.layout
 ```
 
-For step 4, use a document that looks like your real work: figures, tables
-of different shapes, a long title, an abstract, footnotes, a block quote and
-references. The package's specimen document, `examples/gallery-document.Rmd`
-in the source repository, carries all of these and is a good default.
+The folder's `specimen.md` shows every element a style sets in a few pages.
+Before you finish, also render a document that looks like your real work:
+figures, tables of different shapes, a long title, an abstract, footnotes, a
+block quote and references. `examples/gallery-document.Rmd` in the source
+repository carries all of these.
 
-# Working with an AI
+# What to give the assistant
 
-An AI assistant can write a good style, given the engine's constraints and
-made to look at its own result. Without them it writes YAML that resembles a
-style but names tokens and values the engine does not have.
+An assistant left to its memory writes YAML that resembles a style but names
+tokens and values docdesigner does not have. These files fix that. All of
+them except the last two come from `designer_ai_context()`, generated from
+the installed package, so they match the version you render with. Write the
+folder again after updating docdesigner.
 
-1. **Give it the brief.** `designer_design_brief("brief.md")` writes the
-   constraints as Markdown: colour roles, fonts, named steps, the type scale,
-   title layouts and the markup tokens. It is generated from the schema of
-   the installed version, so it cannot be out of date. Give it this article
-   too.
-2. **Give it a scaffold, not a blank file.** Seed the style from the nearest
-   shipped one with `complete = FALSE` and ask for changes to that file. An
-   assistant editing twenty declared tokens makes fewer mistakes than one
-   writing two hundred.
-3. **Ask for a reason beside every token.** A comment saying why each value
-   was chosen makes the style reviewable, and lets the next person, or the
-   next assistant, tell a decision from an accident.
-4. **Make it validate.** Every change goes through
-   `designer_validate_style()`, and errors are fixed before anything else. An
-   assistant that can run R runs it itself.
-5. **Make it look.** A valid style can still set a bad page (see *Only the
-   page is evidence*, below). An assistant that can read images renders the
-   specimen, converts the pages with `pdftools::pdf_convert()` and inspects
-   them. Otherwise you look and tell it what is wrong. Do not accept a
-   description of how the page should look in place of a render.
+| File | Also available as | What it gives the assistant |
+|:--|:--|:--|
+| `AI-INSTRUCTIONS.md` | | How to work: what to ask you first, the loop, the validator's cross-token rules, and the mistakes assistants make most. Load it first. |
+| `brief.md` | `designer_design_brief()` | The hard constraints: colour roles, fonts, named steps, the type scale, title layouts, markup styles. |
+| `tokens.csv` | `designer_tokens()` | Every key that exists, with its allowed values, default and status. The commonest failure is an invented key. |
+| `examples/*.yml` | `designer_new_style()` | Shipped styles with their authors' comments. An assistant imitates what it sees, so show it reasoned files. |
+| `specimen.md` | | A test document with every element a style sets. |
+| `check-style.R` | | The loop as one script: validate, render, write each page as a PNG. Needs the pdftools package for the images. |
+| This article | [the website](https://jncohen.github.io/docdesigner/articles/creating-styles.html) | What makes a style good, not just valid. The brief says what is allowed; this says what works. |
+| Your model pages | | Screenshots or PDF pages of what the style should resemble. The single most useful input when imitating a publication. |
 
-To imitate a design made in a visual tool, export it as one standalone HTML
-page and translate it with `designer_import_html()`. The brief's last section
-says what the import reads and what it leaves to you.
+How you hand these over depends on the assistant.
+
+- **An assistant that runs code and reads images**, such as a coding
+  assistant opened on the folder, runs `check-style.R` itself and looks at
+  the pages before showing them to you. Your part is to judge.
+- **A chat assistant without tools** gets the files as attachments and
+  writes `format.yml`. You run the script, paste back the validator's
+  output, and attach the page images. It is slower, and it works.
+
+Either way, hold the assistant to the page. It will describe a draft as
+clean, balanced or readable; only a render shows whether it is (see *Only
+the page is evidence*, below). Ask for the images, and look at every one.
+
+To imitate a design made in a visual tool rather than describe it, export
+the design as one standalone HTML page and translate it with
+`designer_import_html()`. The brief's last section says what the import
+reads and what it leaves to you.
 
 # Setting tokens
 
@@ -310,10 +351,10 @@ title layouts, before you share a style. In particular check:
 Most styles dress a finished document for a reader. A markup style dresses a
 draft for its author: it is printed to be read slowly and written on, and
 every mark made on the page has to lead back to a spot in the source. The
-shipped `review` style is the example, and the right scaffold:
+shipped `review` style is the example, and the right starting point:
 
 ```r
-designer_new_style("my-review", from = "review", path = ".", complete = FALSE)
+designer_ai_context("my-context", from = "review")
 ```
 
 The `markup.*` tokens make a style a markup style. Each is off by default, so

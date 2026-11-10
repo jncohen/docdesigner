@@ -44,9 +44,12 @@ reference:
       - designer_new_style
       - designer_validate_style
       - designer_tokens
+  - title: Designing with an AI
+    contents:
+      - designer_ai_context
+      - designer_design_brief
   - title: Designing from a mockup
     contents:
-      - designer_design_brief
       - designer_import_html
   - title: Style sets
     contents:

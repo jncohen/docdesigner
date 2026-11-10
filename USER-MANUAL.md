@@ -254,7 +254,18 @@ title.layout: header
 code.highlight: tango
 ```
 
-Scaffold a new style from an existing one, then edit only what differs:
+Styles are designed with an AI assistant. Start by writing a folder of
+context for it: the engine's constraints, the token table, example styles, a
+test document, and a script that renders every page as an image. Give the
+assistant `AI-INSTRUCTIONS.md` first. The *Creating a style* article
+describes the workflow.
+
+```r
+docdesigner::designer_ai_context("my-context", from = "minimal")
+```
+
+The assistant, or you, scaffolds a new style from an existing one, then edits
+only what differs:
 
 ```r
 docdesigner::designer_new_style("my-style", from = "minimal")

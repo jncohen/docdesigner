@@ -286,6 +286,19 @@ output:
 
 ### Creating a style
 
+Styles are designed with an AI assistant. Start by writing a folder of
+context for it: the engine's constraints, the token table, example styles, a
+test document, and a script that renders every page as an image.
+
+```r
+designer_ai_context("my-context", from = "minimal")
+```
+
+Give the assistant `AI-INSTRUCTIONS.md` and the files beside it.
+[Creating a style](https://jncohen.github.io/docdesigner/articles/creating-styles.html)
+describes the workflow. The assistant's first step is the one you would take
+by hand:
+
 ```r
 designer_new_style("my-style", from = "minimal", path = "~/styles")
 ```
