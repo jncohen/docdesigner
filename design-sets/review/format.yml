@@ -17,9 +17,11 @@
 #     claim, its words and its page; the running head names the section's
 #     claim on every page; a heading that is a label rather than a claim is
 #     flagged [[LABEL?]].
-#   * [[TODO]], [[CITE]], [[WEAK]], [[CUT]], [[CHECK]], [[FIX]] print as
-#     margin tags; citation keys print after citations; changebars mark
-#     paragraphs changed since the last git tag; nothing floats.
+#   * [[TODO]], [[CITE]], [[WEAK]], [[CUT]], [[CHECK]], [[FIX]], [[VERIFY]],
+#     [[FACT]], [[RECOMPUTE]] and [[QUESTION]] print as margin tags; [[V]],
+#     [[C]], [[F]], [[N]] and [[Q]] are their short forms; citation keys
+#     print after citations; changebars mark paragraphs changed since the
+#     last git tag; nothing floats.
 #   * Every page carries the title, version (git hash) and date.
 #
 # The reasoning and its sources: the review style spec. Over the 1.25in margin
