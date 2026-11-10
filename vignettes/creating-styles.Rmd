@@ -19,9 +19,10 @@ so on. The engine turns those tokens into LaTeX. You never write LaTeX, and a
 style cannot break a document: every token is checked against a schema with
 fixed types, bounds and named steps.
 
-This guide covers the workflow, the rules for setting tokens, the principles
-that separate a good style from a merely valid one, and closes with the full
-token reference, generated from the schema itself.
+This guide covers the workflow, working with an AI, the rules for setting
+tokens, the principles that separate a good style from a merely valid one, and
+markup styles for drafts, and closes with the full token reference, generated
+from the schema itself.
 
 # The workflow
 
@@ -57,6 +58,37 @@ For step 4, use a document that looks like your real work: figures, tables
 of different shapes, a long title, an abstract, footnotes, a block quote and
 references. The package's specimen document, `examples/gallery-document.Rmd`
 in the source repository, carries all of these and is a good default.
+
+# Working with an AI
+
+An AI assistant can write a good style, given the engine's constraints and
+made to look at its own result. Without them it writes YAML that resembles a
+style but names tokens and values the engine does not have.
+
+1. **Give it the brief.** `designer_design_brief("brief.md")` writes the
+   constraints as Markdown: colour roles, fonts, named steps, the type scale,
+   title layouts and the markup tokens. It is generated from the schema of
+   the installed version, so it cannot be out of date. Give it this article
+   too.
+2. **Give it a scaffold, not a blank file.** Seed the style from the nearest
+   shipped one with `complete = FALSE` and ask for changes to that file. An
+   assistant editing twenty declared tokens makes fewer mistakes than one
+   writing two hundred.
+3. **Ask for a reason beside every token.** A comment saying why each value
+   was chosen makes the style reviewable, and lets the next person, or the
+   next assistant, tell a decision from an accident.
+4. **Make it validate.** Every change goes through
+   `designer_validate_style()`, and errors are fixed before anything else. An
+   assistant that can run R runs it itself.
+5. **Make it look.** A valid style can still set a bad page (see *Only the
+   page is evidence*, below). An assistant that can read images renders the
+   specimen, converts the pages with `pdftools::pdf_convert()` and inspects
+   them. Otherwise you look and tell it what is wrong. Do not accept a
+   description of how the page should look in place of a render.
+
+To imitate a design made in a visual tool, export it as one standalone HTML
+page and translate it with `designer_import_html()`. The brief's last section
+says what the import reads and what it leaves to you.
 
 # Setting tokens
 
@@ -272,6 +304,53 @@ title layouts, before you share a style. In particular check:
 - a table wider than half the measure, in a two-column style;
 - the last page, which often carries only a few references;
 - the first page of the body when `title.layout` is `page`.
+
+# Markup styles
+
+Most styles dress a finished document for a reader. A markup style dresses a
+draft for its author: it is printed to be read slowly and written on, and
+every mark made on the page has to lead back to a spot in the source. The
+shipped `review` style is the example, and the right scaffold:
+
+```r
+designer_new_style("my-review", from = "review", path = ".", complete = FALSE)
+```
+
+The `markup.*` tokens make a style a markup style. Each is off by default, so
+no publication style shows them.
+
+```{r markup-tokens, echo = FALSE}
+mk <- tokens[grepl("^markup[.]", tokens$key), ]
+knitr::kable(data.frame(Token = paste0("`", mk$key, "`"),
+                        Default = ifelse(is.na(mk$default), "", mk$default),
+                        Effect = gsub("|", "\\|", mk$doc, fixed = TRUE)),
+             format = "pipe", row.names = FALSE)
+```
+
+A markup style answers to different rules from a publication style.
+
+- **One column.** Line numbers, paragraph numbers, tags and changebars live in
+  the margins. The validator warns when a markup style sets two columns.
+- **A wide outer margin.** It is where the reader writes. Any `markup.*`
+  token lifts the 1.25in margin cap, and `page.margins.outer` may go to 3.5in;
+  `review` uses 3in. One-sided pages (`page.twoside: false`) keep it on the
+  right of every page.
+- **Nothing floats.** With `markup.floats: false` a table or figure stays
+  beside the text that discusses it, so a note about one finds the other.
+- **Stable lines.** A short measure, open leading, ragged right and no
+  hyphenation keep each line break, and so each line number, the same from
+  one printout to the next.
+- **The tags belong to the engine.** `[[V]]`, `[[C]]`, `[[TODO]]` and the rest
+  are fixed; the README lists them. A style switches them on with
+  `markup.flags` and colours them with `markup.flag_color`, but cannot add or
+  rename one.
+
+A writer can turn one feature off for one printout without a second style:
+`pdf(style = "review", markup = list(line_numbers = 0))`.
+
+When you check the page, check the marks as well as the text: two tags on
+one line, a tag under a flagged heading, a changebar beside a table, and line
+numbers on a page that opens with a figure.
 
 # Sharing a style
 

@@ -339,7 +339,7 @@ tokens:
                              doc: "Number body paragraphs continuously in the inner margin (\u00b6n), so a note made on one printout finds its paragraph in the next."}
   markup.flags:             {type: bool, default: false, status: impl,
                              doc: "[[TODO]], [[CITE]], [[WEAK]], [[CUT]], [[CHECK]], [[FIX]], [[VERIFY]], [[FACT]], [[RECOMPUTE]] and [[QUESTION]] in the text print as margin tags, with [[V]], [[C]], [[F]], [[N]] and [[Q]] as short forms; [[TAG: words]] also keeps the words inline in markup.flag_color."}
-  markup.flag_color:        {type: role, default: accent, status: impl}
+  markup.flag_color:        {type: role, default: accent, status: impl, doc: "Colour role for margin tags and the words a tag keeps inline."}
   markup.cite_keys:         {type: bool, default: false, status: impl,
                              doc: "Print each citation's bibliography key in small muted type after it."}
   markup.map:               {type: int, min: 0, max: 3, default: 0, status: impl,

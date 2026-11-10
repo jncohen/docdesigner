@@ -27,16 +27,20 @@ this list allows.
 
 ## Fonts
 
-Bundled (usable with no extra work): *Source Serif 4*, *EB Garamond*, *XITS*, *Fira Code*.
+Bundled with docdesigner: *Source Serif 4*, *EB Garamond*, *XITS*, *Fira Code*.
 
-**All four bundled families are serif or monospace -- there is no
-bundled sans-serif.** A sans-serif design is not out of bounds, but it
-means supplying font files (`fonts.<Family>.regular/bold/italic/
-bolditalic`) rather than using what's already available.
+In every TeX installation, so also usable with no extra work: *Latin Modern*, *Latin Modern Mono*, *TeX Gyre Heros*.
 
-Three font roles: `typography.body`, `typography.heading` (falls back
-to body if unset), `typography.mono` (code). At most three families in
-a single design -- docdesigner has no fourth type role.
+*TeX Gyre Heros* (a Helvetica-like face) is the one sans-serif available
+without supplying files. Any other face means shipping its files with
+the style (`fonts.<Family>.regular/bold/italic/bolditalic`).
+
+Font roles: `typography.body`; `typography.heading` (falls back to
+body); `typography.mono` (code); and two optional roles,
+`typography.display` (titles and headings set in a display face) and
+`typography.label` (small sans furniture: kickers, callout titles, table
+headers). The roles allow up to five families; good designs use two or
+three.
 
 ## Type scale
 
@@ -136,6 +140,40 @@ heads, rules and colour roles are set by hand from the design. A
 stylesheet page listing every token value by name makes that step
 mechanical.
 
+## Markup styles: drafts to be marked up by hand
+
+Most styles dress a finished document for a reader. A *markup style*
+dresses a draft for its author: printed to be read slowly and written
+on, with every page leading back to a spot in the source. The shipped
+example is `review`; start any markup style from it. These tokens make
+a style a markup style. Each is off by default.
+
+- `markup.line_numbers`: Number every nth line in the outer margin, restarting on each page. 0: off.
+- `markup.paragraph_numbers`: Number body paragraphs continuously in the inner margin (¶n), so a note made on one printout finds its paragraph in the next.
+- `markup.flags`: [[TODO]], [[CITE]], [[WEAK]], [[CUT]], [[CHECK]], [[FIX]], [[VERIFY]], [[FACT]], [[RECOMPUTE]] and [[QUESTION]] in the text print as margin tags, with [[V]], [[C]], [[F]], [[N]] and [[Q]] as short forms; [[TAG: words]] also keeps the words inline in markup.flag_color.
+- `markup.flag_color`: Colour role for margin tags and the words a tag keeps inline.
+- `markup.cite_keys`: Print each citation's bibliography key in small muted type after it.
+- `markup.map`: Open the body with a map of the argument: each heading to this depth, with its words and starting page. 0: off.
+- `markup.claim_check`: Flag [[LABEL?]] beside a heading of fewer than four words: a label where a claim belongs. Advisory.
+- `markup.changebars`: Rule beside each paragraph changed since a reference version: pdf(changes_since = ), else the latest git tag.
+- `markup.floats`: false: tables and figures stay exactly where they are written; nothing floats.
+
+A markup style follows different rules from a publication style:
+
+- **One column.** Numbers, tags and changebars live in the margins; the
+  validator warns on `markup.*` with `page.columns: 2`.
+- **A wide outer margin for handwriting.** Any `markup.*` token lifts the
+  1.25in margin cap: `page.margins.outer` may go to 3.5in (`review`
+  uses 3in). One-sided (`page.twoside: false`) keeps it on the right.
+- **Nothing floats.** `markup.floats: false` keeps a table or figure
+  beside the text that discusses it.
+- **Stable lines.** A short measure, open leading, ragged right and no
+  hyphenation keep line breaks, and so line numbers, stable between
+  printouts.
+- **The tags belong to the engine.** `[[V]]`, `[[C]]`, `[[TODO]]` and the
+  rest are fixed. A style switches them on (`markup.flags`) and colours
+  them (`markup.flag_color`); it cannot add or rename one.
+
 ## Explicitly out of bounds
 
 - Gradients, drop shadows, or any effect implying a light source.
@@ -148,8 +186,23 @@ mechanical.
 
 ## What to do with the result
 
-Export the design as **standalone HTML** (one self-contained page).
-Then, in R:
+**If you write `format.yml` directly**, start from the nearest shipped
+style, declare only the tokens that differ, comment each with the reason
+for its value, then validate and render:
+
+```r
+docdesigner::designer_new_style("your-style-id", from = "minimal",
+                                path = ".", complete = FALSE)
+docdesigner::designer_validate_style("your-style-id")
+rmarkdown::render("paper.Rmd",
+  output_format = docdesigner::pdf(style = "your-style-id"))
+```
+
+Fix every validation error first. Then look at the rendered pages: a
+valid style can still set a bad page, and only the page shows it.
+
+**If you designed in a visual tool**, export the design as **standalone
+HTML** (one self-contained page). Then, in R:
 
 ```r
 docdesigner::designer_import_html(

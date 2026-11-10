@@ -8,6 +8,14 @@
   point for a coauthor. Each stays in the margin of a `review` printout
   until the tag is removed. `[[CITE]]` now prints CITATION NEEDED rather than CITE. Like the
   other tags, `[[V: words]]` keeps the words inline.
+- **Building styles with an AI.** *Creating a style* has two new sections:
+  how to have an AI assistant write a style (give it the brief and a
+  scaffold, make it validate and look at the render), and what makes a
+  markup style like `review` different. `designer_design_brief()` now
+  covers markup styles and a direct `format.yml` route, and no longer
+  says there is no sans-serif without supplying files (TeX Gyre Heros
+  is in every TeX installation) or that there are three type roles
+  (there are five).
 - **Margin tags on one line stack.** Two tags on the same printed line were
   set over each other; the second now sits below the first, and a tag on
   the next line moves down with it. The note box had no height, so LaTeX
